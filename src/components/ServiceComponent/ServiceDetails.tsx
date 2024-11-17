@@ -4,17 +4,18 @@ import {
     IonPage,
     IonTitle,
     IonToolbar,
-    IonButton,
     IonCard,
     IonCardHeader,
     IonCardTitle,
     IonCardContent,
+    IonButton,
     IonButtons,
     IonBackButton
   } from '@ionic/react';
   import React, { useEffect, useState } from 'react';
   import { useParams } from 'react-router-dom'; // For accessing route parameters
-  
+  import './ServiceDetails.css';
+
   const ServiceDetails: React.FC = () => {
     const { id } = useParams<{ id: string }>(); // Get the service ID from the URL
     const [service, setService] = useState<any>(null); // State for the service
@@ -36,6 +37,11 @@ import {
   
       fetchServiceDetails();
     }, [id]);
+  
+    const handleBookSlot = () => {
+      alert(`Booking a slot for service: ${service?.name}`);
+      // Add your booking logic here
+    };
   
     if (isLoading) {
       return (
@@ -89,7 +95,11 @@ import {
               <p>Category: {service.category}</p>
             </IonCardContent>
           </IonCard>
-          <IonButton expand="block">Block</IonButton>
+          <div className="book-button-container">
+          <IonButton expand="block" onClick={handleBookSlot}>
+            Book a Slot Now
+          </IonButton>
+        </div>
         </IonContent>
       </IonPage>
     );
