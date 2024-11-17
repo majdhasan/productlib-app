@@ -1,0 +1,10 @@
+.spinner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+  
+  .ion-searchbar {
+    margin-bottom: 1rem;
+  }
