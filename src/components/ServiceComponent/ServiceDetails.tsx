@@ -13,14 +13,19 @@ import {
     IonBackButton
   } from '@ionic/react';
   import React, { useEffect, useState } from 'react';
-  import { useParams } from 'react-router-dom'; // For accessing route parameters
+  import { useParams,useHistory } from 'react-router-dom';
   import './ServiceDetails.css';
 
   const ServiceDetails: React.FC = () => {
     const { id } = useParams<{ id: string }>(); // Get the service ID from the URL
     const [service, setService] = useState<any>(null); // State for the service
     const [isLoading, setIsLoading] = useState(true); // State for loading spinner
-  
+    const history = useHistory();
+
+    const handleBookSlot = () => {
+      history.push(`/book/${id}`); // Navigate to the booking page
+    };
+
     useEffect(() => {
       // Fetch service details from the backend
       const fetchServiceDetails = async () => {
@@ -37,11 +42,6 @@ import {
   
       fetchServiceDetails();
     }, [id]);
-  
-    const handleBookSlot = () => {
-      alert(`Booking a slot for service: ${service?.name}`);
-      // Add your booking logic here
-    };
   
     if (isLoading) {
       return (

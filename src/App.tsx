@@ -16,6 +16,8 @@ import Tab2 from './pages/Tab2';
 import Tab3 from './pages/Tab3';
 import Services from './pages/Services/Services';
 import ServiceDetails from './components/ServiceComponent/ServiceDetails';
+import BookingCalendar from './components/CalendarComponent/BookingCalendar';
+
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -72,6 +74,7 @@ const App: React.FC = () => (
           <Route path="/services/:id"> {/* Add route for service details */}
             <ServiceDetails />
           </Route>
+          <Route exact path="/book/:id" component={BookingCalendar} />
         </IonRouterOutlet>
         
         <IonTabBar slot="bottom">
