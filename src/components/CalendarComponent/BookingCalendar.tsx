@@ -12,17 +12,19 @@ import {
   IonDatetime,
   IonLoading,
   IonAlert,
+  IonInput,
 } from "@ionic/react";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import "./BookingCalendar.css";
 
 const BookingCalendar: React.FC = () => {
   const { id } = useParams<{ id: string }>(); // Service ID from the route
+  const history = useHistory(); // For navigation
   const [selectedDate, setSelectedDate] = useState<string | null>(null); // Selected date
   const [availableSlots, setAvailableSlots] = useState<string[]>([]); // Available slots
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null); // Selected slot
   const [isLoading, setIsLoading] = useState(false); // For showing a loading spinner
-  const [isBookingSuccess, setIsBookingSuccess] = useState(false); // Booking success state
+  const [userEmail, setUserEmail] = useState(""); // Email input state
   const [showAlert, setShowAlert] = useState(false); // Alert for no slot selected
 
   // Fetch available slots when the service ID and selected date are set
@@ -59,15 +61,15 @@ const BookingCalendar: React.FC = () => {
 
   // Confirm booking
   const handleConfirmBooking = async () => {
-    if (!selectedSlot) {
-      setShowAlert(true); // Show alert if no slot is selected
+    if (!selectedSlot || !selectedDate || !userEmail.trim()) {
+      setShowAlert(true); // Show alert if no slot or email is selected
       return;
     }
 
     const bookingRequest = {
       serviceId: id,
-      userEmail: "guest@example.com", // Replace this with user input if required
-      startTime: selectedSlot, // Selected slot
+      userEmail: userEmail.trim(), // Get user email input
+      startTime: `${selectedDate.split("T")[0]}T${selectedSlot}:00`, // Combine date and time
     };
 
     try {
@@ -78,9 +80,11 @@ const BookingCalendar: React.FC = () => {
       });
 
       if (response.ok) {
-        setIsBookingSuccess(true);
+        const data = await response.json(); // Assuming the response contains the booking ID
+        history.push(`/confirmation/${data.id}`); // Navigate to the confirmation page
       } else {
-        console.error("Booking failed:", await response.json());
+        const errorData = await response.json();
+        console.error("Booking failed:", errorData);
       }
     } catch (error) {
       console.error("Error confirming booking:", error);
@@ -91,41 +95,41 @@ const BookingCalendar: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Book a Slot</IonTitle>
+          <IonTitle>Book your Slot</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent>
         <IonLoading isOpen={isLoading} message="Fetching available slots..." />
 
-        {/* Alert for No Slot Selected */}
+        {/* Alert for No Slot or Email Selected */}
         <IonAlert
           isOpen={showAlert}
           onDidDismiss={() => setShowAlert(false)}
-          header="No Slot Selected"
-          message="Please select a slot before confirming your booking."
+          header="Incomplete Details"
+          message="Please select a slot and provide your email before confirming your booking."
           buttons={["OK"]}
         />
 
-        {/* Booking Success Message */}
-        {isBookingSuccess && (
-          <IonAlert
-            isOpen={isBookingSuccess}
-            onDidDismiss={() => setIsBookingSuccess(false)}
-            header="Booking Confirmed"
-            message="Your booking has been successfully confirmed."
-            buttons={["OK"]}
-          />
-        )}
+        {/* Email Input */}
+        <div className="email-input-container">
+          <IonInput
+            placeholder="Enter your email"
+            value={userEmail}
+            onIonChange={(e) => setUserEmail(e.detail.value!)}
+            type="email"
+          ></IonInput>
+        </div>
 
         {/* Calendar */}
         <div className="datetime-container">
           <IonDatetime
             presentation="date"
             onIonChange={(e) => {
-                const value = Array.isArray(e.detail.value) ? e.detail.value[0] : e.detail.value;
-                setSelectedDate(value ?? null);
-              }}
+              const value = Array.isArray(e.detail.value) ? e.detail.value[0] : e.detail.value;
+              setSelectedDate(value ?? null);
+            }}
             value={selectedDate}
+            min={new Date().toISOString()} // Restrict past dates
           />
         </div>
 
@@ -156,11 +160,13 @@ const BookingCalendar: React.FC = () => {
         )}
 
         {/* Confirm Booking Button */}
-        <div className="confirm-button-container">
-          <IonButton expand="block" onClick={handleConfirmBooking}>
-            Confirm Booking
-          </IonButton>
-        </div>
+        {selectedSlot && (
+          <div className="confirm-button-container">
+            <IonButton expand="block" onClick={handleConfirmBooking}>
+              Confirm Booking
+            </IonButton>
+          </div>
+        )}
       </IonContent>
     </IonPage>
   );

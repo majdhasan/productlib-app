@@ -17,6 +17,8 @@ import Tab3 from './pages/Tab3';
 import Services from './pages/Services/Services';
 import ServiceDetails from './components/ServiceComponent/ServiceDetails';
 import BookingCalendar from './components/CalendarComponent/BookingCalendar';
+import Confirmation from './pages/Confirmation/Confirmation';
+import PaymentPage from './pages/Payment/PaymentPage';
 
 
 /* Core CSS required for Ionic components to work properly */
@@ -75,7 +77,11 @@ const App: React.FC = () => (
             <ServiceDetails />
           </Route>
           <Route exact path="/book/:id" component={BookingCalendar} />
-        </IonRouterOutlet>
+          <Route path="/confirmation/:id" render={(props) => <Confirmation key={props.match.params.id} />} />
+          <Route exact path="/payment/:id">
+    <PaymentPage />
+  </Route>
+          </IonRouterOutlet>
         
         <IonTabBar slot="bottom">
           <IonTabButton tab="tab1" href="/tab1">

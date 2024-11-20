@@ -1,0 +1,41 @@
+.confirmation-container {
+    text-align: center;
+    padding: 20px;
+}
+
+.confirmation-container h2 {
+    margin-bottom: 10px;
+    color: var(--ion-color-primary);
+}
+
+.confirmation-container p {
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+}
+
+.ion-padding {
+    text-align: center;
+}
+
+.ion-padding p {
+    margin: 10px 0;
+}
+
+IonButton {
+    margin: 10px 0;
+}
+
+.paid {
+    color: green;
+    font-weight: bold;
+}
+
+.unpaid {
+    color: red;
+    font-weight: bold;
+}
+
+.status-message {
+    margin-top: 10px;
+    font-size: 1.2em;
+}
