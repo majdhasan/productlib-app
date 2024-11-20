@@ -51,7 +51,7 @@ const Services: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Services</IonTitle>
+          <IonTitle>What are you looking for?</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
