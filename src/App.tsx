@@ -10,16 +10,15 @@ import {
   setupIonicReact
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { ellipse, rocketOutline, square, triangle } from 'ionicons/icons';
-import Tab1 from './pages/Tab1';
-import Tab2 from './pages/Tab2';
-import Tab3 from './pages/Tab3';
+import { ellipse, rocketOutline, square, triangle, bookOutline } from 'ionicons/icons';
 import Services from './pages/Services/Services';
 import ServiceDetails from './components/ServiceComponent/ServiceDetails';
 import BookingCalendar from './components/CalendarComponent/BookingCalendar';
 import Confirmation from './pages/Confirmation/Confirmation';
 import PaymentPage from './pages/Payment/PaymentPage';
-
+import MyBookings from './pages/MyBookings/MyBookings';
+import { UserProvider } from './context/UserContext';
+import Login from './pages/Login/Login';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -54,56 +53,48 @@ import './theme/variables.css';
 setupIonicReact();
 
 const App: React.FC = () => (
-  <IonApp>
-    <IonReactRouter>
-      <IonTabs>
-        <IonRouterOutlet>
-          <Route exact path="/tab1">
-            <Tab1 />
-          </Route>
-          <Route exact path="/tab2">
-            <Tab2 />
-          </Route>
-          <Route path="/tab3">
-            <Tab3 />
-          </Route>
-          <Route exact path="/services">
-            <Services />
-          </Route>
-          <Route exact path="/">
-            <Redirect to="/tab1" />
-          </Route>
-          <Route path="/services/:id"> {/* Add route for service details */}
-            <ServiceDetails />
-          </Route>
-          <Route exact path="/book/:id" component={BookingCalendar} />
-          <Route path="/confirmation/:id" render={(props) => <Confirmation key={props.match.params.id} />} />
-          <Route exact path="/payment/:id">
-    <PaymentPage />
-  </Route>
+  <UserProvider>
+    <IonApp>
+      <IonReactRouter>
+        <IonTabs>
+          <IonRouterOutlet>
+            <Route exact path="/services">
+              <Services />
+            </Route>
+            <Route exact path="/">
+              <Redirect to="/services" />
+            </Route>
+            <Route path="/services/:id"> {/* Add route for service details */}
+              <ServiceDetails />
+            </Route>
+            <Route exact path="/book/:id" component={BookingCalendar} />
+            <Route path="/confirmation/:id" render={(props) => <Confirmation key={props.match.params.id} />} />
+            <Route exact path="/payment/:id">
+              <PaymentPage />
+            </Route>
+            <Route exact path="/my-bookings">
+              <MyBookings />
+            </Route>
+            <Route exact path="/login">
+              <Login />
+            </Route>
           </IonRouterOutlet>
-        
-        <IonTabBar slot="bottom">
-          <IonTabButton tab="tab1" href="/tab1">
-            <IonIcon aria-hidden="true" icon={triangle} />
-            <IonLabel>Tab 1</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="tab2" href="/tab2">
-            <IonIcon aria-hidden="true" icon={ellipse} />
-            <IonLabel>Tab 2</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="tab3" href="/tab3">
-            <IonIcon aria-hidden="true" icon={square} />
-            <IonLabel>Tab 3</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="services" href="/services">
-            <IonIcon aria-hidden="true" icon={rocketOutline} />
-            <IonLabel>Book now</IonLabel>
-          </IonTabButton>
-        </IonTabBar>
-      </IonTabs>
-    </IonReactRouter>
-  </IonApp>
+
+          <IonTabBar slot="bottom">
+            <IonTabButton tab="my-bookings" href="/my-bookings">
+              <IonIcon aria-hidden="true" icon={bookOutline} />
+              <IonLabel>My Bookings</IonLabel>
+            </IonTabButton>
+
+            <IonTabButton tab="services" href="/services">
+              <IonIcon aria-hidden="true" icon={rocketOutline} />
+              <IonLabel>Book now</IonLabel>
+            </IonTabButton>
+          </IonTabBar>
+        </IonTabs>
+      </IonReactRouter>
+    </IonApp>
+  </UserProvider>
 );
 
 export default App;
