@@ -1,0 +1,43 @@
+.date-bubble {
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 10px 0;
+    background-color: #e0e0e0;
+    border-radius: 20px;
+    font-size: 14px;
+    color: #333;
+    text-align: center;
+}
+
+.booking-list {
+    margin-top: 10px;
+}
+
+IonItem h3 {
+    font-size: 16px;
+    margin: 0;
+    color: #444;
+}
+
+IonItem p {
+    font-size: 14px;
+    margin: 2px 0;
+    color: #666;
+}
+
+.paid-status {
+    color: green;
+    font-weight: bold;
+}
+
+.unpaid-status {
+    color: red;
+    font-weight: bold;
+}
+
+.empty-bookings {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+    font-size: 16px;
+}

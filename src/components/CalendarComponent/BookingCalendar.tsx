@@ -95,7 +95,7 @@ const BookingCalendar: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Book your Slot</IonTitle>
+          <IonTitle>Book a slot</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent>
