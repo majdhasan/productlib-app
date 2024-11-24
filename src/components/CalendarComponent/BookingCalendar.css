@@ -8,10 +8,15 @@
   margin: 20px;
 }
 
-.email-input-container {
-  margin: 20px;
-  text-align: center;
+.guest-input-container {
+  margin: 16px; /* Consistent margin */
+  padding: 16px;
+  border-radius: 8px; /* Rounded corners */
+  background-color: #1c1c1e; /* Match dark theme background */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for contrast */
+  color: #ffffff; /* Ensure text is white */
 }
+
 .confirm-button-container {
   margin: 20px;
   text-align: center;

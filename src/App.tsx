@@ -10,7 +10,7 @@ import {
   setupIonicReact
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { ellipse, rocketOutline, square, triangle, bookOutline } from 'ionicons/icons';
+import { personOutline, rocketOutline, bookOutline } from 'ionicons/icons';
 import Services from './pages/Services/Services';
 import ServiceDetails from './components/ServiceComponent/ServiceDetails';
 import BookingCalendar from './components/CalendarComponent/BookingCalendar';
@@ -18,7 +18,7 @@ import Confirmation from './pages/Confirmation/Confirmation';
 import PaymentPage from './pages/Payment/PaymentPage';
 import MyBookings from './pages/MyBookings/MyBookings';
 import { UserProvider } from './context/UserContext';
-import Login from './pages/Login/Login';
+import Profile from './pages/Profile/Profile';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -75,9 +75,7 @@ const App: React.FC = () => (
             <Route exact path="/my-bookings">
               <MyBookings />
             </Route>
-            <Route exact path="/login">
-              <Login />
-            </Route>
+            <Route exact path="/profile" component={Profile} />
           </IonRouterOutlet>
 
           <IonTabBar slot="bottom">
@@ -89,6 +87,10 @@ const App: React.FC = () => (
             <IonTabButton tab="services" href="/services">
               <IonIcon aria-hidden="true" icon={rocketOutline} />
               <IonLabel>Book now</IonLabel>
+            </IonTabButton>
+            <IonTabButton tab="profile" href="/profile">
+              <IonIcon aria-hidden="true" icon={personOutline} />
+              <IonLabel>Profile</IonLabel>
             </IonTabButton>
           </IonTabBar>
         </IonTabs>

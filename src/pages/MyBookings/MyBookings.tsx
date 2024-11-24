@@ -5,20 +5,21 @@ import {
     IonToolbar,
     IonTitle,
     IonContent,
-    IonInput,
-    IonButton,
-    IonLabel,
-    IonItem,
-    IonList,
-    IonAlert,
-    IonSegment,
-    IonSegmentButton,
     IonText,
     IonRefresher,
     IonRefresherContent,
+    IonAlert,
+    IonList,
+    IonItem,
+    IonLabel,
+    IonButton,
+    IonInput,
+    IonSegment,
+    IonSegmentButton,
     useIonToast,
 } from '@ionic/react';
 import { useHistory } from 'react-router-dom';
+import LoginComponent from "../../components/LoginComponent/LoginComponent";
 import './MyBookings.css';
 
 // Helper function to format timestamps
@@ -41,23 +42,25 @@ const formatTime = (timestamp: string): string => {
 
 const MyBookings: React.FC = () => {
     const [email, setEmail] = useState<string>('');
-    const [password, setPassword] = useState<string>(''); // For login
     const [bookingId, setBookingId] = useState<string>(''); // For lookup
-    const [bookings, setBookings] = useState<any[]>([]); // State for bookings
+    const [bookings, setBookings] = useState<any[]>([]);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
-    const [activeTab, setActiveTab] = useState<'login' | 'lookup'>('login'); // Toggle between tabs
+    const [activeTab, setActiveTab] = useState<'login' | 'lookup'>('login'); // Toggle between login and lookup tabs
     const history = useHistory();
     const [presentToast] = useIonToast();
-    const [showLogoutPrompt, setShowLogoutPrompt] = useState(false); // State for logout prompt
-
 
     useEffect(() => {
         fetchBookings();
     }, []);
 
-    // Fetch bookings based on the logged-in user's ID
+    const handleLoginSuccess = (user: any) => {
+        localStorage.setItem('user', JSON.stringify(user));
+        // Fetch bookings or refresh the page
+        fetchBookings();
+    };
+
     const fetchBookings = async () => {
-        const storedUser = localStorage.getItem('user');
+        const storedUser = localStorage.getItem("user");
         if (!storedUser) return;
 
         const user = JSON.parse(storedUser);
@@ -66,51 +69,20 @@ const MyBookings: React.FC = () => {
         try {
             const response = await fetch(`http://localhost:8080/api/bookings/user/${user.id}`);
             if (!response.ok) {
-                throw new Error('Failed to fetch bookings');
+                throw new Error("Failed to fetch bookings");
             }
             const data = await response.json();
+            console.log("Fetched bookings:", data); // Debugging: Check booking structure
             setBookings(data);
         } catch (error) {
-            console.error('Error fetching bookings:', error);
+            console.error("Error fetching bookings:", error);
         }
     };
+
 
     const handleRefresh = async (event: CustomEvent) => {
         await fetchBookings();
-        event.detail.complete(); // Notify Ionic that the refresh is complete
-    };
-
-    const handleLogin = async () => {
-        try {
-            const response = await fetch('http://localhost:8080/api/users/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password }),
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                setErrorMessage(errorData.message || 'Login failed. Please check your credentials.');
-                return;
-            }
-
-            const user = await response.json();
-            localStorage.setItem('user', JSON.stringify(user));
-            setEmail(user.email); // Set email after login
-            setPassword(''); // Clear password field
-            setShowLogoutPrompt(false); // Reset logout prompt state
-            fetchBookings(); // Fetch bookings after login
-
-            // Show success toast
-            presentToast({
-                message: 'Login successful!',
-                duration: 2000,
-                position: 'bottom',
-            });
-        } catch (error) {
-            setErrorMessage('An error occurred during login. Please try again.');
-            console.error(error);
-        }
+        event.detail.complete();
     };
 
     const handleLookup = async () => {
@@ -133,38 +105,13 @@ const MyBookings: React.FC = () => {
         }
     };
 
-
-    const handleLogout = () => {
-        setShowLogoutPrompt(true); // Show logout confirmation
-    };
-
-    const confirmLogout = () => {
-        localStorage.removeItem('user');
-        setEmail('');
-        setBookings([]);
-        setShowLogoutPrompt(false); // Reset logout prompt state
-
-        // Show success toast
-        presentToast({
-            message: 'Logout successful!',
-            duration: 2000,
-            position: 'bottom',
-        });
-    };
-
-    const cancelLogout = () => {
-        setShowLogoutPrompt(false); // Cancel logout prompt
-    };
-
     const groupBookingsByDate = (): { [key: string]: any[] } => {
-        // Sort bookings by startTime in descending order (newest to oldest)
         const sortedBookings = [...bookings].sort(
             (a, b) => new Date(b.startTime).getTime() - new Date(a.startTime).getTime()
         );
 
-        // Group sorted bookings by date
         return sortedBookings.reduce((grouped: { [key: string]: any[] }, booking) => {
-            const date = formatDate(booking.startTime); // Format the date for grouping
+            const date = formatDate(booking.startTime);
             if (!grouped[date]) {
                 grouped[date] = [];
             }
@@ -172,7 +119,6 @@ const MyBookings: React.FC = () => {
             return grouped;
         }, {});
     };
-
 
     const groupedBookings = groupBookingsByDate();
 
@@ -199,34 +145,13 @@ const MyBookings: React.FC = () => {
                         </IonSegment>
 
                         {activeTab === 'login' && (
-                            <div>
-                                <IonList>
-                                    <IonItem>
-                                        <IonLabel position="stacked">Email</IonLabel>
-                                        <IonInput
-                                            value={email}
-                                            placeholder="Enter your email"
-                                            onIonChange={(e) => setEmail(e.detail.value!)}
-                                        />
-                                    </IonItem>
-                                    <IonItem>
-                                        <IonLabel position="stacked">Password</IonLabel>
-                                        <IonInput
-                                            type="password"
-                                            value={password}
-                                            placeholder="Enter your password"
-                                            onIonChange={(e) => setPassword(e.detail.value!)}
-                                        />
-                                    </IonItem>
-                                </IonList>
-                                <IonButton expand="block" type="button" onClick={handleLogin}>
-                                    Login
-                                </IonButton>
+                            <div className="tab-content-container">
+                                <LoginComponent onLoginSuccess={handleLoginSuccess} />
                             </div>
                         )}
 
                         {activeTab === 'lookup' && (
-                            <div>
+                            <div className="tab-content-container">
                                 <IonList>
                                     <IonItem>
                                         <IonLabel position="stacked">Email</IonLabel>
@@ -253,33 +178,6 @@ const MyBookings: React.FC = () => {
                     </>
                 ) : (
                     <>
-                        <h2>Welcome, {email}</h2>
-                        <IonButton color="danger" expand="block" onClick={handleLogout}>
-                            Logout
-                        </IonButton>
-
-
-                        {/* Logout confirmation */}
-                        <IonAlert
-                            isOpen={showLogoutPrompt}
-                            onDidDismiss={cancelLogout}
-                            header="Logout"
-                            message="Are you sure you want to log out?"
-                            buttons={[
-                                {
-                                    text: 'Cancel',
-                                    role: 'cancel',
-                                    handler: cancelLogout,
-                                },
-                                {
-                                    text: 'Logout',
-                                    role: 'confirm',
-                                    handler: confirmLogout,
-                                },
-                            ]}
-                        />
-
-                        {/* Pull-to-refresh functionality */}
                         <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
                             <IonRefresherContent
                                 pullingText="Pull to refresh"
@@ -301,7 +199,7 @@ const MyBookings: React.FC = () => {
                                                 onClick={() => history.push(`/confirmation/${booking.id}`)}
                                             >
                                                 <IonLabel>
-                                                    <h3>{booking.service.name}</h3>
+                                                    <h3>{booking.serviceEntity?.name || "Service Name Unavailable"}</h3>
                                                     <p>
                                                         {formatTime(booking.startTime)} - {formatTime(booking.endTime)}
                                                     </p>
@@ -321,6 +219,8 @@ const MyBookings: React.FC = () => {
                                 </IonText>
                             </div>
                         )}
+
+
                     </>
                 )}
 

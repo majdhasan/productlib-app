@@ -1,0 +1,22 @@
+.profile-page {
+    padding: 16px;
+  }
+  
+  .ion-input {
+    margin-bottom: 16px;
+  }
+  
+  .ion-button {
+    margin-top: 16px;
+  }
+  
+  .ion-title {
+    text-align: center;
+  }
+  
+  .profile-header {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 16px;
+  }
+  

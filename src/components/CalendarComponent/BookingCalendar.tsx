@@ -13,6 +13,9 @@ import {
   IonLoading,
   IonAlert,
   IonInput,
+  useIonToast,
+  IonItem,
+  IonLabel
 } from "@ionic/react";
 import { useParams, useHistory } from "react-router-dom";
 import "./BookingCalendar.css";
@@ -25,7 +28,21 @@ const BookingCalendar: React.FC = () => {
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null); // Selected slot
   const [isLoading, setIsLoading] = useState(false); // For showing a loading spinner
   const [userEmail, setUserEmail] = useState(""); // Email input state
+  const [firstName, setFirstName] = useState(""); // For guest's first name
+  const [lastName, setLastName] = useState(""); // For guest's last name
   const [showAlert, setShowAlert] = useState(false); // Alert for no slot selected
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Track if the user is logged in
+  const [presentToast] = useIonToast();
+
+  // Check if the user is logged in on component mount
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      const user = JSON.parse(storedUser);
+      setIsLoggedIn(true);
+      setUserEmail(user.email); // Set the user's email from the stored user
+    }
+  }, []);
 
   // Fetch available slots when the service ID and selected date are set
   useEffect(() => {
@@ -59,43 +76,57 @@ const BookingCalendar: React.FC = () => {
     setSelectedSlot(slot);
   };
 
-  // Confirm booking
   const handleConfirmBooking = async () => {
     if (!selectedSlot || !selectedDate || !userEmail.trim()) {
-      setShowAlert(true); // Show alert if no slot or email is selected
+      presentToast({
+        message: "Please select a slot and provide your email before confirming your booking.",
+        duration: 2000,
+        color: "danger",
+      });
       return;
     }
-
+  
     const bookingRequest = {
       serviceId: id,
-      userEmail: userEmail.trim(), // Get user email input
-      startTime: `${selectedDate.split("T")[0]}T${selectedSlot}:00`, // Combine date and time
+      userEmail: userEmail.trim(),
+      startTime: `${selectedDate.split("T")[0]}T${selectedSlot}:00`,
     };
-
+  
     try {
       const response = await fetch("http://localhost:8080/api/bookings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(bookingRequest),
       });
-
-      if (response.ok) {
-        const data = await response.json(); // Assuming the response contains the booking ID
-        history.push(`/confirmation/${data.id}`); // Navigate to the confirmation page
-      } else {
+  
+      if (!response.ok) {
         const errorData = await response.json();
-        console.error("Booking failed:", errorData);
+        presentToast({
+          message: errorData.error || "Failed to confirm the booking.",
+          duration: 3000,
+          color: "danger",
+        });
+        return;
       }
+  
+      const data = await response.json();
+      history.push(`/confirmation/${data.id}`);
     } catch (error) {
       console.error("Error confirming booking:", error);
+      presentToast({
+        message: "An unexpected error occurred. Please try again later.",
+        duration: 3000,
+        color: "danger",
+      });
     }
   };
+  
 
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Book a slot</IonTitle>
+          <IonTitle>Book a Slot</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent>
@@ -110,15 +141,36 @@ const BookingCalendar: React.FC = () => {
           buttons={["OK"]}
         />
 
-        {/* Email Input */}
-        <div className="email-input-container">
-          <IonInput
-            placeholder="Enter your email"
-            value={userEmail}
-            onIonChange={(e) => setUserEmail(e.detail.value!)}
-            type="email"
-          ></IonInput>
-        </div>
+        {/* Email Input - Only show if the user is not logged in */}
+        {!isLoggedIn && (
+          <div className="guest-input-container">
+            <IonItem>
+              <IonLabel position="stacked">First Name</IonLabel>
+              <IonInput
+                placeholder="Enter your first name"
+                value={firstName}
+                onIonChange={(e) => setFirstName(e.detail.value!)}
+              />
+            </IonItem>
+            <IonItem>
+              <IonLabel position="stacked">Last Name</IonLabel>
+              <IonInput
+                placeholder="Enter your last name"
+                value={lastName}
+                onIonChange={(e) => setLastName(e.detail.value!)}
+              />
+            </IonItem>
+            <IonItem>
+              <IonLabel position="stacked">Email</IonLabel>
+              <IonInput
+                type="email"
+                placeholder="Enter your email"
+                value={userEmail}
+                onIonChange={(e) => setUserEmail(e.detail.value!)}
+              />
+            </IonItem>
+          </div>
+        )}
 
         {/* Calendar */}
         <div className="datetime-container">
