@@ -18,7 +18,6 @@ const LoginComponent: React.FC<LoginProps> = ({ onLoginSuccess }) => {
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     const handleLogin = async () => {
-        console.log("Login attempt with:", { email, password }); // Debug
         try {
             const response = await fetch("http://localhost:8080/api/users/login", {
                 method: "POST",

@@ -15,7 +15,8 @@ import {
   IonInput,
   useIonToast,
   IonItem,
-  IonLabel
+  IonLabel,
+  IonText
 } from "@ionic/react";
 import { useParams, useHistory } from "react-router-dom";
 import "./BookingCalendar.css";
@@ -85,20 +86,20 @@ const BookingCalendar: React.FC = () => {
       });
       return;
     }
-  
+
     const bookingRequest = {
       serviceId: id,
       userEmail: userEmail.trim(),
       startTime: `${selectedDate.split("T")[0]}T${selectedSlot}:00`,
     };
-  
+
     try {
       const response = await fetch("http://localhost:8080/api/bookings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(bookingRequest),
       });
-  
+
       if (!response.ok) {
         const errorData = await response.json();
         presentToast({
@@ -108,7 +109,7 @@ const BookingCalendar: React.FC = () => {
         });
         return;
       }
-  
+
       const data = await response.json();
       history.push(`/confirmation/${data.id}`);
     } catch (error) {
@@ -120,7 +121,7 @@ const BookingCalendar: React.FC = () => {
       });
     }
   };
-  
+
 
   return (
     <IonPage>
@@ -172,53 +173,69 @@ const BookingCalendar: React.FC = () => {
           </div>
         )}
 
-        {/* Calendar */}
-        <div className="datetime-container">
-          <IonDatetime
-            presentation="date"
-            onIonChange={(e) => {
-              const value = Array.isArray(e.detail.value) ? e.detail.value[0] : e.detail.value;
-              setSelectedDate(value ?? null);
-            }}
-            value={selectedDate}
-            min={new Date().toISOString()} // Restrict past dates
-          />
+        {/* Display logged-in email */}
+        <div className="book-slot-container">
+          {userEmail && (
+            <div className="logged-in-as">
+              <IonText>
+                <p>
+                  You are logged in as <strong>{userEmail}</strong>,{" "}
+                  <IonText color="primary" onClick={() => history.push("/profile")}>
+                    <strong>(not you?)</strong>
+                  </IonText>
+                </p>
+              </IonText>
+            </div>
+          )}
+
+          {/* Calendar */}
+          <div className="datetime-container">
+            <IonDatetime
+              presentation="date"
+              onIonChange={(e) => {
+                const value = Array.isArray(e.detail.value) ? e.detail.value[0] : e.detail.value;
+                setSelectedDate(value ?? null);
+              }}
+              value={selectedDate}
+              min={new Date().toISOString()} // Restrict past dates
+            />
+          </div>
+
+          {/* Slots */}
+          {selectedDate && (
+            <div className="slots-container">
+              <h2>Available Slots for {new Date(selectedDate).toDateString()}</h2>
+              <IonGrid>
+                <IonRow>
+                  {availableSlots.length > 0 ? (
+                    availableSlots.map((slot, index) => (
+                      <IonCol size="6" key={index}>
+                        <IonButton
+                          expand="block"
+                          color={selectedSlot === slot ? "success" : "primary"}
+                          onClick={() => handleSlotSelect(slot)}
+                        >
+                          {slot}
+                        </IonButton>
+                      </IonCol>
+                    ))
+                  ) : (
+                    <p>No available slots for the selected date.</p>
+                  )}
+                </IonRow>
+              </IonGrid>
+            </div>
+          )}
+
+          {/* Confirm Booking Button */}
+          {selectedSlot && (
+            <div className="confirm-button-container">
+              <IonButton expand="block" onClick={handleConfirmBooking}>
+                Confirm Booking
+              </IonButton>
+            </div>
+          )}
         </div>
-
-        {/* Slots */}
-        {selectedDate && (
-          <div className="slots-container">
-            <h2>Available Slots for {new Date(selectedDate).toDateString()}</h2>
-            <IonGrid>
-              <IonRow>
-                {availableSlots.length > 0 ? (
-                  availableSlots.map((slot, index) => (
-                    <IonCol size="6" key={index}>
-                      <IonButton
-                        expand="block"
-                        color={selectedSlot === slot ? "success" : "primary"}
-                        onClick={() => handleSlotSelect(slot)}
-                      >
-                        {slot}
-                      </IonButton>
-                    </IonCol>
-                  ))
-                ) : (
-                  <p>No available slots for the selected date.</p>
-                )}
-              </IonRow>
-            </IonGrid>
-          </div>
-        )}
-
-        {/* Confirm Booking Button */}
-        {selectedSlot && (
-          <div className="confirm-button-container">
-            <IonButton expand="block" onClick={handleConfirmBooking}>
-              Confirm Booking
-            </IonButton>
-          </div>
-        )}
       </IonContent>
     </IonPage>
   );

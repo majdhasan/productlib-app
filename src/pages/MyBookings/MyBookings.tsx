@@ -72,7 +72,6 @@ const MyBookings: React.FC = () => {
                 throw new Error("Failed to fetch bookings");
             }
             const data = await response.json();
-            console.log("Fetched bookings:", data); // Debugging: Check booking structure
             setBookings(data);
         } catch (error) {
             console.error("Error fetching bookings:", error);
