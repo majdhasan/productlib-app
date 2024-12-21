@@ -12,39 +12,39 @@ import {
 } from '@ionic/react';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom'; // For navigation
-import './Services.css';
+import './Products.css';
 
-const Services: React.FC = () => {
-  const [services, setServices] = useState([]); // State for services
+const Products: React.FC = () => {
+  const [products, setProducts] = useState([]); // State for products
   const [searchQuery, setSearchQuery] = useState(''); // State for search query
   const [isLoading, setIsLoading] = useState(true); // State for loading spinner
   const history = useHistory(); // React Router hook for navigation
 
   useEffect(() => {
-    // Fetch services from the backend
-    const fetchServices = async () => {
+    // Fetch products from the backend
+    const fetchProducts = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/services'); // Replace with your API endpoint
+        const response = await fetch('http://localhost:8080/api/products'); // Replace with your API endpoint
         const data = await response.json();
-        setServices(data);
+        setProducts(data);
       } catch (error) {
-        console.error('Error fetching services:', error);
+        console.error('Error fetching products:', error);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchServices();
+    fetchProducts();
   }, []);
 
-  // Filter services based on search query
-  const filteredServices = services.filter((service: any) =>
+  // Filter products based on search query
+  const filteredProducts = products.filter((service: any) =>
     service.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   // Navigate to the service details page
-  const goToServiceDetails = (serviceId: number) => {
-    history.push(`/services/${serviceId}`);
+  const goToServiceDetails = (productId: number) => {
+    history.push(`/products/${productId}`);
   };
 
   return (
@@ -73,8 +73,8 @@ const Services: React.FC = () => {
           </div>
         ) : (
           <IonList>
-            {filteredServices.length > 0 ? (
-              filteredServices.map((service: any) => (
+            {filteredProducts.length > 0 ? (
+              filteredProducts.map((service: any) => (
                 <IonItem
                   key={service.id}
                   button
@@ -84,13 +84,12 @@ const Services: React.FC = () => {
                     <h2>{service.name}</h2>
                     <p>{service.description}</p>
                     <p>Cost: ${service.cost}</p>
-                    <p>Duration: {service.duration} minutes</p>
                   </IonLabel>
                 </IonItem>
               ))
             ) : (
               <IonItem>
-                <IonLabel>No services found</IonLabel>
+                <IonLabel>No products found</IonLabel>
               </IonItem>
             )}
           </IonList>
@@ -100,4 +99,4 @@ const Services: React.FC = () => {
   );
 };
 
-export default Services;
+export default Products;

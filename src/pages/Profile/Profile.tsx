@@ -81,7 +81,7 @@ const ProfilePage: React.FC = () => {
         </IonHeader>
         <IonContent className="ion-padding">
           <p>You need to log in to access your profile.</p>
-          <IonButton expand="block" onClick={() => history.push("/my-bookings")}>
+          <IonButton expand="block" onClick={() => history.push("/my-orders")}>
             Go to Login
           </IonButton>
         </IonContent>

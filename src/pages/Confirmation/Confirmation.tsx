@@ -22,7 +22,7 @@ const Confirmation: React.FC = () => {
     const fetchBooking = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch(`http://localhost:8080/api/bookings/${id}`);
+        const response = await fetch(`http://localhost:8080/api/orders/${id}`);
         if (!response.ok) {
           throw new Error("Failed to fetch booking.");
         }

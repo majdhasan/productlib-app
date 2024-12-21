@@ -1,5 +1,5 @@
 {
-  "name": "servicelib-app",
+  "name": "productlib-app",
   "integrations": {
     "capacitor": {}
   },

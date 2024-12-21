@@ -10,13 +10,12 @@ import {
   setupIonicReact
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { personOutline, rocketOutline, bookOutline } from 'ionicons/icons';
-import Services from './pages/Services/Services';
-import ServiceDetails from './components/ServiceComponent/ServiceDetails';
-import BookingCalendar from './components/CalendarComponent/BookingCalendar';
+import { personOutline, rocketOutline, bookOutline, cartOutline } from 'ionicons/icons';
+import Products from './pages/Products/Products';
+import ProductDetails from './components/ProductComponent/ProductDetails';
 import Confirmation from './pages/Confirmation/Confirmation';
 import PaymentPage from './pages/Payment/PaymentPage';
-import MyBookings from './pages/MyBookings/MyBookings';
+import MyOrders from './pages/MyOrders/MyOrders';
 import { UserProvider } from './context/UserContext';
 import Profile from './pages/Profile/Profile';
 
@@ -58,36 +57,41 @@ const App: React.FC = () => (
       <IonReactRouter>
         <IonTabs>
           <IonRouterOutlet>
-            <Route exact path="/services">
-              <Services />
+            <Route exact path="/products">
+              <Products />
             </Route>
             <Route exact path="/">
-              <Redirect to="/services" />
+              <Redirect to="/products" />
             </Route>
-            <Route path="/services/:id"> {/* Add route for service details */}
-              <ServiceDetails />
+            <Route path="/products/:id"> {/* Add route for service details */}
+              <ProductDetails />
             </Route>
-            <Route exact path="/book/:id" component={BookingCalendar} />
             <Route path="/confirmation/:id" render={(props) => <Confirmation key={props.match.params.id} />} />
             <Route exact path="/payment/:id">
               <PaymentPage />
             </Route>
-            <Route exact path="/my-bookings">
-              <MyBookings />
+            <Route exact path="/my-orders">
+              <MyOrders />
             </Route>
             <Route exact path="/profile" component={Profile} />
           </IonRouterOutlet>
 
           <IonTabBar slot="bottom">
-            <IonTabButton tab="my-bookings" href="/my-bookings">
+            <IonTabButton tab="my-orders" href="/my-orders">
               <IonIcon aria-hidden="true" icon={bookOutline} />
-              <IonLabel>My Bookings</IonLabel>
+              <IonLabel>My Orders</IonLabel>
             </IonTabButton>
 
-            <IonTabButton tab="services" href="/services">
+            <IonTabButton tab="products" href="/products">
               <IonIcon aria-hidden="true" icon={rocketOutline} />
-              <IonLabel>Book now</IonLabel>
+              <IonLabel>Order now</IonLabel>
             </IonTabButton>
+
+            <IonTabButton tab="cart" href="/cart">
+              <IonIcon aria-hidden="true" icon={cartOutline} />
+              <IonLabel>My Cart</IonLabel>
+            </IonTabButton>
+
             <IonTabButton tab="profile" href="/profile">
               <IonIcon aria-hidden="true" icon={personOutline} />
               <IonLabel>Profile</IonLabel>

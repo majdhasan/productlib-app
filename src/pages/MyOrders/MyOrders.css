@@ -48,8 +48,8 @@ ion-segment-button {
     align-items: center;
 }
 
-/* Placeholder for empty bookings */
-.empty-bookings {
+/* Placeholder for empty orders */
+.empty-orders {
     text-align: center;
     color: #a1a1a1;
     margin-top: 16px;

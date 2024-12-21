@@ -20,7 +20,7 @@ import {
 } from '@ionic/react';
 import { useHistory } from 'react-router-dom';
 import LoginComponent from "../../components/LoginComponent/LoginComponent";
-import './MyBookings.css';
+import './MyOrders.css';
 
 // Helper function to format timestamps
 const formatDate = (timestamp: string): string => {
@@ -40,26 +40,26 @@ const formatTime = (timestamp: string): string => {
     return new Date(timestamp).toLocaleTimeString(undefined, options);
 };
 
-const MyBookings: React.FC = () => {
+const MyOrders: React.FC = () => {
     const [email, setEmail] = useState<string>('');
     const [bookingId, setBookingId] = useState<string>(''); // For lookup
-    const [bookings, setBookings] = useState<any[]>([]);
+    const [orders, setOrders] = useState<any[]>([]);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [activeTab, setActiveTab] = useState<'login' | 'lookup'>('login'); // Toggle between login and lookup tabs
     const history = useHistory();
     const [presentToast] = useIonToast();
 
     useEffect(() => {
-        fetchBookings();
+        fetchOrders();
     }, []);
 
     const handleLoginSuccess = (user: any) => {
         localStorage.setItem('user', JSON.stringify(user));
-        // Fetch bookings or refresh the page
-        fetchBookings();
+        // Fetch orders or refresh the page
+        fetchOrders();
     };
 
-    const fetchBookings = async () => {
+    const fetchOrders = async () => {
         const storedUser = localStorage.getItem("user");
         if (!storedUser) return;
 
@@ -67,27 +67,27 @@ const MyBookings: React.FC = () => {
         setEmail(user.email);
 
         try {
-            const response = await fetch(`http://localhost:8080/api/bookings/user/${user.id}`);
+            const response = await fetch(`http://localhost:8080/api/orders/user/${user.id}`);
             if (!response.ok) {
-                throw new Error("Failed to fetch bookings");
+                throw new Error("Failed to fetch orders");
             }
             const data = await response.json();
-            setBookings(data);
+            setOrders(data);
         } catch (error) {
-            console.error("Error fetching bookings:", error);
+            console.error("Error fetching orders:", error);
         }
     };
 
 
     const handleRefresh = async (event: CustomEvent) => {
-        await fetchBookings();
+        await fetchOrders();
         event.detail.complete();
     };
 
     const handleLookup = async () => {
         try {
             const response = await fetch(
-                `http://localhost:8080/api/bookings/lookup?email=${email}&bookingId=${bookingId}`
+                `http://localhost:8080/api/orders/lookup?email=${email}&bookingId=${bookingId}`
             );
 
             if (!response.ok) {
@@ -104,12 +104,12 @@ const MyBookings: React.FC = () => {
         }
     };
 
-    const groupBookingsByDate = (): { [key: string]: any[] } => {
-        const sortedBookings = [...bookings].sort(
+    const groupOrdersByDate = (): { [key: string]: any[] } => {
+        const sortedOrders = [...orders].sort(
             (a, b) => new Date(b.startTime).getTime() - new Date(a.startTime).getTime()
         );
 
-        return sortedBookings.reduce((grouped: { [key: string]: any[] }, booking) => {
+        return sortedOrders.reduce((grouped: { [key: string]: any[] }, booking) => {
             const date = formatDate(booking.startTime);
             if (!grouped[date]) {
                 grouped[date] = [];
@@ -119,13 +119,13 @@ const MyBookings: React.FC = () => {
         }, {});
     };
 
-    const groupedBookings = groupBookingsByDate();
+    const groupedOrders = groupOrdersByDate();
 
     return (
         <IonPage>
             <IonHeader>
                 <IonToolbar>
-                    <IonTitle>My Bookings</IonTitle>
+                    <IonTitle>My Orders</IonTitle>
                 </IonToolbar>
             </IonHeader>
             <IonContent className="ion-padding">
@@ -184,14 +184,14 @@ const MyBookings: React.FC = () => {
                             ></IonRefresherContent>
                         </IonRefresher>
 
-                        {Object.keys(groupedBookings).length > 0 ? (
-                            Object.entries(groupedBookings).map(([date, bookings]) => (
+                        {Object.keys(groupedOrders).length > 0 ? (
+                            Object.entries(groupedOrders).map(([date, orders]) => (
                                 <div key={date}>
                                     <IonText color="primary">
                                         <h3 className="date-bubble">{date}</h3>
                                     </IonText>
                                     <IonList className="booking-list">
-                                        {bookings.map((booking) => (
+                                        {orders.map((booking) => (
                                             <IonItem
                                                 key={booking.id}
                                                 button
@@ -212,9 +212,9 @@ const MyBookings: React.FC = () => {
                                 </div>
                             ))
                         ) : (
-                            <div className="empty-bookings">
+                            <div className="empty-orders">
                                 <IonText color="medium">
-                                    <p>No bookings found. Start exploring and book your favorite service!</p>
+                                    <p>No orders found. Start exploring and book your favorite service!</p>
                                 </IonText>
                             </div>
                         )}
@@ -237,4 +237,4 @@ const MyBookings: React.FC = () => {
     );
 };
 
-export default MyBookings;
+export default MyOrders;

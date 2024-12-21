@@ -15,32 +15,31 @@ import {
   IonText,
 } from '@ionic/react';
 import React, { useEffect, useState } from 'react';
-import { useParams, useHistory } from 'react-router-dom';
-import './ServiceDetails.css';
+import { useParams } from 'react-router-dom';
+import './ProductDetails.css';
 
-const ServiceDetails: React.FC = () => {
-  const { id } = useParams<{ id: string }>(); // Get the service ID from the URL
-  const [service, setService] = useState<any>(null); // State for the service
+const ProductDetails: React.FC = () => {
+  const { id } = useParams<{ id: string }>(); // Get the product ID from the URL
+  const [product, setProduct] = useState<any>(null); // State for the product
   const [isLoading, setIsLoading] = useState(true); // State for loading spinner
   const [error, setError] = useState<string | null>(null); // State for error message
-  const history = useHistory();
 
-  const handleBookSlot = () => {
-    history.push(`/book/${id}`); // Navigate to the booking page
+  const handleAddToCart = () => {
+
   };
 
   useEffect(() => {
-    // Fetch service details from the backend
+    // Fetch product details from the backend
     const fetchServiceDetails = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/api/services/${id}`);
+        const response = await fetch(`http://localhost:8080/api/products/${id}`);
         if (!response.ok) {
-          throw new Error('Failed to fetch service details.');
+          throw new Error('Failed to fetch product details.');
         }
         const data = await response.json();
-        setService(data);
+        setProduct(data);
       } catch (error: any) {
-        console.error('Error fetching service details:', error.message);
+        console.error('Error fetching product details:', error.message);
         setError(error.message || 'Failed to load service details.');
       } finally {
         setIsLoading(false);
@@ -59,7 +58,7 @@ const ServiceDetails: React.FC = () => {
           </IonToolbar>
         </IonHeader>
         <IonContent>
-          <IonLoading isOpen={isLoading} message="Loading service details..." />
+          <IonLoading isOpen={isLoading} message="Loading product details..." />
         </IonContent>
       </IonPage>
     );
@@ -85,7 +84,7 @@ const ServiceDetails: React.FC = () => {
     );
   }
 
-  if (!service) {
+  if (!product) {
     return (
       <IonPage>
         <IonHeader>
@@ -93,11 +92,11 @@ const ServiceDetails: React.FC = () => {
             <IonButtons slot="start">
               <IonBackButton defaultHref="/" />
             </IonButtons>
-            <IonTitle>Service Not Found</IonTitle>
+            <IonTitle>Product Not Found</IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonContent>
-          <p>The requested service could not be found.</p>
+          <p>The requested product could not be found.</p>
         </IonContent>
       </IonPage>
     );
@@ -110,30 +109,23 @@ const ServiceDetails: React.FC = () => {
           <IonButtons slot="start">
             <IonBackButton defaultHref="/" />
           </IonButtons>
-          <IonTitle>Service Details</IonTitle>
+          <IonTitle>Product Details</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent>
         <IonCard>
           <IonCardHeader>
-            <IonCardTitle>{service.name}</IonCardTitle>
+            <IonCardTitle>{product.name}</IonCardTitle>
           </IonCardHeader>
           <IonCardContent>
-            <p><strong>Description:</strong> {service.description}</p>
-            <p><strong>Cost:</strong> ${service.cost}</p>
-            <p><strong>Duration:</strong> {service.duration} minutes</p>
-            <p><strong>Category:</strong> {service.category}</p>
-            {service.address && <p><strong>Address:</strong> {service.address}</p>}
-            {service.latitude && service.longitude && (
-              <p>
-                <strong>Coordinates:</strong> ({service.latitude}, {service.longitude})
-              </p>
-            )}
+            <p><strong>Description:</strong> {product.description}</p>
+            <p><strong>Cost:</strong> ${product.cost}</p>
+            <p><strong>Category:</strong> {product.category}</p>
           </IonCardContent>
         </IonCard>
         <div className="book-button-container">
-          <IonButton expand="block" onClick={handleBookSlot}>
-            Book a Slot Now
+          <IonButton expand="block" onClick={handleAddToCart}>
+            Add to Cart
           </IonButton>
         </div>
       </IonContent>
@@ -141,4 +133,4 @@ const ServiceDetails: React.FC = () => {
   );
 };
 
-export default ServiceDetails;
+export default ProductDetails;

@@ -2,8 +2,8 @@ import axios from 'axios';
 
 const API_BASE_URL = "http://localhost:8080/api"; // Replace with your backend URL
 
-export const getAllServices = async () => {
-  const response = await axios.get(`${API_BASE_URL}/services`);
+export const getAllProducts = async () => {
+  const response = await axios.get(`${API_BASE_URL}/products`);
   return response.data;
 };
 

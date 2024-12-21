@@ -24,7 +24,7 @@ const PaymentPage: React.FC = () => {
         // Fetch booking to ensure it exists
         const fetchBooking = async () => {
             try {
-                const response = await fetch(`http://localhost:8080/api/bookings/${id}`);
+                const response = await fetch(`http://localhost:8080/api/orders/${id}`);
                 if (!response.ok) {
                     throw new Error("Booking not found.");
                 }
@@ -43,7 +43,7 @@ const PaymentPage: React.FC = () => {
     const handlePayment = async () => {
         setIsLoading(true);
         try {
-            const response = await fetch(`http://localhost:8080/api/bookings/${id}/pay`, {
+            const response = await fetch(`http://localhost:8080/api/orders/${id}/pay`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
             });
