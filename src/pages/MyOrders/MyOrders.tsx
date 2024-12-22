@@ -45,6 +45,9 @@ const MyOrders: React.FC = () => {
     useEffect(() => {
         if (user) {
             fetchOrders();
+        } else {
+            // Clear orders when the user logs out
+            setOrders([]);
         }
     }, [user]);
 

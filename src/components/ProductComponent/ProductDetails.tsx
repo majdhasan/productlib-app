@@ -34,7 +34,6 @@ const ProductDetails: React.FC = () => {
 
   const handleAddToCart = async () => {
     if (!user) {
-      alert('Please log in to order.');
       history.push('/profile');
       return;
     }
