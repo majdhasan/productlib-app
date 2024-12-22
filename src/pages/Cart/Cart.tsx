@@ -15,6 +15,7 @@ import {
 } from "@ionic/react";
 import { useHistory } from "react-router-dom";
 import { useAppContext } from "../../context/AppContext";
+import { CartAPI } from "../../services/apiService";
 
 const Cart: React.FC = () => {
   const { user, cart, setCart } = useAppContext();
@@ -23,30 +24,14 @@ const Cart: React.FC = () => {
   const fetchOrCreateCart = async () => {
     try {
       if (cart && cart.status === "PENDING") {
-        // Validate cart status with backend
-        const response = await fetch(`http://localhost:8080/api/cart/${cart.id}`);
-        if (response.ok) {
-          const fetchedCart = await response.json();
-          if (fetchedCart.status === "PENDING") {
-            setCart(fetchedCart);
-            return;
-          }
+        const fetchedCart = await CartAPI.fetchCart(cart.id);
+        if (fetchedCart.status === "PENDING") {
+          setCart(fetchedCart);
+          return;
         }
       }
-
-      // Create a new cart if no valid pending cart is found
-      const createResponse = await fetch(`http://localhost:8080/api/cart`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items: [] }),
-      });
-
-      if (createResponse.ok) {
-        const newCart = await createResponse.json();
-        setCart(newCart);
-      } else {
-        throw new Error("Failed to create a new cart.");
-      }
+      const newCart = await CartAPI.createCart();
+      setCart(newCart);
     } catch (error) {
       console.error("Error initializing cart:", error);
     }
@@ -54,7 +39,7 @@ const Cart: React.FC = () => {
 
   useEffect(() => {
     fetchOrCreateCart();
-  }, []); // Runs only once on mount
+  }, []);
 
   const handleQuantityChange = async (productId: number, change: number) => {
     try {
@@ -67,12 +52,7 @@ const Cart: React.FC = () => {
       const updatedCart = { ...cart, items: updatedItems };
       setCart(updatedCart);
 
-      // Sync updated cart to backend
-      await fetch(`http://localhost:8080/api/cart/${cart.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updatedCart),
-      });
+      await CartAPI.updateCart(cart.id, updatedCart);
     } catch (error) {
       console.error("Error updating cart:", error);
     }
@@ -84,12 +64,7 @@ const Cart: React.FC = () => {
       const updatedCart = { ...cart, items: updatedItems };
       setCart(updatedCart);
 
-      // Sync updated cart to backend
-      await fetch(`http://localhost:8080/api/cart/${cart.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updatedCart),
-      });
+      await CartAPI.updateCart(cart.id, updatedCart);
     } catch (error) {
       console.error("Error removing item from cart:", error);
     }

@@ -16,6 +16,7 @@ import {
 } from '@ionic/react';
 import { useHistory } from 'react-router-dom';
 import { useAppContext } from '../../context/AppContext';
+import { UserAPI } from '../../services/apiService';
 import './MyOrders.css';
 
 // Helper functions to format date and time
@@ -57,13 +58,8 @@ const MyOrders: React.FC = () => {
                 return;
             }
 
-            const response = await fetch(`http://localhost:8080/api/orders/user/${user.id}`);
-            if (!response.ok) {
-                throw new Error('Failed to fetch orders.');
-            }
-
-            const data = await response.json();
-            setOrders(data);
+            const fetchedOrders = await UserAPI.fetchUserOrders(user.id);
+            setOrders(fetchedOrders);
         } catch (error) {
             console.error('Error fetching orders:', error);
             setErrorMessage('Failed to load orders. Please try again later.');

@@ -8,9 +8,14 @@ import {
   IonButton,
   IonSpinner,
   IonButtons,
-  IonBackButton
+  IonBackButton,
+  IonList,
+  IonItem,
+  IonLabel,
+  IonThumbnail
 } from "@ionic/react";
 import { useParams, useHistory } from "react-router-dom";
+import { OrderAPI } from "../../services/apiService";
 import "./Confirmation.css";
 
 const Confirmation: React.FC = () => {
@@ -20,16 +25,11 @@ const Confirmation: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Fetch the order details
-    const fetchOrders = async () => {
+    const fetchOrderDetails = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch(`http://localhost:8080/api/orders/${id}`);
-        if (!response.ok) {
-          throw new Error("Failed to fetch order.");
-        }
-        const data = await response.json();
-        setOrder(data);
+        const fetchedOrder = await OrderAPI.fetchOrderById(id);
+        setOrder(fetchedOrder);
       } catch (error) {
         console.error("Error fetching order:", error);
       } finally {
@@ -37,7 +37,7 @@ const Confirmation: React.FC = () => {
       }
     };
 
-    fetchOrders(); // Fetch data on mount
+    fetchOrderDetails();
   }, [id]);
 
   if (isLoading) {
@@ -77,6 +77,9 @@ const Confirmation: React.FC = () => {
     ? "Your order is now confirmed!"
     : "Your reservation is awaiting payment.";
 
+  const calculateRowTotal = (quantity: number, price: number) =>
+    quantity * price;
+
   return (
     <IonPage>
       <IonHeader>
@@ -98,6 +101,33 @@ const Confirmation: React.FC = () => {
             {order.isPaid ? "Paid" : "Unpaid"}
           </span>
         </p>
+
+        <IonList>
+          {order.cart.items.map((item: any) => (
+            <IonItem key={item.id}>
+              <IonThumbnail slot="start">
+                <img
+                  src={`http://localhost:8080/images/${item.product.image}`}
+                  alt={item.product.name}
+                />
+              </IonThumbnail>
+              <IonLabel>
+                <h2>{item.product.name}</h2>
+                <p>
+                  <strong>Quantity:</strong> {item.quantity}
+                </p>
+                <p>
+                  <strong>Price per unit:</strong> ₪{item.productPrice.toFixed(2)}
+                </p>
+                <p>
+                  <strong>Total:</strong> ₪{calculateRowTotal(item.quantity, item.productPrice).toFixed(2)}
+                </p>
+                {item.notes && <p><strong>Notes:</strong> {item.notes}</p>}
+              </IonLabel>
+            </IonItem>
+          ))}
+        </IonList>
+
         {!order.isPaid && (
           <IonButton expand="block" color="success" onClick={() => history.push(`/payment/${id}`)}>
             Pay Now
