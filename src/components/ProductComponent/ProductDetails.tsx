@@ -16,7 +16,6 @@ import {
   IonTextarea,
   IonItem,
   IonLabel,
-  IonInput,
 } from '@ionic/react';
 import React, { useEffect, useState } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
@@ -40,53 +39,54 @@ const ProductDetails: React.FC = () => {
   const handleAddToCart = async () => {
     const storedUser = localStorage.getItem('user');
     const storedCart = localStorage.getItem('cart');
-  
+
     if (!storedUser) {
-      history.push('/my-orders');
+      alert('Please log in to order.');
+      history.push('/profile');
       return;
     }
-  
+
     try {
       const user = JSON.parse(storedUser || '{}');
-      let cart = JSON.parse(storedCart || 'null');
-  
-      // Ensure cart is present in localStorage
-      if (!cart) {
+      const cart = JSON.parse(storedCart || '{}');
+
+      if (!cart || !cart.id) {
         alert('Cart information missing. Please log in again.');
-        history.push('/my-orders');
+        history.push('/profile');
         return;
       }
-  
-      // Add the product to the cart
-      const updatedCart = {
-        ...cart,
-        items: [
-          ...cart.items,
-          { productId: product.id, quantity, notes },
-        ],
-      };
-  
-      // Update the cart on the server
-      const updateResponse = await fetch(`http://localhost:8080/api/cart/${cart.id}`, {
-        method: 'PUT',
+
+      const addResponse = await fetch(`http://localhost:8080/api/cart/add`, {
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedCart),
+        body: JSON.stringify({
+          cartId: cart.id,
+          productId: product.id,
+          quantity: quantity,
+          notes: notes,
+        }),
       });
-  
-      if (!updateResponse.ok) {
-        throw new Error('Failed to update the cart.');
+
+      if (!addResponse.ok) {
+        throw new Error('Failed to add product to cart.');
       }
-  
-      const updatedCartData = await updateResponse.json();
-      localStorage.setItem('cart', JSON.stringify(updatedCartData));
-  
+
+      const updatedCartItem = await addResponse.json();
+      console.log('Added to cart:', updatedCartItem);
+
+      // Optionally fetch the updated cart or update localStorage
+      const updatedCartResponse = await fetch(`http://localhost:8080/api/cart/${cart.id}`);
+      if (updatedCartResponse.ok) {
+        const updatedCart = await updatedCartResponse.json();
+        localStorage.setItem('cart', JSON.stringify(updatedCart));
+      }
+
       alert('Product added to cart successfully!');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error adding product to cart:', error.message);
       alert('Failed to add product to cart.');
     }
   };
-  
 
   useEffect(() => {
     const fetchProductDetails = async () => {
@@ -178,7 +178,7 @@ const ProductDetails: React.FC = () => {
           </IonCardHeader>
           <IonCardContent>
             <p><strong>Description:</strong> {product.description}</p>
-            <p><strong>Cost:</strong> ${product.cost}</p>
+            <p><strong>Cost:</strong> ₪{product.cost.toFixed(2)}</p>
             <p><strong>Category:</strong> {product.category}</p>
           </IonCardContent>
         </IonCard>
