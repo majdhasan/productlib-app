@@ -17,7 +17,6 @@ import Confirmation from './pages/Confirmation/Confirmation';
 import PaymentPage from './pages/Payment/PaymentPage';
 import Cart from './pages/Cart/Cart';
 import MyOrders from './pages/MyOrders/MyOrders';
-import { UserProvider } from './context/UserContext';
 import Profile from './pages/Profile/Profile';
 import { AppProvider } from './context/AppContext';
 

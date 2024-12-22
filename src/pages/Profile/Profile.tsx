@@ -47,13 +47,6 @@ const ProfilePage: React.FC = () => {
     setCart(null);
   };
 
-  const handleLoginSuccess = (loggedInUser: any) => {
-    setUser(loggedInUser);
-    setFirstName(loggedInUser.firstName || '');
-    setLastName(loggedInUser.lastName || '');
-    setDateOfBirth(loggedInUser.dateOfBirth || '');
-  };
-
   return (
     <IonPage>
       <IonHeader>
@@ -105,9 +98,7 @@ const ProfilePage: React.FC = () => {
             </IonSegment>
 
             <div className="tab-content-container">
-              {activeTab === 'login' && (
-                <LoginComponent onLoginSuccess={handleLoginSuccess} />
-              )}
+              {activeTab === 'login' && <LoginComponent />}
               {activeTab === 'signup' && (
                 <div>
                   {/* Placeholder for signup form */}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   IonPage,
   IonHeader,
@@ -14,31 +14,27 @@ import {
   IonThumbnail,
 } from "@ionic/react";
 import { useHistory } from "react-router-dom";
+import { useAppContext } from "../../context/AppContext";
 
 const Cart: React.FC = () => {
-  const [cart, setCart] = useState<any>({ items: [] });
+  const { user, cart, setCart } = useAppContext();
   const history = useHistory();
 
   const fetchOrCreateCart = async () => {
     try {
-      const storedCart = localStorage.getItem("cart");
-
-      if (storedCart) {
-        const parsedCart = JSON.parse(storedCart);
-
-        // Check with the backend if the cart is still pending
-        const response = await fetch(`http://localhost:8080/api/cart/${parsedCart.id}`);
+      if (cart && cart.status === "PENDING") {
+        // Validate cart status with backend
+        const response = await fetch(`http://localhost:8080/api/cart/${cart.id}`);
         if (response.ok) {
           const fetchedCart = await response.json();
           if (fetchedCart.status === "PENDING") {
             setCart(fetchedCart);
-            localStorage.setItem("cart", JSON.stringify(fetchedCart));
             return;
           }
         }
       }
 
-      // Create a new cart if no pending cart is found
+      // Create a new cart if no valid pending cart is found
       const createResponse = await fetch(`http://localhost:8080/api/cart`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -48,37 +44,55 @@ const Cart: React.FC = () => {
       if (createResponse.ok) {
         const newCart = await createResponse.json();
         setCart(newCart);
-        localStorage.setItem("cart", JSON.stringify(newCart));
       } else {
         throw new Error("Failed to create a new cart.");
       }
     } catch (error) {
       console.error("Error initializing cart:", error);
-      setCart({ items: [] }); // Fallback to an empty cart
     }
   };
 
   useEffect(() => {
     fetchOrCreateCart();
-  }, []);
+  }, []); // Runs only once on mount
 
-  const handleQuantityChange = (productId: number, change: number) => {
-    const updatedItems = cart.items.map((item: any) =>
-      item.product.id === productId
-        ? { ...item, quantity: Math.max(item.quantity + change, 1) }
-        : item
-    );
+  const handleQuantityChange = async (productId: number, change: number) => {
+    try {
+      const updatedItems = cart.items.map((item: any) =>
+        item.product.id === productId
+          ? { ...item, quantity: Math.max(item.quantity + change, 1) }
+          : item
+      );
 
-    const updatedCart = { ...cart, items: updatedItems };
-    setCart(updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
+      const updatedCart = { ...cart, items: updatedItems };
+      setCart(updatedCart);
+
+      // Sync updated cart to backend
+      await fetch(`http://localhost:8080/api/cart/${cart.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updatedCart),
+      });
+    } catch (error) {
+      console.error("Error updating cart:", error);
+    }
   };
 
-  const handleRemoveItem = (productId: number) => {
-    const updatedItems = cart.items.filter((item: any) => item.product.id !== productId);
-    const updatedCart = { ...cart, items: updatedItems };
-    setCart(updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
+  const handleRemoveItem = async (productId: number) => {
+    try {
+      const updatedItems = cart.items.filter((item: any) => item.product.id !== productId);
+      const updatedCart = { ...cart, items: updatedItems };
+      setCart(updatedCart);
+
+      // Sync updated cart to backend
+      await fetch(`http://localhost:8080/api/cart/${cart.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updatedCart),
+      });
+    } catch (error) {
+      console.error("Error removing item from cart:", error);
+    }
   };
 
   const calculateRowTotal = (quantity: number, price: number) => quantity * price;
@@ -102,7 +116,7 @@ const Cart: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        {cart.items && cart.items.length > 0 ? (
+        {cart?.items?.length > 0 ? (
           <IonList>
             {cart.items.map((item: any, index: number) => (
               <IonItem key={index}>
@@ -116,8 +130,7 @@ const Cart: React.FC = () => {
                   <h2>{item.product.name}</h2>
                   <p>Price: ₪{item.product.cost.toFixed(2)}</p>
                   <p>
-                    Row Total: ₪
-                    {calculateRowTotal(item.quantity, item.product.cost).toFixed(2)}
+                    Row Total: ₪{calculateRowTotal(item.quantity, item.product.cost).toFixed(2)}
                   </p>
                   {item.notes && <p>Notes: {item.notes}</p>}
                 </IonLabel>
@@ -150,13 +163,13 @@ const Cart: React.FC = () => {
           </IonList>
         ) : (
           <IonText color="medium" className="ion-text-center">
-            <h2>Your cart is empty!</h2>
+            <h2>{user ? 'Your cart is empty!' : 'You are not logged in!'}</h2>
           </IonText>
         )}
       </IonContent>
       <IonFooter>
         <IonToolbar>
-          {cart.items && cart.items.length > 0 ? (
+          {cart?.items?.length > 0 ? (
             <div style={{ padding: "10px" }}>
               <h3>Total: ₪{calculateCartTotal().toFixed(2)}</h3>
               <IonButton expand="block" onClick={handleCheckout}>

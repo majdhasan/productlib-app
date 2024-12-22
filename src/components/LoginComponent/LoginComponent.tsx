@@ -8,16 +8,14 @@ import {
     IonAlert,
 } from "@ionic/react";
 import { useHistory } from "react-router-dom";
+import { useAppContext } from "../../context/AppContext";
 
-interface LoginProps {
-    onLoginSuccess: (user: any) => void; // Callback function after a successful login
-}
-
-const LoginComponent: React.FC<LoginProps> = ({ onLoginSuccess }) => {
+const LoginComponent: React.FC = () => {
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const history = useHistory(); // Access the history object
+    const { setUser, setCart } = useAppContext(); // Access AppContext
 
     const handleLogin = async () => {
         try {
@@ -34,12 +32,9 @@ const LoginComponent: React.FC<LoginProps> = ({ onLoginSuccess }) => {
             const data = await response.json();
             const { user, cart } = data;
 
-            // Store user and cart data in localStorage
-            localStorage.setItem("user", JSON.stringify(user));
-            localStorage.setItem("cart", JSON.stringify(cart));
-
-            // Call the onLoginSuccess callback
-            onLoginSuccess(user);
+            // Update AppContext with user and cart data
+            setUser(user);
+            setCart(cart);
 
             // Redirect to products page
             history.push("/products");
