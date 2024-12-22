@@ -19,6 +19,8 @@ import Cart from './pages/Cart/Cart';
 import MyOrders from './pages/MyOrders/MyOrders';
 import { UserProvider } from './context/UserContext';
 import Profile from './pages/Profile/Profile';
+import { AppProvider } from './context/AppContext';
+
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -53,7 +55,7 @@ import './theme/variables.css';
 setupIonicReact();
 
 const App: React.FC = () => (
-  <UserProvider>
+  <AppProvider>
     <IonApp>
       <IonReactRouter>
         <IonTabs>
@@ -76,7 +78,7 @@ const App: React.FC = () => (
             </Route>
             <Route exact path="/profile" component={Profile} />
             <Route exact path="/cart">
-            <Cart />
+              <Cart />
             </Route>
           </IonRouterOutlet>
 
@@ -104,7 +106,7 @@ const App: React.FC = () => (
         </IonTabs>
       </IonReactRouter>
     </IonApp>
-  </UserProvider>
+  </AppProvider>
 );
 
 export default App;

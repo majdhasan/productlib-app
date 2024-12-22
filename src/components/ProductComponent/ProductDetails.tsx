@@ -19,6 +19,7 @@ import {
 } from '@ionic/react';
 import React, { useEffect, useState } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
+import { useAppContext } from '../../context/AppContext';
 import './ProductDetails.css';
 
 const ProductDetails: React.FC = () => {
@@ -26,67 +27,61 @@ const ProductDetails: React.FC = () => {
   const [product, setProduct] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [notes, setNotes] = useState('');
+  const { user, cart, setCart } = useAppContext();
   const history = useHistory();
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    setIsLoggedIn(!!storedUser);
-  }, []);
-
   const handleAddToCart = async () => {
-    const storedUser = localStorage.getItem('user');
-    const storedCart = localStorage.getItem('cart');
-
-    if (!storedUser) {
+    if (!user) {
       alert('Please log in to order.');
       history.push('/profile');
       return;
     }
-
+  
     try {
-      const user = JSON.parse(storedUser || '{}');
-      const cart = JSON.parse(storedCart || '{}');
-
+      // Ensure the cart exists
       if (!cart || !cart.id) {
         alert('Cart information missing. Please log in again.');
         history.push('/profile');
         return;
       }
-
+  
+      // Add the item to the cart
       const addResponse = await fetch(`http://localhost:8080/api/cart/add`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           cartId: cart.id,
           productId: product.id,
-          quantity: quantity,
-          notes: notes,
+          quantity,
+          notes,
         }),
       });
-
+  
       if (!addResponse.ok) {
         throw new Error('Failed to add product to cart.');
       }
-
-      const updatedCartItem = await addResponse.json();
-      console.log('Added to cart:', updatedCartItem);
-
-      // Optionally fetch the updated cart or update localStorage
+  
+      // Fetch the updated cart after adding the item
       const updatedCartResponse = await fetch(`http://localhost:8080/api/cart/${cart.id}`);
-      if (updatedCartResponse.ok) {
-        const updatedCart = await updatedCartResponse.json();
-        localStorage.setItem('cart', JSON.stringify(updatedCart));
+      if (!updatedCartResponse.ok) {
+        throw new Error('Failed to fetch updated cart.');
       }
-
+  
+      const updatedCart = await updatedCartResponse.json();
+  
+      // Update the cart in the AppContext and localStorage
+      setCart(updatedCart);
+      localStorage.setItem('cart', JSON.stringify(updatedCart));
+  
       alert('Product added to cart successfully!');
     } catch (error: any) {
       console.error('Error adding product to cart:', error.message);
       alert('Failed to add product to cart.');
     }
   };
+  
 
   useEffect(() => {
     const fetchProductDetails = async () => {
@@ -203,7 +198,7 @@ const ProductDetails: React.FC = () => {
         </div>
         <div className="book-button-container">
           <IonButton expand="block" onClick={handleAddToCart}>
-            {isLoggedIn ? 'Add to Cart' : 'Log in to order'}
+            {user ? 'Add to Cart' : 'Log in to order'}
           </IonButton>
         </div>
       </IonContent>

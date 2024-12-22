@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     IonPage,
     IonHeader,
@@ -15,6 +15,7 @@ import {
     IonThumbnail,
 } from '@ionic/react';
 import { useHistory } from 'react-router-dom';
+import { useAppContext } from '../../context/AppContext';
 import './MyOrders.css';
 
 // Helper functions to format date and time
@@ -36,23 +37,23 @@ const formatTime = (timestamp: string): string => {
 };
 
 const MyOrders: React.FC = () => {
+    const { user } = useAppContext(); // Access the user from AppContext
     const [orders, setOrders] = useState<any[]>([]);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const history = useHistory();
 
     useEffect(() => {
-        fetchOrders();
-    }, []);
+        if (user) {
+            fetchOrders();
+        }
+    }, [user]);
 
     const fetchOrders = async () => {
         try {
-            const storedUser = localStorage.getItem('user');
-            if (!storedUser) {
-                setErrorMessage('You need to log in to view orders.');
+            if (!user) {
                 return;
             }
 
-            const user = JSON.parse(storedUser);
             const response = await fetch(`http://localhost:8080/api/orders/user/${user.id}`);
             if (!response.ok) {
                 throw new Error('Failed to fetch orders.');
@@ -94,7 +95,8 @@ const MyOrders: React.FC = () => {
                                 <IonLabel>
                                     <h2>Order #{order.id}</h2>
                                     <p>
-                                        <strong>Status:</strong> {order.cart.status === 'ORDERED' ? 'Ordered' : 'Pending'}
+                                        <strong>Status:</strong>{' '}
+                                        {order.cart.status === 'ORDERED' ? 'Ordered' : 'Pending'}
                                     </p>
                                     <p>
                                         <strong>Created At:</strong> {formatDate(order.createdAt)}{' '}
@@ -106,7 +108,11 @@ const MyOrders: React.FC = () => {
                                                 <img
                                                     src={`http://localhost:8080/images/${item.product.image}`}
                                                     alt={item.product.name}
-                                                    style={{ width: '50px', height: '50px', objectFit: 'cover' }}
+                                                    style={{
+                                                        width: '50px',
+                                                        height: '50px',
+                                                        objectFit: 'cover',
+                                                    }}
                                                 />
                                             </IonThumbnail>
                                         ))}
@@ -117,7 +123,7 @@ const MyOrders: React.FC = () => {
                     </IonList>
                 ) : (
                     <IonText color="medium" className="ion-text-center">
-                        <h2>No orders found.</h2>
+                        <h2>{user ? 'No orders found.' : 'You are not logged in!'}</h2>
                     </IonText>
                 )}
 
