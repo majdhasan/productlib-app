@@ -13,24 +13,83 @@ import {
   IonBackButton,
   IonLoading,
   IonText,
+  IonTextarea,
+  IonItem,
+  IonLabel,
+  IonInput,
 } from '@ionic/react';
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import './ProductDetails.css';
 
 const ProductDetails: React.FC = () => {
-  const { id } = useParams<{ id: string }>(); // Get the product ID from the URL
-  const [product, setProduct] = useState<any>(null); // State for the product
-  const [isLoading, setIsLoading] = useState(true); // State for loading spinner
-  const [error, setError] = useState<string | null>(null); // State for error message
-
-  const handleAddToCart = () => {
-
-  };
+  const { id } = useParams<{ id: string }>();
+  const [product, setProduct] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [quantity, setQuantity] = useState(1);
+  const [notes, setNotes] = useState('');
+  const history = useHistory();
 
   useEffect(() => {
-    // Fetch product details from the backend
-    const fetchServiceDetails = async () => {
+    const storedUser = localStorage.getItem('user');
+    setIsLoggedIn(!!storedUser);
+  }, []);
+
+  const handleAddToCart = async () => {
+    const storedUser = localStorage.getItem('user');
+    const storedCart = localStorage.getItem('cart');
+  
+    if (!storedUser) {
+      history.push('/my-orders');
+      return;
+    }
+  
+    try {
+      const user = JSON.parse(storedUser || '{}');
+      let cart = JSON.parse(storedCart || 'null');
+  
+      // Ensure cart is present in localStorage
+      if (!cart) {
+        alert('Cart information missing. Please log in again.');
+        history.push('/my-orders');
+        return;
+      }
+  
+      // Add the product to the cart
+      const updatedCart = {
+        ...cart,
+        items: [
+          ...cart.items,
+          { productId: product.id, quantity, notes },
+        ],
+      };
+  
+      // Update the cart on the server
+      const updateResponse = await fetch(`http://localhost:8080/api/cart/${cart.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedCart),
+      });
+  
+      if (!updateResponse.ok) {
+        throw new Error('Failed to update the cart.');
+      }
+  
+      const updatedCartData = await updateResponse.json();
+      localStorage.setItem('cart', JSON.stringify(updatedCartData));
+  
+      alert('Product added to cart successfully!');
+    } catch (error) {
+      console.error('Error adding product to cart:', error.message);
+      alert('Failed to add product to cart.');
+    }
+  };
+  
+
+  useEffect(() => {
+    const fetchProductDetails = async () => {
       try {
         const response = await fetch(`http://localhost:8080/api/products/${id}`);
         if (!response.ok) {
@@ -40,13 +99,13 @@ const ProductDetails: React.FC = () => {
         setProduct(data);
       } catch (error: any) {
         console.error('Error fetching product details:', error.message);
-        setError(error.message || 'Failed to load service details.');
+        setError(error.message || 'Failed to load product details.');
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchServiceDetails();
+    fetchProductDetails();
   }, [id]);
 
   if (isLoading) {
@@ -123,9 +182,28 @@ const ProductDetails: React.FC = () => {
             <p><strong>Category:</strong> {product.category}</p>
           </IonCardContent>
         </IonCard>
+        <div className="custom-controls">
+          <IonItem>
+            <IonLabel>Quantity</IonLabel>
+            <div className="quantity-controls">
+              <IonButton onClick={() => setQuantity(quantity > 1 ? quantity - 1 : 1)}>-</IonButton>
+              <span>{quantity}</span>
+              <IonButton onClick={() => setQuantity(quantity + 1)}>+</IonButton>
+            </div>
+          </IonItem>
+          <IonItem>
+            <IonLabel position="stacked">Notes</IonLabel>
+            <IonTextarea
+              rows={4}
+              value={notes}
+              placeholder="Add additional details or instructions..."
+              onIonChange={(e) => setNotes(e.detail.value!)}
+            />
+          </IonItem>
+        </div>
         <div className="book-button-container">
           <IonButton expand="block" onClick={handleAddToCart}>
-            Add to Cart
+            {isLoggedIn ? 'Add to Cart' : 'Log in to order'}
           </IonButton>
         </div>
       </IonContent>

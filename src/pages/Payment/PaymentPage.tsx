@@ -21,15 +21,15 @@ const PaymentPage: React.FC = () => {
     const [showConfetti, setShowConfetti] = useState(false);
 
     useEffect(() => {
-        // Fetch booking to ensure it exists
-        const fetchBooking = async () => {
+        // Fetch order to ensure it exists
+        const fetchOrder = async () => {
             try {
                 const response = await fetch(`http://localhost:8080/api/orders/${id}`);
                 if (!response.ok) {
-                    throw new Error("Booking not found.");
+                    throw new Error("Order not found.");
                 }
-                const booking = await response.json();
-                setIsPaid(booking.isPaid);
+                const order = await response.json();
+                setIsPaid(order.isPaid);
             } catch (error) {
                 setError((error as Error).message);
             } finally {
@@ -37,7 +37,7 @@ const PaymentPage: React.FC = () => {
             }
         };
 
-        fetchBooking();
+        fetchOrder();
     }, [id]);
 
     const handlePayment = async () => {
@@ -53,7 +53,7 @@ const PaymentPage: React.FC = () => {
             }
 
             // Wait for confirmation of payment
-            const updatedBooking = await response.json();
+            const updatedOrder = await response.json();
             setShowConfetti(true); // Trigger confetti animation
             setTimeout(() => {
                 history.push(`/confirmation/${id}?refresh=true`);
@@ -110,14 +110,14 @@ const PaymentPage: React.FC = () => {
             <IonContent className="ion-padding">
                 {isPaid ? (
                     <div>
-                        <h2>Booking Already Paid</h2>
+                        <h2>Order Already Paid</h2>
                         <IonButton expand="block" onClick={() => history.push(`/confirmation/${id}?refresh=true`)}>
                             View Confirmation
                         </IonButton>
                     </div>
                 ) : (
                     <div>
-                        <h2>Ready to Pay for Booking #{id}?</h2>
+                        <h2>Ready to Pay for Order #{id}?</h2>
                         <IonButton expand="block" color="success" onClick={handlePayment}>
                             Pay Now
                         </IonButton>

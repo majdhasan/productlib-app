@@ -42,7 +42,7 @@ const formatTime = (timestamp: string): string => {
 
 const MyOrders: React.FC = () => {
     const [email, setEmail] = useState<string>('');
-    const [bookingId, setBookingId] = useState<string>(''); // For lookup
+    const [orderId, setOrderId] = useState<string>(''); // For lookup
     const [orders, setOrders] = useState<any[]>([]);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [activeTab, setActiveTab] = useState<'login' | 'lookup'>('login'); // Toggle between login and lookup tabs
@@ -87,17 +87,17 @@ const MyOrders: React.FC = () => {
     const handleLookup = async () => {
         try {
             const response = await fetch(
-                `http://localhost:8080/api/orders/lookup?email=${email}&bookingId=${bookingId}`
+                `http://localhost:8080/api/orders/lookup?email=${email}&orderId=${orderId}`
             );
 
             if (!response.ok) {
                 const errorData = await response.json();
-                setErrorMessage(errorData.message || 'Failed to lookup booking.');
+                setErrorMessage(errorData.message || 'Failed to lookup order.');
                 return;
             }
 
-            const booking = await response.json();
-            history.push(`/confirmation/${booking.id}`); // Navigate to confirmation page
+            const order = await response.json();
+            history.push(`/confirmation/${order.id}`); // Navigate to confirmation page
         } catch (error) {
             setErrorMessage('An error occurred during lookup. Please try again.');
             console.error(error);
@@ -106,15 +106,15 @@ const MyOrders: React.FC = () => {
 
     const groupOrdersByDate = (): { [key: string]: any[] } => {
         const sortedOrders = [...orders].sort(
-            (a, b) => new Date(b.startTime).getTime() - new Date(a.startTime).getTime()
+            (a, b) => new Date(b.time).getTime() - new Date(a.time).getTime()
         );
 
-        return sortedOrders.reduce((grouped: { [key: string]: any[] }, booking) => {
-            const date = formatDate(booking.startTime);
+        return sortedOrders.reduce((grouped: { [key: string]: any[] }, order) => {
+            const date = formatDate(order.time);
             if (!grouped[date]) {
                 grouped[date] = [];
             }
-            grouped[date].push(booking);
+            grouped[date].push(order);
             return grouped;
         }, {});
     };
@@ -161,16 +161,16 @@ const MyOrders: React.FC = () => {
                                         />
                                     </IonItem>
                                     <IonItem>
-                                        <IonLabel position="stacked">Booking ID</IonLabel>
+                                        <IonLabel position="stacked">Order ID</IonLabel>
                                         <IonInput
-                                            value={bookingId}
-                                            placeholder="Enter your booking ID"
-                                            onIonChange={(e) => setBookingId(e.detail.value!)}
+                                            value={orderId}
+                                            placeholder="Enter your order ID"
+                                            onIonChange={(e) => setOrderId(e.detail.value!)}
                                         />
                                     </IonItem>
                                 </IonList>
                                 <IonButton expand="block" type="button" onClick={handleLookup}>
-                                    Lookup Booking
+                                    Lookup Order
                                 </IonButton>
                             </div>
                         )}
@@ -190,20 +190,20 @@ const MyOrders: React.FC = () => {
                                     <IonText color="primary">
                                         <h3 className="date-bubble">{date}</h3>
                                     </IonText>
-                                    <IonList className="booking-list">
-                                        {orders.map((booking) => (
+                                    <IonList className="order-list">
+                                        {orders.map((order) => (
                                             <IonItem
-                                                key={booking.id}
+                                                key={order.id}
                                                 button
-                                                onClick={() => history.push(`/confirmation/${booking.id}`)}
+                                                onClick={() => history.push(`/confirmation/${order.id}`)}
                                             >
                                                 <IonLabel>
-                                                    <h3>{booking.serviceEntity?.name || "Service Name Unavailable"}</h3>
+                                                    <h3>{order.serviceEntity?.name || "Service Name Unavailable"}</h3>
                                                     <p>
-                                                        {formatTime(booking.startTime)} - {formatTime(booking.endTime)}
+                                                        {formatTime(order.startTime)} - {formatTime(order.endTime)}
                                                     </p>
-                                                    <p className={booking.isPaid ? "paid-status" : "unpaid-status"}>
-                                                        {booking.isPaid ? "Paid" : "Unpaid"}
+                                                    <p className={order.isPaid ? "paid-status" : "unpaid-status"}>
+                                                        {order.isPaid ? "Paid" : "Unpaid"}
                                                     </p>
                                                 </IonLabel>
                                             </IonItem>
@@ -214,7 +214,7 @@ const MyOrders: React.FC = () => {
                         ) : (
                             <div className="empty-orders">
                                 <IonText color="medium">
-                                    <p>No orders found. Start exploring and book your favorite service!</p>
+                                    <p>No orders found. Start exploring and order your favorite food!</p>
                                 </IonText>
                             </div>
                         )}

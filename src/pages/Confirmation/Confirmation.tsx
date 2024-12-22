@@ -14,28 +14,28 @@ import "./Confirmation.css";
 const Confirmation: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const history = useHistory();
-  const [booking, setBooking] = useState<any>(null);
+  const [order, setOrder] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Fetch the booking details
-    const fetchBooking = async () => {
+    // Fetch the order details
+    const fetchOrders = async () => {
       setIsLoading(true);
       try {
         const response = await fetch(`http://localhost:8080/api/orders/${id}`);
         if (!response.ok) {
-          throw new Error("Failed to fetch booking.");
+          throw new Error("Failed to fetch order.");
         }
         const data = await response.json();
-        setBooking(data);
+        setOrder(data);
       } catch (error) {
-        console.error("Error fetching booking:", error);
+        console.error("Error fetching order:", error);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchBooking(); // Fetch data on mount
+    fetchOrders(); // Fetch data on mount
   }, [id]);
 
   if (isLoading) {
@@ -53,50 +53,44 @@ const Confirmation: React.FC = () => {
     );
   }
 
-  if (!booking) {
+  if (!order) {
     return (
       <IonPage>
         <IonHeader>
           <IonToolbar>
-            <IonTitle>Booking Not Found</IonTitle>
+            <IonTitle>Order Not Found</IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonContent>
-          <p>The booking could not be retrieved.</p>
+          <p>The order could not be retrieved.</p>
         </IonContent>
       </IonPage>
     );
   }
 
-  const statusMessage = booking.isPaid
-    ? "Your booking is now confirmed!"
+  const statusMessage = order.isPaid
+    ? "Your order is now confirmed!"
     : "Your reservation is awaiting payment.";
 
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Booking Confirmation</IonTitle>
+          <IonTitle>Order Details</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
         <h2>{statusMessage}</h2>
         <p>
-          <strong>Booking ID:</strong> {booking.id}
-        </p>
-        <p>
-          <strong>Start Time:</strong> {new Date(booking.startTime).toLocaleString()}
-        </p>
-        <p>
-          <strong>End Time:</strong> {new Date(booking.endTime).toLocaleString()}
+          <strong>Order ID:</strong> {order.id}
         </p>
         <p>
           <strong>Status:</strong>{" "}
-          <span className={booking.isPaid ? "paid" : "unpaid"}>
-            {booking.isPaid ? "Paid" : "Unpaid"}
+          <span className={order.isPaid ? "paid" : "unpaid"}>
+            {order.isPaid ? "Paid" : "Unpaid"}
           </span>
         </p>
-        {!booking.isPaid && (
+        {!order.isPaid && (
           <IonButton expand="block" color="success" onClick={() => history.push(`/payment/${id}`)}>
             Pay Now
           </IonButton>

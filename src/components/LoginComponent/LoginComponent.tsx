@@ -7,6 +7,7 @@ import {
     IonList,
     IonAlert,
 } from "@ionic/react";
+import { useHistory } from "react-router-dom";
 
 interface LoginProps {
     onLoginSuccess: (user: any) => void; // Callback function after a successful login
@@ -16,6 +17,7 @@ const LoginComponent: React.FC<LoginProps> = ({ onLoginSuccess }) => {
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const history = useHistory(); // Access the history object
 
     const handleLogin = async () => {
         try {
@@ -26,16 +28,24 @@ const LoginComponent: React.FC<LoginProps> = ({ onLoginSuccess }) => {
             });
 
             if (!response.ok) {
-                const errorData = await response.json();
-                setErrorMessage(errorData.message || "Login failed. Please check your credentials.");
-                return;
+                throw new Error("Login failed. Please check your credentials.");
             }
 
-            const user = await response.json();
+            const data = await response.json();
+            const { user, cart } = data;
+
+            // Store user and cart data in localStorage
             localStorage.setItem("user", JSON.stringify(user));
+            localStorage.setItem("cart", JSON.stringify(cart));
+
+            // Call the onLoginSuccess callback
             onLoginSuccess(user);
-        } catch (error) {
-            setErrorMessage("An error occurred during login. Please try again.");
+
+            // Redirect to products page
+            history.push("/products");
+        } catch (error: any) {
+            console.error("Error logging in:", error.message);
+            setErrorMessage("Login failed. Please try again.");
         }
     };
 
@@ -47,7 +57,7 @@ const LoginComponent: React.FC<LoginProps> = ({ onLoginSuccess }) => {
                     <IonInput
                         value={email}
                         placeholder="Enter your email"
-                        onIonChange={(e) => setEmail(e.detail.value || "")} // Update email state
+                        onIonChange={(e) => setEmail(e.detail.value || "")}
                     />
                 </IonItem>
                 <IonItem>
@@ -57,7 +67,7 @@ const LoginComponent: React.FC<LoginProps> = ({ onLoginSuccess }) => {
                         value={password}
                         placeholder="Enter your password"
                         onIonInput={(e: any) => setPassword(e.target.value || "")}
-                        />
+                    />
                 </IonItem>
             </IonList>
             <IonButton expand="block" onClick={handleLogin}>

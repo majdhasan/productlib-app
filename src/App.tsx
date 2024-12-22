@@ -15,6 +15,7 @@ import Products from './pages/Products/Products';
 import ProductDetails from './components/ProductComponent/ProductDetails';
 import Confirmation from './pages/Confirmation/Confirmation';
 import PaymentPage from './pages/Payment/PaymentPage';
+import Cart from './pages/Cart/Cart';
 import MyOrders from './pages/MyOrders/MyOrders';
 import { UserProvider } from './context/UserContext';
 import Profile from './pages/Profile/Profile';
@@ -74,6 +75,9 @@ const App: React.FC = () => (
               <MyOrders />
             </Route>
             <Route exact path="/profile" component={Profile} />
+            <Route exact path="/cart">
+            <Cart />
+            </Route>
           </IonRouterOutlet>
 
           <IonTabBar slot="bottom">

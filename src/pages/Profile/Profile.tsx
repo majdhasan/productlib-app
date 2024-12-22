@@ -67,6 +67,7 @@ const ProfilePage: React.FC = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("user");
+    localStorage.removeItem("cart");
     setUser(null);
     history.push("/"); // Redirect to the home page
   };
