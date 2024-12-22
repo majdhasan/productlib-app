@@ -19,43 +19,64 @@ const Cart: React.FC = () => {
   const [cart, setCart] = useState<any>({ items: [] });
   const history = useHistory();
 
-  useEffect(() => {
+  const fetchOrCreateCart = async () => {
     try {
-      // Safely retrieve cart from localStorage
       const storedCart = localStorage.getItem("cart");
+
       if (storedCart) {
         const parsedCart = JSON.parse(storedCart);
-        setCart(parsedCart);
+
+        // Check with the backend if the cart is still pending
+        const response = await fetch(`http://localhost:8080/api/cart/${parsedCart.id}`);
+        if (response.ok) {
+          const fetchedCart = await response.json();
+          if (fetchedCart.status === "PENDING") {
+            setCart(fetchedCart);
+            localStorage.setItem("cart", JSON.stringify(fetchedCart));
+            return;
+          }
+        }
+      }
+
+      // Create a new cart if no pending cart is found
+      const createResponse = await fetch(`http://localhost:8080/api/cart`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ items: [] }),
+      });
+
+      if (createResponse.ok) {
+        const newCart = await createResponse.json();
+        setCart(newCart);
+        localStorage.setItem("cart", JSON.stringify(newCart));
+      } else {
+        throw new Error("Failed to create a new cart.");
       }
     } catch (error) {
-      console.error("Error parsing cart data:", error);
-      setCart({ items: [] }); // Fallback for invalid JSON
+      console.error("Error initializing cart:", error);
+      setCart({ items: [] }); // Fallback to an empty cart
     }
+  };
+
+  useEffect(() => {
+    fetchOrCreateCart();
   }, []);
 
   const handleQuantityChange = (productId: number, change: number) => {
-    if (!cart.items) return;
-
-    // Update the quantity of the specific product in the cart
     const updatedItems = cart.items.map((item: any) =>
       item.product.id === productId
-        ? { ...item, quantity: Math.max(item.quantity + change, 1) } // Minimum quantity is 1
+        ? { ...item, quantity: Math.max(item.quantity + change, 1) }
         : item
     );
 
     const updatedCart = { ...cart, items: updatedItems };
-
-    // Save the updated cart to localStorage
     setCart(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
 
   const handleRemoveItem = (productId: number) => {
-    // Remove the item completely from the cart
     const updatedItems = cart.items.filter((item: any) => item.product.id !== productId);
     const updatedCart = { ...cart, items: updatedItems };
-
-    // Save the updated cart to localStorage
     setCart(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
@@ -67,7 +88,7 @@ const Cart: React.FC = () => {
 
   const handleCheckout = () => {
     if (cart.items.length > 0) {
-      history.push("/payment/" + cart.id); // Redirect to the payment page
+      history.push("/payment/" + cart.id);
     } else {
       alert("Your cart is empty!");
     }
@@ -87,7 +108,7 @@ const Cart: React.FC = () => {
               <IonItem key={index}>
                 <IonThumbnail slot="start">
                   <img
-                    src={`http://localhost:8080/images/${item.product.image}`} // Adjust the URL based on your backend's image hosting
+                    src={`http://localhost:8080/images/${item.product.image}`}
                     alt={item.product.name}
                   />
                 </IonThumbnail>

@@ -7,6 +7,8 @@ import {
   IonContent,
   IonButton,
   IonSpinner,
+  IonButtons,
+  IonBackButton
 } from "@ionic/react";
 import { useParams, useHistory } from "react-router-dom";
 import "./Confirmation.css";
@@ -58,6 +60,9 @@ const Confirmation: React.FC = () => {
       <IonPage>
         <IonHeader>
           <IonToolbar>
+            <IonButtons slot="start">
+              <IonBackButton defaultHref="/" />
+            </IonButtons>
             <IonTitle>Order Not Found</IonTitle>
           </IonToolbar>
         </IonHeader>
@@ -76,6 +81,9 @@ const Confirmation: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
+          <IonButtons slot="start">
+            <IonBackButton defaultHref="/" />
+          </IonButtons>
           <IonTitle>Order Details</IonTitle>
         </IonToolbar>
       </IonHeader>
