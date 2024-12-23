@@ -41,10 +41,11 @@ const Cart: React.FC = () => {
     fetchOrCreateCart();
   }, []);
 
-  const handleQuantityChange = async (productId: number, change: number) => {
+  const handleQuantityChange = async (cartItemId: number, change: number) => {
     try {
+      // Find the item to update
       const updatedItems = cart.items.map((item: any) =>
-        item.product.id === productId
+        item.id === cartItemId
           ? { ...item, quantity: Math.max(item.quantity + change, 1) }
           : item
       );
@@ -52,28 +53,37 @@ const Cart: React.FC = () => {
       const updatedCart = { ...cart, items: updatedItems };
       setCart(updatedCart);
 
-      await CartAPI.updateCart(cart.id, updatedCart);
+      // Only update the backend for `PENDING` carts
+      if (cart.status === "PENDING") {
+        const targetItem = updatedItems.find((item: any) => item.id === cartItemId);
+        if (targetItem) {
+          await CartAPI.updateCartItemQuantity(cartItemId, targetItem.quantity);
+        }
+      }
     } catch (error) {
-      console.error("Error updating cart:", error);
+      console.error("Error updating cart item quantity:", error);
     }
   };
 
-  const handleRemoveItem = async (productId: number) => {
+  const handleRemoveItem = async (cartItemId: number) => {
     try {
-      const updatedItems = cart.items.filter((item: any) => item.product.id !== productId);
-      const updatedCart = { ...cart, items: updatedItems };
+      await CartAPI.removeCartItem(cartItemId);
+      const updatedCart = await CartAPI.fetchCart(cart.id);
       setCart(updatedCart);
-
-      await CartAPI.updateCart(cart.id, updatedCart);
     } catch (error) {
       console.error("Error removing item from cart:", error);
     }
   };
 
-  const calculateRowTotal = (quantity: number, price: number) => quantity * price;
+  const calculateRowTotal = (item: any) => {
+    const price =
+      cart.status === "PENDING" ? item.product.cost : item.productPrice;
+    return price * item.quantity;
+  };
+
 
   const calculateCartTotal = () =>
-    cart.items.reduce((total: number, item: any) => total + calculateRowTotal(item.quantity, item.product.cost), 0);
+    cart.items.reduce((total: number, item: any) => total + calculateRowTotal(item), 0);
 
   const handleCheckout = () => {
     if (cart.items.length > 0) {
@@ -103,16 +113,22 @@ const Cart: React.FC = () => {
                 </IonThumbnail>
                 <IonLabel>
                   <h2>{item.product.name}</h2>
-                  <p>Price: ₪{item.product.cost.toFixed(2)}</p>
                   <p>
-                    Row Total: ₪{calculateRowTotal(item.quantity, item.product.cost).toFixed(2)}
+                    <strong>Price per unit:</strong> ₪
+                    {cart.status === "PENDING"
+                      ? item.product.cost.toFixed(2)
+                      : (item.productPrice || 0).toFixed(2)}
+                  </p>
+                  <p>
+                    <strong>Row Total:</strong> ₪
+                    {calculateRowTotal(item).toFixed(2)}
                   </p>
                   {item.notes && <p>Notes: {item.notes}</p>}
                 </IonLabel>
                 <div style={{ display: "flex", alignItems: "center" }}>
                   <IonButton
                     color="primary"
-                    onClick={() => handleQuantityChange(item.product.id, -1)}
+                    onClick={() => handleQuantityChange(item.id, -1)}
                   >
                     -
                   </IonButton>
@@ -121,7 +137,7 @@ const Cart: React.FC = () => {
                   </p>
                   <IonButton
                     color="primary"
-                    onClick={() => handleQuantityChange(item.product.id, 1)}
+                    onClick={() => handleQuantityChange(item.id, 1)}
                   >
                     +
                   </IonButton>
@@ -129,7 +145,7 @@ const Cart: React.FC = () => {
                 <IonButton
                   color="danger"
                   slot="end"
-                  onClick={() => handleRemoveItem(item.product.id)}
+                  onClick={() => handleRemoveItem(item.id)}
                 >
                   Remove
                 </IonButton>
@@ -138,7 +154,7 @@ const Cart: React.FC = () => {
           </IonList>
         ) : (
           <IonText color="medium" className="ion-text-center">
-            <h2>{user ? 'Your cart is empty!' : 'You are not logged in!'}</h2>
+            <h2>{user ? "Your cart is empty!" : "You are not logged in!"}</h2>
           </IonText>
         )}
       </IonContent>

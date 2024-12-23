@@ -37,16 +37,14 @@ const ProductDetails: React.FC = () => {
       history.push('/profile');
       return;
     }
-  
+
     try {
-      // Ensure the cart exists
       if (!cart || !cart.id) {
         alert('Cart information missing. Please log in again.');
         history.push('/profile');
         return;
       }
-  
-      // Add the item to the cart
+
       const addResponse = await fetch(`http://localhost:8080/api/cart/add`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -54,33 +52,30 @@ const ProductDetails: React.FC = () => {
           cartId: cart.id,
           productId: product.id,
           quantity,
-          notes,
+          notes, // Ensure this is included
         }),
       });
-  
+
       if (!addResponse.ok) {
         throw new Error('Failed to add product to cart.');
       }
-  
-      // Fetch the updated cart after adding the item
+
       const updatedCartResponse = await fetch(`http://localhost:8080/api/cart/${cart.id}`);
       if (!updatedCartResponse.ok) {
         throw new Error('Failed to fetch updated cart.');
       }
-  
+
       const updatedCart = await updatedCartResponse.json();
-  
-      // Update the cart in the AppContext and localStorage
       setCart(updatedCart);
       localStorage.setItem('cart', JSON.stringify(updatedCart));
-  
       alert('Product added to cart successfully!');
     } catch (error: any) {
       console.error('Error adding product to cart:', error.message);
       alert('Failed to add product to cart.');
     }
   };
-  
+
+
 
   useEffect(() => {
     const fetchProductDetails = async () => {
@@ -191,7 +186,7 @@ const ProductDetails: React.FC = () => {
               rows={4}
               value={notes}
               placeholder="Add additional details or instructions..."
-              onIonChange={(e) => setNotes(e.detail.value!)}
+              onIonChange={(e) => setNotes(e.detail.value || '')}
             />
           </IonItem>
         </div>
