@@ -65,7 +65,7 @@ const App: React.FC = () => (
             <Route exact path="/">
               <Redirect to="/products" />
             </Route>
-            <Route path="/products/:id"> {/* Add route for service details */}
+            <Route path="/products/:id"> {/* Add route for product details */}
               <ProductDetails />
             </Route>
             <Route path="/confirmation/:id" render={(props) => <Confirmation key={props.match.params.id} />} />

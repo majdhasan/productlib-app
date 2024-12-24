@@ -107,7 +107,8 @@ const Cart: React.FC = () => {
               <IonItem key={index}>
                 <IonThumbnail slot="start">
                   <img
-                    src={`http://localhost:8080/images/${item.product.image}`}
+                    // src={`http://localhost:8080/images/${item.product.image}`}
+                    src={`https://pbs.twimg.com/media/Dq_Dic9W4AAQo9c.png`}
                     alt={item.product.name}
                   />
                 </IonThumbnail>

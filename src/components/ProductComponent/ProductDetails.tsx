@@ -75,8 +75,6 @@ const ProductDetails: React.FC = () => {
     }
   };
 
-
-
   useEffect(() => {
     const fetchProductDetails = async () => {
       try {
@@ -97,59 +95,6 @@ const ProductDetails: React.FC = () => {
     fetchProductDetails();
   }, [id]);
 
-  if (isLoading) {
-    return (
-      <IonPage>
-        <IonHeader>
-          <IonToolbar>
-            <IonTitle>Loading...</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <IonContent>
-          <IonLoading isOpen={isLoading} message="Loading product details..." />
-        </IonContent>
-      </IonPage>
-    );
-  }
-
-  if (error) {
-    return (
-      <IonPage>
-        <IonHeader>
-          <IonToolbar>
-            <IonButtons slot="start">
-              <IonBackButton defaultHref="/" />
-            </IonButtons>
-            <IonTitle>Error</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <IonContent className="ion-padding">
-          <IonText color="danger">
-            <h3>{error}</h3>
-          </IonText>
-        </IonContent>
-      </IonPage>
-    );
-  }
-
-  if (!product) {
-    return (
-      <IonPage>
-        <IonHeader>
-          <IonToolbar>
-            <IonButtons slot="start">
-              <IonBackButton defaultHref="/" />
-            </IonButtons>
-            <IonTitle>Product Not Found</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <IonContent>
-          <p>The requested product could not be found.</p>
-        </IonContent>
-      </IonPage>
-    );
-  }
-
   return (
     <IonPage>
       <IonHeader>
@@ -161,40 +106,61 @@ const ProductDetails: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <IonCard>
-          <IonCardHeader>
-            <IonCardTitle>{product.name}</IonCardTitle>
-          </IonCardHeader>
-          <IonCardContent>
-            <p><strong>Description:</strong> {product.description}</p>
-            <p><strong>Cost:</strong> ₪{product.cost.toFixed(2)}</p>
-            <p><strong>Category:</strong> {product.category}</p>
-          </IonCardContent>
-        </IonCard>
-        <div className="custom-controls">
-          <IonItem>
-            <IonLabel>Quantity</IonLabel>
-            <div className="quantity-controls">
-              <IonButton onClick={() => setQuantity(quantity > 1 ? quantity - 1 : 1)}>-</IonButton>
-              <span>{quantity}</span>
-              <IonButton onClick={() => setQuantity(quantity + 1)}>+</IonButton>
+        {/* Spinner */}
+        <IonLoading isOpen={isLoading} message="Loading product details..." />
+
+        {/* Error State */}
+        {error && (
+          <IonText color="danger" className="ion-padding">
+            <h3>{error}</h3>
+          </IonText>
+        )}
+
+        {/* Product Details */}
+        {product && !isLoading && (
+          <>
+            <IonCard>
+              <IonCardHeader>
+                <IonCardTitle>{product.name}</IonCardTitle>
+              </IonCardHeader>
+              <IonCardContent>
+                <p>
+                  <strong>Description:</strong> {product.description}
+                </p>
+                <p>
+                  <strong>Cost:</strong> ₪{product.cost.toFixed(2)}
+                </p>
+                <p>
+                  <strong>Category:</strong> {product.category}
+                </p>
+              </IonCardContent>
+            </IonCard>
+            <div className="custom-controls">
+              <IonItem>
+                <IonLabel>Quantity</IonLabel>
+                <div className="quantity-controls">
+                  <IonButton onClick={() => setQuantity(quantity > 1 ? quantity - 1 : 1)}>-</IonButton>
+                  <span>{quantity}</span>
+                  <IonButton onClick={() => setQuantity(quantity + 1)}>+</IonButton>
+                </div>
+              </IonItem>
+              <IonItem>
+                <IonLabel position="stacked">Notes</IonLabel>
+                <IonTextarea
+                  rows={4}
+                  value={notes}
+                  placeholder="Add additional details or instructions..."
+                  onIonChange={(e) => setNotes(e.detail.value || '')}
+                />
+              </IonItem>
             </div>
-          </IonItem>
-          <IonItem>
-            <IonLabel position="stacked">Notes</IonLabel>
-            <IonTextarea
-              rows={4}
-              value={notes}
-              placeholder="Add additional details or instructions..."
-              onIonChange={(e) => setNotes(e.detail.value || '')}
-            />
-          </IonItem>
-        </div>
-        <div className="book-button-container">
-          <IonButton expand="block" onClick={handleAddToCart}>
-            {user ? 'Add to Cart' : 'Log in to order'}
-          </IonButton>
-        </div>
+            <div className="book-button-container">
+              <IonButton expand="block" onClick={handleAddToCart}>
+                {user ? 'Add to Cart' : 'Log in to order'}
+              </IonButton>
+            </div>
+          </>
+        )}
       </IonContent>
     </IonPage>
   );

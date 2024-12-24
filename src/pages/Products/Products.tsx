@@ -9,6 +9,7 @@ import {
   IonItem,
   IonLabel,
   IonSpinner,
+  IonThumbnail
 } from '@ionic/react';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom'; // For navigation
@@ -38,12 +39,12 @@ const Products: React.FC = () => {
   }, []);
 
   // Filter products based on search query
-  const filteredProducts = products.filter((service: any) =>
-    service.name.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredProducts = products.filter((product: any) =>
+    product.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Navigate to the service details page
-  const goToServiceDetails = (productId: number) => {
+  // Navigate to the product details page
+  const goToProductDetails = (productId: number) => {
     history.push(`/products/${productId}`);
   };
 
@@ -74,16 +75,22 @@ const Products: React.FC = () => {
         ) : (
           <IonList>
             {filteredProducts.length > 0 ? (
-              filteredProducts.map((service: any) => (
+              filteredProducts.map((product: any) => (
                 <IonItem
-                  key={service.id}
+                  key={product.id}
                   button
-                  onClick={() => goToServiceDetails(service.id)} // Navigate on click
+                  onClick={() => goToProductDetails(product.id)} // Navigate on click
                 >
+                  <IonThumbnail slot="start">
+                    <img
+                      src={`https://pbs.twimg.com/media/Dq_Dic9W4AAQo9c.png`}
+                      alt={product.name}
+                    />
+                  </IonThumbnail>
                   <IonLabel>
-                    <h2>{service.name}</h2>
-                    <p>{service.description}</p>
-                    <p>Cost: ${service.cost}</p>
+                    <h2>{product.name}</h2>
+                    <p>{product.description}</p>
+                    <p>Cost: ₪{product.cost}</p>
                   </IonLabel>
                 </IonItem>
               ))
