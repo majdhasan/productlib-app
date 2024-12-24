@@ -84,9 +84,9 @@ const MyOrders: React.FC = () => {
             </IonHeader>
             <IonContent>
                 <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
-                    <IonRefresherContent pullingText="Pull to refresh" refreshingSpinner="bubbles" />
+                    <IonRefresherContent pullingText={labels.pullToRefresh} refreshingSpinner="bubbles" />
                 </IonRefresher>
-
+    
                 {orders.length > 0 ? (
                     <IonList>
                         {orders.map((order: any) => (
@@ -96,13 +96,15 @@ const MyOrders: React.FC = () => {
                                 onClick={() => history.push(`/confirmation/${order.id}`)}
                             >
                                 <IonLabel>
-                                    <h2>طلبية #{order.id}</h2>
+                                    <h2>{`${labels.orderNumber} ${order.id}`}</h2>
                                     <p>
-                                        <strong>Status:</strong>{' '}
-                                        {order.cart.status === 'ORDERED' ? 'Ordered' : 'Pending'}
+                                        <strong>{labels.statusOrdered}</strong>{' '}
+                                        {order.cart.status === 'ORDERED'
+                                            ? labels.statusOrdered
+                                            : labels.statusPending}
                                     </p>
                                     <p>
-                                        <strong>Created At:</strong> {formatDate(order.createdAt)}{' '}
+                                        <strong>{labels.createdAt}</strong> {formatDate(order.createdAt)}{' '}
                                         {formatTime(order.createdAt)}
                                     </p>
                                     <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
@@ -127,22 +129,23 @@ const MyOrders: React.FC = () => {
                     </IonList>
                 ) : (
                     <IonText color="medium" className="ion-text-center">
-                        <h2>{user ? 'No orders found.' : 'You are not logged in!'}</h2>
+                        <h2>{user ? labels.noOrdersFound : labels.notLoggedIn}</h2>
                     </IonText>
                 )}
-
+    
                 {errorMessage && (
                     <IonAlert
                         isOpen={!!errorMessage}
                         onDidDismiss={() => setErrorMessage(null)}
-                        header="Error"
-                        message={errorMessage}
-                        buttons={['OK']}
+                        header={labels.errorHeader}
+                        message={labels.errorLoadingOrders}
+                        buttons={[labels.ok]}
                     />
                 )}
             </IonContent>
         </IonPage>
     );
+    
 };
 
 export default MyOrders;

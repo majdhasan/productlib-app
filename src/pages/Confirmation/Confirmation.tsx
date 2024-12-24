@@ -16,10 +16,15 @@ import {
 } from "@ionic/react";
 import { useParams, useHistory } from "react-router-dom";
 import { OrderAPI } from "../../services/apiService";
+import { useAppContext } from "../../context/AppContext";
+import { translations } from '../../translations';
 import "./Confirmation.css";
 
 const Confirmation: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const { language } = useAppContext();
+  const labels = translations[language];
+
   const history = useHistory();
   const [order, setOrder] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -45,7 +50,7 @@ const Confirmation: React.FC = () => {
       <IonPage>
         <IonHeader>
           <IonToolbar>
-            <IonTitle>Loading...</IonTitle>
+            <IonTitle>{labels.loading}</IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonContent>
@@ -63,19 +68,19 @@ const Confirmation: React.FC = () => {
             <IonButtons slot="start">
               <IonBackButton defaultHref="/" />
             </IonButtons>
-            <IonTitle>Order Not Found</IonTitle>
+            <IonTitle>{labels.orderNotFound}</IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonContent>
-          <p>The order could not be retrieved.</p>
+          <p>{labels.orderRetrievalFailed}</p>
         </IonContent>
       </IonPage>
     );
   }
 
   const statusMessage = order.isPaid
-    ? "Your order is now confirmed!"
-    : "Your reservation is awaiting payment.";
+    ? labels.orderConfirmed
+    : labels.orderAwaitingPayment;
 
   const calculateRowTotal = (quantity: number, price: number) =>
     quantity * price;
@@ -87,18 +92,18 @@ const Confirmation: React.FC = () => {
           <IonButtons slot="start">
             <IonBackButton defaultHref="/" />
           </IonButtons>
-          <IonTitle>Order Details</IonTitle>
+          <IonTitle>{labels.orderDetails}</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
         <h2>{statusMessage}</h2>
         <p>
-          <strong>Order ID:</strong> {order.id}
+          <strong>{labels.orderId}</strong> {order.id}
         </p>
         <p>
-          <strong>Status:</strong>{" "}
+          <strong>{labels.statusPaid}:</strong>{" "}
           <span className={order.isPaid ? "paid" : "unpaid"}>
-            {order.isPaid ? "Paid" : "Unpaid"}
+            {order.isPaid ? labels.statusPaid : labels.statusUnpaid}
           </span>
         </p>
 
@@ -115,15 +120,15 @@ const Confirmation: React.FC = () => {
               <IonLabel>
                 <h2>{item.product.name}</h2>
                 <p>
-                  <strong>Quantity:</strong> {item.quantity}
+                  <strong>{labels.quantity}</strong> {item.quantity}
                 </p>
                 <p>
-                  <strong>Price per unit:</strong> ₪{item.productPrice.toFixed(2)}
+                  <strong>{labels.pricePerUnit}</strong> ₪{item.productPrice.toFixed(2)}
                 </p>
                 <p>
-                  <strong>Total:</strong> ₪{calculateRowTotal(item.quantity, item.productPrice).toFixed(2)}
+                  <strong>{labels.total}</strong> ₪{calculateRowTotal(item.quantity, item.productPrice).toFixed(2)}
                 </p>
-                {item.notes && <p><strong>Notes:</strong> {item.notes}</p>}
+                {item.notes && <p><strong>{labels.notes}</strong> {item.notes}</p>}
               </IonLabel>
             </IonItem>
           ))}
@@ -131,7 +136,7 @@ const Confirmation: React.FC = () => {
 
         {!order.isPaid && (
           <IonButton expand="block" color="success" onClick={() => history.push(`/payment/${id}`)}>
-            Pay Now
+            {labels.payNow}
           </IonButton>
         )}
       </IonContent>
