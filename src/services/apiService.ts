@@ -89,3 +89,21 @@ export const OrderAPI = {
     return response.json();
   },
 };
+
+export const ProductAPI = {
+  fetchProducts: async (): Promise<any> => {
+    const response = await fetch('http://localhost:8080/api/products');
+    if (!response.ok) {
+      throw new Error("Failed to fetch products.");
+    }
+    return response.json();
+  },
+
+  fetchProductDetailsById: async (productId: string): Promise<any> => {
+    const response = await fetch(`http://localhost:8080/api/products/${productId}`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch product details.");
+    }
+    return response.json();
+  },
+};

@@ -20,6 +20,7 @@ import {
 import React, { useEffect, useState } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { useAppContext } from '../../context/AppContext';
+import { ProductAPI } from "../../services/apiService";
 import './ProductDetails.css';
 
 const ProductDetails: React.FC = () => {
@@ -31,6 +32,7 @@ const ProductDetails: React.FC = () => {
   const [notes, setNotes] = useState('');
   const { user, cart, setCart } = useAppContext();
   const history = useHistory();
+
 
   const handleAddToCart = async () => {
     if (!user) {
@@ -78,11 +80,7 @@ const ProductDetails: React.FC = () => {
   useEffect(() => {
     const fetchProductDetails = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/api/products/${id}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch product details.');
-        }
-        const data = await response.json();
+        const data = await ProductAPI.fetchProductDetailsById(id)
         setProduct(data);
       } catch (error: any) {
         console.error('Error fetching product details:', error.message);

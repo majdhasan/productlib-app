@@ -13,6 +13,10 @@ import {
 } from '@ionic/react';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom'; // For navigation
+import { ProductAPI } from "../../services/apiService";
+import { translations } from "../../translations";
+import { useAppContext } from '../../context/AppContext';
+
 import './Products.css';
 
 const Products: React.FC = () => {
@@ -20,13 +24,15 @@ const Products: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState(''); // State for search query
   const [isLoading, setIsLoading] = useState(true); // State for loading spinner
   const history = useHistory(); // React Router hook for navigation
+  const { language } = useAppContext();
+
+  const labels = translations[language];
 
   useEffect(() => {
     // Fetch products from the backend
     const fetchProducts = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/products'); // Replace with your API endpoint
-        const data = await response.json();
+        const data = await ProductAPI.fetchProducts()
         setProducts(data);
       } catch (error) {
         console.error('Error fetching products:', error);
@@ -52,13 +58,13 @@ const Products: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>مخبز المشهداوي</IonTitle>
+          <IonTitle>{labels.orderNow}</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">What are you looking for?</IonTitle>
+            <IonTitle size="large">{labels.orderNow}</IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonSearchbar
