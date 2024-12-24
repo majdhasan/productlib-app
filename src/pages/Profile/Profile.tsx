@@ -12,23 +12,28 @@ import {
   IonButton,
   IonSegment,
   IonSegmentButton,
+  IonSelect,
+  IonSelectOption
 } from '@ionic/react';
 import LoginComponent from '../../components/LoginComponent/LoginComponent';
 import { useAppContext } from '../../context/AppContext';
+import { translations } from '../../translations';
 
 const ProfilePage: React.FC = () => {
-  const { user, setUser, setCart } = useAppContext();
+  const { user, setUser, setCart, language, setLanguage } = useAppContext();
   const [firstName, setFirstName] = useState(user?.firstName || '');
   const [lastName, setLastName] = useState(user?.lastName || '');
   const [dateOfBirth, setDateOfBirth] = useState(user?.dateOfBirth || '');
   const [activeTab, setActiveTab] = useState<'login' | 'signup'>('login');
+
+  const labels = translations[language];
 
   const handleUpdateProfile = async () => {
     try {
       const response = await fetch(`http://localhost:8080/api/users/profile/${user.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ firstName, lastName, dateOfBirth }),
+        body: JSON.stringify({ firstName, lastName, dateOfBirth,preferredLanguage: language, }),
       });
 
       if (!response.ok) {
@@ -59,20 +64,28 @@ const ProfilePage: React.FC = () => {
           <>
             <IonList>
               <IonItem>
-                <IonLabel position="stacked">First Name</IonLabel>
+                <IonLabel position="stacked">{labels.firstName}</IonLabel>
                 <IonInput value={firstName} onIonChange={(e) => setFirstName(e.detail.value!)} />
               </IonItem>
               <IonItem>
-                <IonLabel position="stacked">Last Name</IonLabel>
+                <IonLabel position="stacked">{labels.lastName}</IonLabel>
                 <IonInput value={lastName} onIonChange={(e) => setLastName(e.detail.value!)} />
               </IonItem>
               <IonItem>
-                <IonLabel position="stacked">Date of Birth</IonLabel>
+                <IonLabel position="stacked">{labels.dateOfBirth}</IonLabel>
                 <IonInput
                   type="date"
                   value={dateOfBirth}
                   onIonChange={(e) => setDateOfBirth(e.detail.value!)}
                 />
+              </IonItem>
+              <IonItem>
+                <IonLabel position="stacked">{labels.selectLanguage}</IonLabel>
+                <IonSelect value={language} onIonChange={(e) => setLanguage(e.detail.value)}>
+                  <IonSelectOption value="en">English</IonSelectOption>
+                  <IonSelectOption value="ar">العربية</IonSelectOption>
+                  <IonSelectOption value="he">עברית</IonSelectOption>
+                </IonSelect>
               </IonItem>
             </IonList>
 

@@ -18,6 +18,8 @@ import { useHistory } from 'react-router-dom';
 import { useAppContext } from '../../context/AppContext';
 import { UserAPI } from '../../services/apiService';
 import './MyOrders.css';
+import { translations } from '../../translations';
+
 
 // Helper functions to format date and time
 const formatDate = (timestamp: string): string => {
@@ -38,10 +40,12 @@ const formatTime = (timestamp: string): string => {
 };
 
 const MyOrders: React.FC = () => {
-    const { user } = useAppContext(); // Access the user from AppContext
+    const { user, language } = useAppContext(); // Access the user from AppContext
     const [orders, setOrders] = useState<any[]>([]);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const history = useHistory();
+
+    const labels = translations[language];
 
     useEffect(() => {
         if (user) {
@@ -75,7 +79,7 @@ const MyOrders: React.FC = () => {
         <IonPage>
             <IonHeader>
                 <IonToolbar>
-                    <IonTitle>My Orders</IonTitle>
+                    <IonTitle>{labels.myOrders}</IonTitle>
                 </IonToolbar>
             </IonHeader>
             <IonContent>
@@ -92,7 +96,7 @@ const MyOrders: React.FC = () => {
                                 onClick={() => history.push(`/confirmation/${order.id}`)}
                             >
                                 <IonLabel>
-                                    <h2>Order #{order.id}</h2>
+                                    <h2>طلبية #{order.id}</h2>
                                     <p>
                                         <strong>Status:</strong>{' '}
                                         {order.cart.status === 'ORDERED' ? 'Ordered' : 'Pending'}

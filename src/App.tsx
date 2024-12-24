@@ -18,8 +18,8 @@ import PaymentPage from './pages/Payment/PaymentPage';
 import Cart from './pages/Cart/Cart';
 import MyOrders from './pages/MyOrders/MyOrders';
 import Profile from './pages/Profile/Profile';
-import { AppProvider } from './context/AppContext';
-
+import { useAppContext } from './context/AppContext';
+import { translations } from './translations';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -53,8 +53,13 @@ import './theme/variables.css';
 
 setupIonicReact();
 
-const App: React.FC = () => (
-  <AppProvider>
+const App: React.FC = () => {
+
+  const { language } = useAppContext();
+
+  const labels = translations[language];
+
+  return (
     <IonApp>
       <IonReactRouter>
         <IonTabs>
@@ -84,28 +89,28 @@ const App: React.FC = () => (
           <IonTabBar slot="bottom">
             <IonTabButton tab="my-orders" href="/my-orders">
               <IonIcon aria-hidden="true" icon={bookOutline} />
-              <IonLabel>My Orders</IonLabel>
+              <IonLabel>{labels.myOrders}</IonLabel>
             </IonTabButton>
 
             <IonTabButton tab="products" href="/products">
               <IonIcon aria-hidden="true" icon={rocketOutline} />
-              <IonLabel>Order now</IonLabel>
+              <IonLabel>{labels.orderNow}</IonLabel>
             </IonTabButton>
 
             <IonTabButton tab="cart" href="/cart">
               <IonIcon aria-hidden="true" icon={cartOutline} />
-              <IonLabel>My Cart</IonLabel>
+              <IonLabel>{labels.cart}</IonLabel>
             </IonTabButton>
 
             <IonTabButton tab="profile" href="/profile">
               <IonIcon aria-hidden="true" icon={personOutline} />
-              <IonLabel>Profile</IonLabel>
+              <IonLabel>{labels.profile}</IonLabel>
             </IonTabButton>
           </IonTabBar>
         </IonTabs>
       </IonReactRouter>
     </IonApp>
-  </AppProvider>
-);
+  );
+};
 
 export default App;

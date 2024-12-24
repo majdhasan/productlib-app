@@ -115,13 +115,13 @@ const Cart: React.FC = () => {
                 <IonLabel>
                   <h2>{item.product.name}</h2>
                   <p>
-                    <strong>Price per unit:</strong> ₪
+                    <strong>سعر القطعه:</strong> ₪
                     {cart.status === "PENDING"
                       ? item.product.cost.toFixed(2)
                       : (item.productPrice || 0).toFixed(2)}
                   </p>
                   <p>
-                    <strong>Row Total:</strong> ₪
+                    <strong>السعر المجمل:</strong> ₪
                     {calculateRowTotal(item).toFixed(2)}
                   </p>
                   {item.notes && <p>Notes: {item.notes}</p>}

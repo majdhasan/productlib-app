@@ -52,7 +52,7 @@ const Products: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>What are you looking for?</IonTitle>
+          <IonTitle>مخبز المشهداوي</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
@@ -90,7 +90,7 @@ const Products: React.FC = () => {
                   <IonLabel>
                     <h2>{product.name}</h2>
                     <p>{product.description}</p>
-                    <p>Cost: ₪{product.cost}</p>
+                    <p>السعر: ₪{product.cost}</p>
                   </IonLabel>
                 </IonItem>
               ))

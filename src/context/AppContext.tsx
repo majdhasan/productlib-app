@@ -5,6 +5,8 @@ interface AppContextType {
   setUser: React.Dispatch<React.SetStateAction<any>>;
   cart: any;
   setCart: React.Dispatch<React.SetStateAction<any>>;
+  language: string;
+  setLanguage: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -18,6 +20,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [cart, setCart] = useState<any>(() => {
     const storedCart = localStorage.getItem('cart');
     return storedCart ? JSON.parse(storedCart) : null;
+  });
+
+  const [language, setLanguage] = useState<string>(() => {
+    const storedLanguage = localStorage.getItem('language');
+    return storedLanguage || 'en'; // Default to English if no language is stored
   });
 
   // Sync state to localStorage whenever user or cart changes
@@ -37,8 +44,22 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   }, [cart]);
 
+  useEffect(() => {
+    localStorage.setItem('language', language);
+  }, [language]);
+
   return (
-    <AppContext.Provider value={{ user, setUser, cart, setCart }}>
+    <AppContext.Provider
+
+      value={{
+        user,
+        setUser,
+        cart,
+        setCart,
+        language,
+        setLanguage,
+      }}
+    >
       {children}
     </AppContext.Provider>
   );
