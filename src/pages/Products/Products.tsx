@@ -69,7 +69,7 @@ const Products: React.FC = () => {
         </IonHeader>
         <IonSearchbar
           className="ion-searchbar"
-          placeholder="Type here..."
+          placeholder={labels.typeHere}
           onIonInput={(e: any) => setSearchQuery(e.target.value)} // Update search query on input
         ></IonSearchbar>
 

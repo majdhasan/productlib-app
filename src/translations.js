@@ -43,6 +43,7 @@ export const translations = {
     statusUnpaid: 'Unpaid',
     quantity: 'Quantity:',
     payNow: 'Pay Now',
+    typeHere: 'Type here...'
   },
   ar: {
     profileTitle: 'الملف الشخصي',
@@ -89,6 +90,7 @@ export const translations = {
     quantity: 'الكمية:',
     pricePerUnit: 'سعر الوحدة:',
     payNow: 'ادفع الآن',
+    typeHere: 'اكتب هنا...'
   },
   he: {
     profileTitle: 'פרופיל',
@@ -136,5 +138,6 @@ export const translations = {
     pricePerUnit: 'מחיר ליחידה:',
     total: 'סה"כ:',
     payNow: 'שלם עכשיו',
+    typeHere: 'הקלד כאן...'
   },
 };
