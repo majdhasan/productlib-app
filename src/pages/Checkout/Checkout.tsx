@@ -15,8 +15,12 @@ import {
     IonThumbnail,
     IonList,
     IonIcon,
+    IonSelect,
+    IonRadioGroup,
+    IonRadio,
+    IonSelectOption
 } from "@ionic/react";
-import { callOutline, locationOutline, clipboardOutline, personOutline } from "ionicons/icons";
+import { callOutline, locationOutline, clipboardOutline, timeOutline, personOutline } from "ionicons/icons";
 import { useHistory } from "react-router-dom";
 import { useAppContext } from "../../context/AppContext";
 import { translations } from "../../translations";
@@ -30,6 +34,8 @@ const Checkout: React.FC = () => {
     const [firstName, setFirstName] = useState(user?.firstName || "");
     const [lastName, setLastName] = useState(user?.lastName || "");
     const [orderNotes, setOrderNotes] = useState("");
+    const [pickupTimeOption, setPickupTimeOption] = useState<"asap" | "specific">("asap");
+    const [specificPickupTime, setSpecificPickupTime] = useState("");
 
     const labels = translations[language];
     const history = useHistory();
@@ -59,6 +65,7 @@ const Checkout: React.FC = () => {
                 firstName,
                 lastName,
                 orderNotes,
+                pickupTime: pickupTimeOption === "asap" ? "ASAP" : specificPickupTime,
             };
 
             console.log("Checkout Payload:", payload);
@@ -127,6 +134,84 @@ const Checkout: React.FC = () => {
                         onIonChange={(e) => setPhone(e.detail.value || "")}
                     />
                 </IonItem>
+
+                <IonItem className="section-box">
+                    <IonIcon slot="start" icon={timeOutline} />
+                    <div className="pickup-options-container">
+                        <IonLabel position="stacked" className="section-label">
+                            {labels.pickupTime}
+                        </IonLabel>
+                        <IonRadioGroup
+                            value={pickupTimeOption}
+                            onIonChange={(e) => setPickupTimeOption(e.detail.value)}
+                        >
+                            <IonItem
+                                lines="none"
+                                className="radio-option"
+                                button
+                                onClick={() => setPickupTimeOption("asap")} // Explicitly update the state
+                            >
+                                <IonRadio slot="start" value="asap" />
+                                <IonLabel>{labels.asap}</IonLabel>
+                            </IonItem>
+                            <IonItem
+                                lines="none"
+                                className="radio-option"
+                                button
+                                onClick={() => setPickupTimeOption("specific")} // Explicitly update the state
+                            >
+                                <IonRadio slot="start" value="specific" />
+                                <IonLabel>{labels.specificTime}</IonLabel>
+                            </IonItem>
+                        </IonRadioGroup>
+
+                        {pickupTimeOption === "specific" && (
+                            <div className="datetime-dropdowns">
+                                {/* Date Dropdown */}
+                                <IonItem className="dropdown-item" lines="none">
+                                    <IonLabel position="stacked">{labels.selectDate}</IonLabel>
+                                    <IonSelect
+                                        placeholder={labels.selectDatePlaceholder}
+                                        onIonChange={(e) =>
+                                            setSpecificPickupTime((prev) => ({ ...prev, date: e.detail.value }))
+                                        }
+                                    >
+                                        {Array.from({ length: 7 }).map((_, i) => {
+                                            const date = new Date();
+                                            date.setDate(date.getDate() + i);
+                                            return (
+                                                <IonSelectOption key={i} value={date.toISOString().split("T")[0]}>
+                                                    {date.toDateString()}
+                                                </IonSelectOption>
+                                            );
+                                        })}
+                                    </IonSelect>
+                                </IonItem>
+
+                                {/* Time Dropdown */}
+                                <IonItem className="dropdown-item" lines="none">
+                                    <IonLabel position="stacked">{labels.selectTime}</IonLabel>
+                                    <IonSelect
+                                        placeholder={labels.selectTimePlaceholder}
+                                        onIonChange={(e) =>
+                                            setSpecificPickupTime((prev) => ({ ...prev, time: e.detail.value }))
+                                        }
+                                    >
+                                        {Array.from({ length: 12 }).map((_, i) => {
+                                            const hour = i + 9; // Assume working hours start from 9 AM
+                                            return (
+                                                <IonSelectOption key={i} value={`${hour}:00`}>
+                                                    {`${hour}:00`}
+                                                </IonSelectOption>
+                                            );
+                                        })}
+                                    </IonSelect>
+                                </IonItem>
+                            </div>
+                        )}
+                    </div>
+                </IonItem>
+
 
                 <IonList className="section-box product-list">
                     <IonItem lines="none" className="summary-header">

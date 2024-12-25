@@ -65,6 +65,17 @@ export const translations = {
     enterFirstName: "Enter your first name",
     enterLastName: "Enter your last name",
     enterRequiredFields: "Please fill in all required fields.",
+    pickupTime: "Pickup Time",
+    asap: "As soon as possible",
+    specificTime: "Specific Date and Time",
+    enterPickupTime: "Please select a pickup time.",
+    pickupTime: "Pickup Time",
+    asap: "As soon as possible",
+    specificTime: "Specific Date and Time",
+    selectDate: "Select Date",
+    selectDatePlaceholder: "Choose a date",
+    selectTime: "Select Time",
+    selectTimePlaceholder: "Choose a time"
   },
   ar: {
     profileTitle: 'الملف الشخصي',
@@ -132,6 +143,14 @@ export const translations = {
     enterFirstName: "أدخل اسمك الأول",
     enterLastName: "أدخل اسم عائلتك",
     enterRequiredFields: "يرجى ملء جميع الحقول المطلوبة.",
+    pickupTime: 'وقت الاستلام',
+    asap: 'في أقرب وقت ممكن',
+    specificTime: 'تاريخ ووقت محدد',
+    enterPickupTime: 'يرجى اختيار وقت الاستلام',
+    selectDate: 'اختر التاريخ',
+    selectDatePlaceholder: 'اختر تاريخًا',
+    selectTime: 'اختر الوقت',
+    selectTimePlaceholder: 'اختر وقتًا'
   },
   he: {
     profileTitle: 'פרופיל',
@@ -199,5 +218,13 @@ export const translations = {
     enterFirstName: "הזן את שמך הפרטי",
     enterLastName: "הזן את שם המשפחה שלך",
     enterRequiredFields: "אנא מלא את כל השדות הנדרשים.",
+    pickupTime: 'זמן איסוף',
+    asap: 'בהקדם האפשרי',
+    specificTime: 'תאריך ושעה ספציפיים',
+    enterPickupTime: 'נא לבחור זמן איסוף',
+    selectDate: 'בחר תאריך',
+    selectDatePlaceholder: 'בחר תאריך',
+    selectTime: 'בחר שעה',
+    selectTimePlaceholder: 'בחר שעה'
   },
 };
