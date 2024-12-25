@@ -56,6 +56,11 @@ const Checkout: React.FC = () => {
             return;
         }
 
+        if (!pickupTimeOption || (pickupTimeOption === "specific" && (!specificPickupTime.date || !specificPickupTime.time))) {
+            alert(labels.enterPickupTime);
+            return;
+        }
+
         try {
             const payload = {
                 cartId: cart.id,
@@ -164,9 +169,9 @@ const Checkout: React.FC = () => {
                                 <IonLabel>{labels.specificTime}</IonLabel>
                             </IonItem>
                         </IonRadioGroup>
-
                         {pickupTimeOption === "specific" && (
                             <div className="datetime-dropdowns">
+
                                 {/* Date Dropdown */}
                                 <IonItem className="dropdown-item" lines="none">
                                     <IonLabel position="stacked">{labels.selectDate}</IonLabel>
@@ -179,32 +184,69 @@ const Checkout: React.FC = () => {
                                         {Array.from({ length: 7 }).map((_, i) => {
                                             const date = new Date();
                                             date.setDate(date.getDate() + i);
+                                            const dayOfWeek = date.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+
+                                            // Skip Sundays (dayOfWeek === 0)
+                                            if (dayOfWeek === 0) {
+                                                return null;
+                                            }
+
                                             return (
                                                 <IonSelectOption key={i} value={date.toISOString().split("T")[0]}>
-                                                    {date.toDateString()}
+                                                    {date.toLocaleDateString(language, {
+                                                        weekday: "long",
+                                                        year: "numeric",
+                                                        month: "long",
+                                                        day: "numeric",
+                                                    })}
                                                 </IonSelectOption>
                                             );
                                         })}
                                     </IonSelect>
                                 </IonItem>
 
+
                                 {/* Time Dropdown */}
                                 <IonItem className="dropdown-item" lines="none">
                                     <IonLabel position="stacked">{labels.selectTime}</IonLabel>
                                     <IonSelect
                                         placeholder={labels.selectTimePlaceholder}
-                                        onIonChange={(e) =>
-                                            setSpecificPickupTime((prev) => ({ ...prev, time: e.detail.value }))
-                                        }
+                                        onIonChange={(e) => {
+                                            if (!specificPickupTime.date) {
+                                                alert(labels.selectDateFirst); // Alert user to select a date first
+                                                return;
+                                            }
+                                            setSpecificPickupTime((prev) => ({ ...prev, time: e.detail.value }));
+                                        }}
+                                        disabled={!specificPickupTime.date} // Disable the dropdown if no date is selected
                                     >
-                                        {Array.from({ length: 12 }).map((_, i) => {
-                                            const hour = i + 9; // Assume working hours start from 9 AM
-                                            return (
-                                                <IonSelectOption key={i} value={`${hour}:00`}>
+                                        {(() => {
+                                            if (!specificPickupTime.date) {
+                                                return null; // Return nothing if no date is selected
+                                            }
+
+                                            const selectedDate = new Date(specificPickupTime.date);
+                                            const isToday = selectedDate.toDateString() === new Date().toDateString();
+                                            const currentHour = new Date().getHours();
+                                            const hours = Array.from({ length: 12 }).map((_, i) => i + 9); // Working hours: 9 AM - 9 PM
+                                            const availableHours = isToday
+                                                ? hours.filter((hour) => hour >= currentHour + 3) // At least 2 hours from now
+                                                : hours;
+
+                                            if (availableHours.length === 0) {
+                                                return (
+                                                    <IonSelectOption disabled>
+                                                        {labels.noAvailableTime} {/* Add this label in your translations */}
+                                                    </IonSelectOption>
+                                                );
+                                            }
+
+                                            return availableHours.map((hour) => (
+                                                <IonSelectOption key={hour} value={`${hour}:00`}>
                                                     {`${hour}:00`}
                                                 </IonSelectOption>
-                                            );
-                                        })}
+                                            ));
+                                        })()}
                                     </IonSelect>
                                 </IonItem>
                             </div>

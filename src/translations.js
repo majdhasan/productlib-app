@@ -75,7 +75,9 @@ export const translations = {
     selectDate: "Select Date",
     selectDatePlaceholder: "Choose a date",
     selectTime: "Select Time",
-    selectTimePlaceholder: "Choose a time"
+    selectTimePlaceholder: "Choose a time",
+    selectDateFirst: 'Please select a date first.',
+    noAvailableTime: 'No available times',
   },
   ar: {
     profileTitle: 'الملف الشخصي',
@@ -150,7 +152,10 @@ export const translations = {
     selectDate: 'اختر التاريخ',
     selectDatePlaceholder: 'اختر تاريخًا',
     selectTime: 'اختر الوقت',
-    selectTimePlaceholder: 'اختر وقتًا'
+    selectTimePlaceholder: 'اختر وقتًا',
+    selectDateFirst: 'يرجى اختيار التاريخ أولاً.',
+    noAvailableTime: 'لا توجد أوقات متاحة',
+
   },
   he: {
     profileTitle: 'פרופיל',
@@ -225,6 +230,8 @@ export const translations = {
     selectDate: 'בחר תאריך',
     selectDatePlaceholder: 'בחר תאריך',
     selectTime: 'בחר שעה',
-    selectTimePlaceholder: 'בחר שעה'
+    selectTimePlaceholder: 'בחר שעה',
+    selectDateFirst: 'אנא בחר תאריך קודם.',
+    noAvailableTime: 'אין שעות זמינות',
   },
 };
