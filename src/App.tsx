@@ -17,6 +17,7 @@ import Confirmation from './pages/Confirmation/Confirmation';
 import PaymentPage from './pages/Payment/PaymentPage';
 import Cart from './pages/Cart/Cart';
 import MyOrders from './pages/MyOrders/MyOrders';
+import Checkout from './pages/Checkout/Checkout';
 import Profile from './pages/Profile/Profile';
 import { useAppContext } from './context/AppContext';
 import { translations } from './translations';
@@ -83,6 +84,9 @@ const App: React.FC = () => {
             <Route exact path="/profile" component={Profile} />
             <Route exact path="/cart">
               <Cart />
+            </Route>
+            <Route exact path="/checkout">
+              <Checkout />
             </Route>
           </IonRouterOutlet>
 

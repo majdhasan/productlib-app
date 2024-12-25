@@ -1,0 +1,31 @@
+.bakery-address-container {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Spacing between the icon and text */
+}
+
+.bakery-address-text {
+  font-size: 14px;
+}
+
+.product-list .product-item {
+  margin-bottom: 8px;
+}
+
+.product-item img {
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.ion-margin-top {
+  margin-top: 16px;
+}
+
+.ion-margin-bottom {
+  margin-bottom: 16px;
+}
+
+.ion-padding-start {
+  padding-left: 16px;
+}

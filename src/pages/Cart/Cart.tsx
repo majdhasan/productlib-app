@@ -86,7 +86,7 @@ const Cart: React.FC = () => {
 
   const handleCheckout = () => {
     if (cart.items.length > 0) {
-      history.push("/payment/" + cart.id);
+      history.push("/checkout");
     } else {
       alert(labels.emptyCartAlert);
     }

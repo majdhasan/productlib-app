@@ -13,7 +13,7 @@ import {
   IonSegment,
   IonSegmentButton,
   IonSelect,
-  IonSelectOption
+  IonSelectOption,
 } from '@ionic/react';
 import LoginComponent from '../../components/LoginComponent/LoginComponent';
 import { useAppContext } from '../../context/AppContext';
@@ -24,6 +24,7 @@ const ProfilePage: React.FC = () => {
   const [firstName, setFirstName] = useState(user?.firstName || '');
   const [lastName, setLastName] = useState(user?.lastName || '');
   const [dateOfBirth, setDateOfBirth] = useState(user?.dateOfBirth || '');
+  const [phoneNumber, setPhoneNumber] = useState(user?.phoneNumber || '');
   const [activeTab, setActiveTab] = useState<'login' | 'signup'>('login');
 
   const labels = translations[language];
@@ -33,7 +34,13 @@ const ProfilePage: React.FC = () => {
       const response = await fetch(`http://localhost:8080/api/users/profile/${user.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ firstName, lastName, dateOfBirth,preferredLanguage: language, }),
+        body: JSON.stringify({
+          firstName,
+          lastName,
+          dateOfBirth,
+          phoneNumber,
+          preferredLanguage: language,
+        }),
       });
 
       if (!response.ok) {
@@ -56,7 +63,7 @@ const ProfilePage: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Profile</IonTitle>
+          <IonTitle>{labels.profileTitle}</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
@@ -80,6 +87,15 @@ const ProfilePage: React.FC = () => {
                 />
               </IonItem>
               <IonItem>
+                <IonLabel position="stacked">{labels.phoneNumber}</IonLabel>
+                <IonInput
+                  type="tel"
+                  value={phoneNumber}
+                  placeholder={labels.enterYourPhone}
+                  onIonChange={(e) => setPhoneNumber(e.detail.value!)}
+                />
+              </IonItem>
+              <IonItem>
                 <IonLabel position="stacked">{labels.selectLanguage}</IonLabel>
                 <IonSelect value={language} onIonChange={(e) => setLanguage(e.detail.value)}>
                   <IonSelectOption value="en">English</IonSelectOption>
@@ -90,10 +106,10 @@ const ProfilePage: React.FC = () => {
             </IonList>
 
             <IonButton expand="block" onClick={handleUpdateProfile}>
-              Update Profile
+              {labels.updateProfile}
             </IonButton>
             <IonButton expand="block" color="danger" onClick={handleLogout}>
-              Logout
+              {labels.logout}
             </IonButton>
           </>
         ) : (
@@ -103,10 +119,10 @@ const ProfilePage: React.FC = () => {
               onIonChange={(e) => setActiveTab(e.detail.value as 'login' | 'signup')}
             >
               <IonSegmentButton value="login">
-                <IonLabel>Login</IonLabel>
+                <IonLabel>{labels.login}</IonLabel>
               </IonSegmentButton>
               <IonSegmentButton value="signup">
-                <IonLabel>Sign Up</IonLabel>
+                <IonLabel>{labels.signup}</IonLabel>
               </IonSegmentButton>
             </IonSegment>
 
@@ -114,8 +130,7 @@ const ProfilePage: React.FC = () => {
               {activeTab === 'login' && <LoginComponent />}
               {activeTab === 'signup' && (
                 <div>
-                  {/* Placeholder for signup form */}
-                  <p>Signup form goes here.</p>
+                  <p>{labels.signupPlaceholder}</p>
                 </div>
               )}
             </div>
