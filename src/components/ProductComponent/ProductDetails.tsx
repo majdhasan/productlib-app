@@ -148,7 +148,7 @@ const ProductDetails: React.FC = () => {
                   rows={4}
                   value={notes}
                   placeholder="Add additional details or instructions..."
-                  onIonChange={(e) => setNotes(e.detail.value || '')}
+                  onIonChange={(e) => {setNotes(e.detail.value || '');}}
                 />
               </IonItem>
             </div>
