@@ -96,13 +96,13 @@ const Products: React.FC = () => {
                   <IonLabel>
                     <h2>{product.name}</h2>
                     <p>{product.description}</p>
-                    <p>السعر: ₪{product.cost}</p>
+                    <p>{labels.price}: ₪{product.cost}</p>
                   </IonLabel>
                 </IonItem>
               ))
             ) : (
               <IonItem>
-                <IonLabel>No products found</IonLabel>
+                <IonLabel>{labels.noProductsFound}</IonLabel>
               </IonItem>
             )}
           </IonList>

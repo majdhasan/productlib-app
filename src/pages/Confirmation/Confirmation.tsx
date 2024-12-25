@@ -98,7 +98,7 @@ const Confirmation: React.FC = () => {
       <IonContent className="ion-padding">
         <h2>{statusMessage}</h2>
         <p>
-          <strong>{labels.orderId}</strong> {order.id}
+          <strong>{labels.orderId}:</strong> {order.id}
         </p>
         <p>
           <strong>{labels.statusPaid}:</strong>{" "}
@@ -120,15 +120,15 @@ const Confirmation: React.FC = () => {
               <IonLabel>
                 <h2>{item.product.name}</h2>
                 <p>
-                  <strong>{labels.quantity}</strong> {item.quantity}
+                  <strong>{labels.quantity}:</strong> {item.quantity}
                 </p>
                 <p>
-                  <strong>{labels.pricePerUnit}</strong> ₪{item.productPrice.toFixed(2)}
+                  <strong>{labels.pricePerUnit}:</strong> ₪{item.productPrice.toFixed(2)}
                 </p>
                 <p>
-                  <strong>{labels.total}</strong> ₪{calculateRowTotal(item.quantity, item.productPrice).toFixed(2)}
+                  <strong>{labels.total}:</strong> ₪{calculateRowTotal(item.quantity, item.productPrice).toFixed(2)}
                 </p>
-                {item.notes && <p><strong>{labels.notes}</strong> {item.notes}</p>}
+                {item.notes && <p><strong>{labels.notes}:</strong> {item.notes}</p>}
               </IonLabel>
             </IonItem>
           ))}

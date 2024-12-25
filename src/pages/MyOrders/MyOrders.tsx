@@ -22,21 +22,21 @@ import { translations } from '../../translations';
 
 
 // Helper functions to format date and time
-const formatDate = (timestamp: string): string => {
+const formatDate = (timestamp: string, language: string): string => {
     const options: Intl.DateTimeFormatOptions = {
         year: 'numeric',
         month: 'long',
         day: 'numeric',
     };
-    return new Date(timestamp).toLocaleDateString(undefined, options);
+    return new Date(timestamp).toLocaleDateString(language, options);
 };
 
-const formatTime = (timestamp: string): string => {
+const formatTime = (timestamp: string, language: string): string => {
     const options: Intl.DateTimeFormatOptions = {
         hour: '2-digit',
         minute: '2-digit',
     };
-    return new Date(timestamp).toLocaleTimeString(undefined, options);
+    return new Date(timestamp).toLocaleTimeString(language, options);
 };
 
 const MyOrders: React.FC = () => {
@@ -86,7 +86,7 @@ const MyOrders: React.FC = () => {
                 <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
                     <IonRefresherContent pullingText={labels.pullToRefresh} refreshingSpinner="bubbles" />
                 </IonRefresher>
-    
+
                 {orders.length > 0 ? (
                     <IonList>
                         {orders.map((order: any) => (
@@ -96,16 +96,17 @@ const MyOrders: React.FC = () => {
                                 onClick={() => history.push(`/confirmation/${order.id}`)}
                             >
                                 <IonLabel>
-                                    <h2>{`${labels.orderNumber} ${order.id}`}</h2>
+                                    <h2>{`${labels.orderNumber}${order.id}`}</h2>
                                     <p>
-                                        <strong>{labels.statusOrdered}</strong>{' '}
+                                        <strong>{labels.statusOrdered}:</strong>{' '}
                                         {order.cart.status === 'ORDERED'
                                             ? labels.statusOrdered
                                             : labels.statusPending}
                                     </p>
                                     <p>
-                                        <strong>{labels.createdAt}</strong> {formatDate(order.createdAt)}{' '}
-                                        {formatTime(order.createdAt)}
+                                        <strong>{labels.createdAt}:</strong>{' '}
+                                        {formatDate(order.createdAt, language)}{' '}
+                                        {formatTime(order.createdAt, language)}
                                     </p>
                                     <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
                                         {order.cart.items.map((item: any) => (
@@ -132,7 +133,7 @@ const MyOrders: React.FC = () => {
                         <h2>{user ? labels.noOrdersFound : labels.notLoggedIn}</h2>
                     </IonText>
                 )}
-    
+
                 {errorMessage && (
                     <IonAlert
                         isOpen={!!errorMessage}
@@ -145,7 +146,7 @@ const MyOrders: React.FC = () => {
             </IonContent>
         </IonPage>
     );
-    
+
 };
 
 export default MyOrders;

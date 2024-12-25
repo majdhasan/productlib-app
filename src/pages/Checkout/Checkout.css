@@ -1,31 +1,67 @@
-.bakery-address-container {
-  margin-top: 16px;
-  display: flex;
-  align-items: center;
-  gap: 8px; /* Spacing between the icon and text */
+/* General Section Box Style */
+.section-box {
+  margin-bottom: 16px;
+  padding: 16px;
+  border-radius: 8px;
+  background-color: var(--ion-card-background);
 }
 
-.bakery-address-text {
+/* Section Labels */
+.section-label {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* Summary Header */
+.summary-header {
+  font-weight: bold;
   font-size: 14px;
 }
 
-.product-list .product-item {
-  margin-bottom: 8px;
+.summary-title {
+  font-size: 18px;
+  font-weight: bold;
 }
 
-.product-item img {
+/* Product List */
+.product-list .product-item {
+  margin-bottom: 12px;
+}
+
+.product-thumbnail img {
   border-radius: 8px;
   object-fit: cover;
+  height: 50px;
+  width: 50px;
 }
 
-.ion-margin-top {
-  margin-top: 16px;
+.product-details {
+  padding-left: 8px;
 }
 
-.ion-margin-bottom {
-  margin-bottom: 16px;
+.product-name {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 1px;
 }
 
-.ion-padding-start {
-  padding-left: 16px;
+.product-info {
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+/* Total Section */
+.total-item {
+  padding-left: 82px;
+}
+
+.total-text {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/* Submit Button */
+.submit-button {
+  font-size: 16px;
+  font-weight: bold;
 }

@@ -88,15 +88,15 @@ const Checkout: React.FC = () => {
                     </IonSegmentButton>
                 </IonSegment>
 
-                <IonItem className="ion-margin-top">
+                <IonItem className="section-box">
                     <IonIcon slot="start" icon={locationOutline} />
-                    <IonLabel position="stacked">{labels.orderAddress}</IonLabel>
+                    <IonLabel position="stacked" className="section-label">{labels.orderAddress}</IonLabel>
                     <IonInput value={labels.bakeryAddress} readonly />
                 </IonItem>
 
-                <IonItem className="ion-margin-top">
+                <IonItem className="section-box">
                     <IonIcon slot="start" icon={callOutline} />
-                    <IonLabel position="stacked">{labels.phoneNumber}</IonLabel>
+                    <IonLabel position="stacked" className="section-label">{labels.phoneNumber}</IonLabel>
                     <IonInput
                         type="tel"
                         value={phone}
@@ -105,44 +105,45 @@ const Checkout: React.FC = () => {
                     />
                 </IonItem>
 
-                <IonList className="ion-margin-top product-list">
-                    <IonItem lines="none">
+                <IonList className="section-box product-list">
+                    <IonItem lines="none" className="summary-header">
+                        <IonIcon icon={clipboardOutline} slot="start" />
                         <IonLabel>
-                            <h2>{labels.orderSummary}</h2>
+                            <h2 className="summary-title">{labels.orderSummary}</h2>
                         </IonLabel>
                     </IonItem>
                     {cart.items.map((item: any, index: number) => (
                         <IonItem key={index} lines="inset" className="product-item">
-                            <IonThumbnail slot="start">
+                            <IonThumbnail slot="start" className="product-thumbnail">
                                 <img
                                     src={`https://pbs.twimg.com/media/Dq_Dic9W4AAQo9c.png`}
                                     alt={item.product.name}
                                 />
                             </IonThumbnail>
-                            <IonLabel>
-                                <h3>{item.product.name}</h3>
-                                <p>
-                                    {labels.quantity}: {item.quantity}
+                            <IonLabel className="product-details">
+                                <h3 className="product-name">{item.product.name}</h3>
+                                <p className="product-info">
+                                    <strong>{labels.quantity}:</strong> {item.quantity}
                                 </p>
-                                <p>
-                                    {labels.pricePerUnit}: ₪{item.product.cost.toFixed(2)}
+                                <p className="product-info">
+                                    <strong>{labels.pricePerUnit}:</strong> ₪{item.product.cost.toFixed(2)}
                                 </p>
-                                <p>
-                                    {labels.rowTotal}: ₪{calculateRowTotal(item.quantity, item.product.cost).toFixed(2)}
+                                <p className="product-info">
+                                    <strong>{labels.rowTotal}:</strong> ₪{calculateRowTotal(item.quantity, item.product.cost).toFixed(2)}
                                 </p>
                             </IonLabel>
                         </IonItem>
                     ))}
-                    <IonItem>
+                    <IonItem lines="none" className="total-item">
                         <IonLabel>
-                            <h3>{labels.total}: ₪{calculateCartTotal().toFixed(2)}</h3>
+                            <h3 className="total-text">{labels.total}: ₪{calculateCartTotal().toFixed(2)}</h3>
                         </IonLabel>
                     </IonItem>
                 </IonList>
 
-                <IonItem className="ion-margin-top ion-margin-bottom">
+                <IonItem className="section-box">
                     <IonIcon slot="start" icon={clipboardOutline} />
-                    <IonLabel position="stacked">{labels.orderNotes}</IonLabel>
+                    <IonLabel position="stacked" className="section-label">{labels.orderNotes}</IonLabel>
                     <IonTextarea
                         rows={4}
                         value={orderNotes}
@@ -151,7 +152,7 @@ const Checkout: React.FC = () => {
                     />
                 </IonItem>
 
-                <IonButton expand="block" className="ion-margin-top" onClick={handleSubmit}>
+                <IonButton expand="block" className="ion-margin-top submit-button" onClick={handleSubmit}>
                     {labels.submitOrder}
                 </IonButton>
             </IonContent>

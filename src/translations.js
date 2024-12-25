@@ -60,6 +60,8 @@ export const translations = {
     checkoutSuccess: "Your order has been placed successfully!",
     checkoutError: "Failed to process your order. Please try again later.",
     orderAddress: "Address",
+    price: "Price",
+    noProductsFound: "No products found",
   },
   ar: {
     profileTitle: 'الملف الشخصي',
@@ -105,7 +107,6 @@ export const translations = {
     statusPaid: 'مدفوع',
     statusUnpaid: 'غير مدفوع',
     quantity: 'الكمية',
-    pricePerUnit: 'سعر الوحدة',
     payNow: 'ادفع الآن',
     typeHere: 'اكتب هنا...',
     checkout: "الدفع",
@@ -123,7 +124,8 @@ export const translations = {
     checkoutSuccess: "تم تقديم طلبك بنجاح!",
     checkoutError: "فشل في معالجة طلبك. حاول مرة أخرى لاحقاً.",
     orderAddress: "العنوان",
-
+    price: "السعر",
+    noProductsFound: "لم يتم العثور على منتجات",
   },
   he: {
     profileTitle: 'פרופיל',
@@ -145,7 +147,6 @@ export const translations = {
     remove: 'להסיר',
     emptyCart: 'עגלת הקניות ריקה!',
     notLoggedIn: 'אינך מחובר!',
-    total: 'סך הכל',
     proceedToCheckout: 'להמשיך לתשלום',
     browseProducts: 'עיין במוצרים',
     emptyCartAlert: 'עגלת הקניות ריקה!',
@@ -169,8 +170,7 @@ export const translations = {
     statusPaid: 'שולם',
     statusUnpaid: 'לא שולם',
     quantity: 'כמות',
-    pricePerUnit: 'מחיר ליחידה',
-    total: 'סה"כ  ',
+    total: 'סה"כ',
     payNow: 'שלם עכשיו',
     typeHere: 'הקלד כאן...',
     checkout: "צ'קאאוט",
@@ -188,5 +188,7 @@ export const translations = {
     checkoutSuccess: "ההזמנה בוצעה בהצלחה!",
     checkoutError: "נכשל בעיבוד ההזמנה. נסה שוב מאוחר יותר.",
     orderAddress: "כתובת",
+    price: "מחיר",
+    noProductsFound: "לא נמצאו מוצרים",
   },
 };
