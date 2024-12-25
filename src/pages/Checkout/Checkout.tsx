@@ -16,7 +16,7 @@ import {
     IonList,
     IonIcon,
 } from "@ionic/react";
-import { callOutline, locationOutline, clipboardOutline } from "ionicons/icons";
+import { callOutline, locationOutline, clipboardOutline, personOutline } from "ionicons/icons";
 import { useHistory } from "react-router-dom";
 import { useAppContext } from "../../context/AppContext";
 import { translations } from "../../translations";
@@ -27,6 +27,8 @@ const Checkout: React.FC = () => {
     const [pickupOrDelivery, setPickupOrDelivery] = useState<"pickup" | "delivery">("pickup");
     const [address, setAddress] = useState("");
     const [phone, setPhone] = useState(user?.phoneNumber || "");
+    const [firstName, setFirstName] = useState(user?.firstName || "");
+    const [lastName, setLastName] = useState(user?.lastName || "");
     const [orderNotes, setOrderNotes] = useState("");
 
     const labels = translations[language];
@@ -38,8 +40,8 @@ const Checkout: React.FC = () => {
         cart.items.reduce((total: number, item: any) => total + calculateRowTotal(item.quantity, item.product.cost), 0);
 
     const handleSubmit = async () => {
-        if (!phone) {
-            alert(labels.enterPhone);
+        if (!phone || !firstName || !lastName) {
+            alert(labels.enterRequiredFields);
             return;
         }
 
@@ -54,6 +56,8 @@ const Checkout: React.FC = () => {
                 method: pickupOrDelivery,
                 address: pickupOrDelivery === "pickup" ? "Al-Bishara St 49, Nazareth, Israel" : address,
                 phone,
+                firstName,
+                lastName,
                 orderNotes,
             };
 
@@ -75,7 +79,6 @@ const Checkout: React.FC = () => {
                 </IonToolbar>
             </IonHeader>
             <IonContent className="ion-padding">
-
                 <IonSegment
                     value={pickupOrDelivery}
                     onIonChange={(e) => setPickupOrDelivery(e.detail.value as "pickup" | "delivery")}
@@ -87,6 +90,26 @@ const Checkout: React.FC = () => {
                         <IonLabel>{labels.delivery}</IonLabel>
                     </IonSegmentButton>
                 </IonSegment>
+
+                <IonItem className="section-box">
+                    <IonIcon slot="start" icon={personOutline} />
+                    <IonLabel position="stacked" className="section-label">{labels.firstName}</IonLabel>
+                    <IonInput
+                        value={firstName}
+                        placeholder={labels.enterFirstName}
+                        onIonChange={(e) => setFirstName(e.detail.value || "")}
+                    />
+                </IonItem>
+
+                <IonItem className="section-box">
+                    <IonIcon slot="start" icon={personOutline} />
+                    <IonLabel position="stacked" className="section-label">{labels.lastName}</IonLabel>
+                    <IonInput
+                        value={lastName}
+                        placeholder={labels.enterLastName}
+                        onIonChange={(e) => setLastName(e.detail.value || "")}
+                    />
+                </IonItem>
 
                 <IonItem className="section-box">
                     <IonIcon slot="start" icon={locationOutline} />
@@ -152,7 +175,7 @@ const Checkout: React.FC = () => {
                     />
                 </IonItem>
 
-                <IonButton expand="block" className="ion-margin-top submit-button" onClick={handleSubmit}>
+                <IonButton expand="block" className="ion-margin-top" onClick={handleSubmit}>
                     {labels.submitOrder}
                 </IonButton>
             </IonContent>

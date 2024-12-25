@@ -62,6 +62,9 @@ export const translations = {
     orderAddress: "Address",
     price: "Price",
     noProductsFound: "No products found",
+    enterFirstName: "Enter your first name",
+    enterLastName: "Enter your last name",
+    enterRequiredFields: "Please fill in all required fields.",
   },
   ar: {
     profileTitle: 'الملف الشخصي',
@@ -126,6 +129,9 @@ export const translations = {
     orderAddress: "العنوان",
     price: "السعر",
     noProductsFound: "لم يتم العثور على منتجات",
+    enterFirstName: "أدخل اسمك الأول",
+    enterLastName: "أدخل اسم عائلتك",
+    enterRequiredFields: "يرجى ملء جميع الحقول المطلوبة.",
   },
   he: {
     profileTitle: 'פרופיל',
@@ -190,5 +196,8 @@ export const translations = {
     orderAddress: "כתובת",
     price: "מחיר",
     noProductsFound: "לא נמצאו מוצרים",
+    enterFirstName: "הזן את שמך הפרטי",
+    enterLastName: "הזן את שם המשפחה שלך",
+    enterRequiredFields: "אנא מלא את כל השדות הנדרשים.",
   },
 };
