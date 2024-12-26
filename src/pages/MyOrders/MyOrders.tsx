@@ -124,8 +124,10 @@ const MyOrders: React.FC = () => {
                                         <IonLabel>
                                             <h2 className="order-header">
                                                 {`${labels.orderNumber}${order.id}`}
-                                                <IonBadge className="status-badge">
-                                                    {labels[`status${order.status}` as keyof typeof labels] || labels.unknownStatus}
+                                                <IonBadge
+                                                    className={`status-badge status-${order.status.toLowerCase()}`}
+                                                >
+                                                    {labels[`status${order.status}`] || labels.unknownStatus}
                                                 </IonBadge>
                                             </h2>
                                             <p>

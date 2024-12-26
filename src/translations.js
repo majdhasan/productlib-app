@@ -82,6 +82,13 @@ export const translations = {
     addToCart: 'Add to Cart',
     loginToOrder: 'Log in to order',
     productDetails: 'Product Details',
+    statusSUBMITTED: "Submitted",
+    statusAPPROVED: "Approved",
+    statusREADY_FOR_PICKUP: "Ready for Pickup",
+    statusIN_DELIVERY: "In Delivery",
+    statusDELIVERED: "Delivered",
+    statusFAILED: "Failed",
+    unknownStatus: "Unknown Status",
   },
   ar: {
     profileTitle: 'الملف الشخصي',
@@ -163,6 +170,13 @@ export const translations = {
     addToCart: 'أضف إلى السلة',
     loginToOrder: 'تسجيل الدخول للطلب',
     productDetails: 'تفاصيل المنتج',
+    "statusSUBMITTED": "تم الإرسال",
+    "statusAPPROVED": "تمت الموافقة",
+    "statusREADY_FOR_PICKUP": "جاهز للاستلام",
+    "statusIN_DELIVERY": "قيد التوصيل",
+    "statusDELIVERED": "تم التوصيل",
+    "statusFAILED": "فشل",
+    "unknownStatus": "حالة غير معروفة"
   },
   he: {
     profileTitle: 'פרופיל',
@@ -244,5 +258,12 @@ export const translations = {
     addToCart: 'הוסף לעגלה',
     loginToOrder: 'התחבר להזמנה',
     productDetails: 'פרטי המוצר',
+    "statusSUBMITTED": "נשלח",
+    "statusAPPROVED": "אושר",
+    "statusREADY_FOR_PICKUP": "מוכן לאיסוף",
+    "statusIN_DELIVERY": "במשלוח",
+    "statusDELIVERED": "נמסר",
+    "statusFAILED": "נכשל",
+    "unknownStatus": "סטטוס לא ידוע"
   },
 };
