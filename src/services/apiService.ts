@@ -17,23 +17,12 @@ const request = async (url: string, options: RequestInit) => {
 // Cart API methods
 export const CartAPI = {
   fetchCart: (cartId: number) => request(`/cart/${cartId}`, { method: "GET" }),
-  createCart: () => request(`/cart`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ items: [] }) }),
-  updateCart: async (cartId: number, updatedCart: any) => {
-    try {
-        const response = await request(`/cart/${cartId}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(updatedCart),
-        });
-        if (!response.ok) {
-            throw new Error("Failed to update cart");
-        }
-        return await response.json();
-    } catch (error) {
-        console.error("Error updating cart:", error);
-        throw error;
-    }
-},
+  createCart: (userId: number) =>
+    request(`/cart/user/${userId}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+    }),
+
   addItemToCart: (cartId: number, productId: number, quantity: number, notes: string) =>
     request(`/cart/add`, {
       method: "POST",
@@ -41,20 +30,20 @@ export const CartAPI = {
       body: JSON.stringify({ cartId, productId, quantity, notes }),
     }),
 
-    updateCartItemQuantity: async (cartItemId: number, newQuantity: number) => {
-      const response = await fetch(
-        `http://localhost:8080/api/cart/update/${cartItemId}?newQuantity=${newQuantity}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-      if (!response.ok) {
-        throw new Error("Failed to update cart item quantity.");
+  updateCartItemQuantity: async (cartItemId: number, newQuantity: number) => {
+    const response = await fetch(
+      `http://localhost:8080/api/cart/update/${cartItemId}?newQuantity=${newQuantity}`,
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
       }
-      return await response.json();
-    },
-    
+    );
+    if (!response.ok) {
+      throw new Error("Failed to update cart item quantity.");
+    }
+    return await response.json();
+  },
+
 
   removeCartItem: async (cartItemId: number) => {
     const response = await fetch(

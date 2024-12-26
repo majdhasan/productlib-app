@@ -26,6 +26,7 @@ const Cart: React.FC = () => {
 
   const fetchOrCreateCart = async () => {
     try {
+      // Check if the current cart exists and is still pending
       if (cart && cart.status === "PENDING") {
         const fetchedCart = await CartAPI.fetchCart(cart.id);
         if (fetchedCart.status === "PENDING") {
@@ -33,8 +34,14 @@ const Cart: React.FC = () => {
           return;
         }
       }
-      const newCart = await CartAPI.createCart();
-      setCart(newCart);
+
+      // If no pending cart exists, create a new cart for the current user
+      if (user && user.id) {
+        const newCart = await CartAPI.createCart(user.id);
+        setCart(newCart);
+      } else {
+        console.error("User not logged in or user ID is missing.");
+      }
     } catch (error) {
       console.error("Error initializing cart:", error);
     }

@@ -27,7 +27,7 @@ import { translations } from "../../translations";
 import "./Checkout.css";
 
 const Checkout: React.FC = () => {
-    const { user, cart, language } = useAppContext();
+    const { user, cart, language, setCart } = useAppContext();
     const [pickupOrDelivery, setPickupOrDelivery] = useState<"pickup" | "delivery">("pickup");
     const [address, setAddress] = useState("");
     const [phone, setPhone] = useState(user?.phoneNumber || "");
@@ -45,38 +45,59 @@ const Checkout: React.FC = () => {
     const calculateCartTotal = () =>
         cart.items.reduce((total: number, item: any) => total + calculateRowTotal(item.quantity, item.product.cost), 0);
 
+
     const handleSubmit = async () => {
         if (!phone || !firstName || !lastName) {
             alert(labels.enterRequiredFields);
             return;
         }
-
+    
         if (pickupOrDelivery === "delivery" && !address) {
             alert(labels.enterAddress);
             return;
         }
-
+    
         if (!pickupTimeOption || (pickupTimeOption === "specific" && (!specificPickupTime.date || !specificPickupTime.time))) {
             alert(labels.enterPickupTime);
             return;
         }
-
+    
         try {
             const payload = {
                 cartId: cart.id,
-                method: pickupOrDelivery,
+                customerId: user.id,
+                orderType: pickupOrDelivery === "pickup" ? "PICKUP" : "DELIVERY",
                 address: pickupOrDelivery === "pickup" ? "Al-Bishara St 49, Nazareth, Israel" : address,
                 phone,
                 firstName,
                 lastName,
-                orderNotes,
-                pickupTime: pickupTimeOption === "asap" ? "ASAP" : specificPickupTime,
+                orderNotes: orderNotes || null,
+                wishedPickupTime:
+                    pickupTimeOption === "specific"
+                        ? `${specificPickupTime.date}T${specificPickupTime.time}:00`
+                        : null,
             };
-
-            console.log("Checkout Payload:", payload);
-
-            alert(labels.checkoutSuccess);
-            history.push("/confirmation/" + cart.id);
+    
+            const response = await fetch("http://localhost:8080/api/orders", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload),
+            });
+    
+            if (!response.ok) {
+                throw new Error(labels.checkoutError);
+            }
+    
+            const createdOrder = await response.json();
+    
+            // Clear cart and update context
+            setCart(null);
+    
+            // Navigate only after ensuring the cart is cleared
+            // TODO fix page not being rendered
+            history.push(`/my-orders`);
         } catch (error) {
             console.error("Checkout Error:", error);
             alert(labels.checkoutError);
