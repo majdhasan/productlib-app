@@ -7,6 +7,8 @@ interface AppContextType {
   setCart: React.Dispatch<React.SetStateAction<any>>;
   language: string;
   setLanguage: React.Dispatch<React.SetStateAction<string>>;
+  orderSubmitted: boolean;
+  setOrderSubmitted: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -27,7 +29,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return storedLanguage || 'en'; // Default to English if no language is stored
   });
 
-  // Sync state to localStorage whenever user or cart changes
+  const [orderSubmitted, setOrderSubmitted] = useState<boolean>(false); // Added
+
   useEffect(() => {
     if (user) {
       localStorage.setItem('user', JSON.stringify(user));
@@ -50,7 +53,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   return (
     <AppContext.Provider
-
       value={{
         user,
         setUser,
@@ -58,6 +60,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setCart,
         language,
         setLanguage,
+        orderSubmitted,
+        setOrderSubmitted,
       }}
     >
       {children}

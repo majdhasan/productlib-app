@@ -27,7 +27,7 @@ import { translations } from "../../translations";
 import "./Checkout.css";
 
 const Checkout: React.FC = () => {
-    const { user, cart, language, setCart } = useAppContext();
+    const { user, cart, language, setOrderSubmitted } = useAppContext();
     const [pickupOrDelivery, setPickupOrDelivery] = useState<"pickup" | "delivery">("pickup");
     const [address, setAddress] = useState("");
     const [phone, setPhone] = useState(user?.phoneNumber || "");
@@ -92,6 +92,8 @@ const Checkout: React.FC = () => {
     
             const createdOrder = await response.json();
     
+            setOrderSubmitted(true);
+
             // Navigate only after ensuring the cart is cleared
             history.push(`/my-orders`);
         } catch (error) {

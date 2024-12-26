@@ -59,7 +59,7 @@ const groupOrdersByDate = (orders: any[], language: string) => {
 };
 
 const MyOrders: React.FC = () => {
-    const { user, language } = useAppContext();
+    const { user, language, orderSubmitted, setOrderSubmitted } = useAppContext();
     const [orders, setOrders] = useState<any[]>([]);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const history = useHistory();
@@ -73,6 +73,13 @@ const MyOrders: React.FC = () => {
             setOrders([]); // Clear orders when the user logs out
         }
     }, [user]);
+
+      useEffect(() => {
+        if (orderSubmitted) {
+            fetchOrders();
+            setOrderSubmitted(false);
+        }
+    }, [orderSubmitted]);
 
     const fetchOrders = async () => {
         try {

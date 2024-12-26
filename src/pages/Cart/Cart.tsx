@@ -19,7 +19,7 @@ import { CartAPI } from "../../services/apiService";
 import { translations } from '../../translations';
 
 const Cart: React.FC = () => {
-  const { user, cart, setCart, language } = useAppContext();
+  const { user, cart, setCart, language, orderSubmitted, setOrderSubmitted } = useAppContext();
   const history = useHistory();
 
   const labels = translations[language];
@@ -37,7 +37,7 @@ const Cart: React.FC = () => {
 
       // If no pending cart exists, create a new cart for the current user
       if (user && user.id) {
-        const newCart = await CartAPI.createCart(user.id);
+        const newCart = await CartAPI.getOrCreateCart(user.id);
         setCart(newCart);
       } else {
         console.error("User not logged in or user ID is missing.");
@@ -50,6 +50,14 @@ const Cart: React.FC = () => {
   useEffect(() => {
     fetchOrCreateCart();
   }, []);
+
+  useEffect(() => {
+    if (orderSubmitted) {
+        // Fetch a new cart and reset the flag
+        fetchOrCreateCart();
+        setOrderSubmitted(false);
+    }
+}, [orderSubmitted]);
 
   const handleQuantityChange = async (cartItemId: number, change: number) => {
     try {
