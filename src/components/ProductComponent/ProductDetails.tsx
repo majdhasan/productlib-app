@@ -21,6 +21,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { useAppContext } from '../../context/AppContext';
 import { ProductAPI } from "../../services/apiService";
+import { translations } from '../../translations';
 import './ProductDetails.css';
 
 const ProductDetails: React.FC = () => {
@@ -30,9 +31,10 @@ const ProductDetails: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [notes, setNotes] = useState('');
-  const { user, cart, setCart } = useAppContext();
+  const { user, cart, language, setCart } = useAppContext();
   const history = useHistory();
 
+  const labels = translations[language];
 
   const handleAddToCart = async () => {
     if (!user) {
@@ -41,8 +43,8 @@ const ProductDetails: React.FC = () => {
     }
 
     try {
-      if (!cart || !cart.id) {
-        alert('Cart information missing. Please log in again.');
+      if (!user || !user.id) {
+        alert('User information missing. Please log in again.');
         history.push('/profile');
         return;
       }
@@ -51,10 +53,10 @@ const ProductDetails: React.FC = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          cartId: cart.id,
+          userId: user.id,
           productId: product.id,
           quantity,
-          notes, // Ensure this is included
+          notes,
         }),
       });
 
@@ -77,19 +79,19 @@ const ProductDetails: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchProductDetails = async () => {
-      try {
-        const data = await ProductAPI.fetchProductDetailsById(id)
-        setProduct(data);
-      } catch (error: any) {
-        console.error('Error fetching product details:', error.message);
-        setError(error.message || 'Failed to load product details.');
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  const fetchProductDetails = async () => {
+    try {
+      const data = await ProductAPI.fetchProductDetailsById(id)
+      setProduct(data);
+    } catch (error: any) {
+      console.error('Error fetching product details:', error.message);
+      setError(error.message || 'Failed to load product details.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchProductDetails();
   }, [id]);
 
@@ -100,7 +102,7 @@ const ProductDetails: React.FC = () => {
           <IonButtons slot="start">
             <IonBackButton defaultHref="/" />
           </IonButtons>
-          <IonTitle>Product Details</IonTitle>
+          <IonTitle>{labels.productDetails}</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent>
@@ -123,19 +125,17 @@ const ProductDetails: React.FC = () => {
               </IonCardHeader>
               <IonCardContent>
                 <p>
-                  <strong>Description:</strong> {product.description}
+                  {product.description}
                 </p>
                 <p>
-                  <strong>Cost:</strong> ₪{product.cost.toFixed(2)}
+                  <strong>{labels.price}:</strong> ₪{product.cost.toFixed(2)}
                 </p>
-                <p>
-                  <strong>Category:</strong> {product.category}
-                </p>
+
               </IonCardContent>
             </IonCard>
             <div className="custom-controls">
               <IonItem>
-                <IonLabel>Quantity</IonLabel>
+                <IonLabel>{labels.quantity}</IonLabel>
                 <div className="quantity-controls">
                   <IonButton onClick={() => setQuantity(quantity > 1 ? quantity - 1 : 1)}>-</IonButton>
                   <span>{quantity}</span>
@@ -143,18 +143,18 @@ const ProductDetails: React.FC = () => {
                 </div>
               </IonItem>
               <IonItem>
-                <IonLabel position="stacked">Notes</IonLabel>
+                <IonLabel position="stacked">{labels.notes}</IonLabel>
                 <IonTextarea
                   rows={4}
                   value={notes}
-                  placeholder="Add additional details or instructions..."
-                  onIonChange={(e) => {setNotes(e.detail.value || '');}}
+                  placeholder={labels.addNotesPlaceholder}
+                  onIonChange={(e) => { setNotes(e.detail.value || ''); }}
                 />
               </IonItem>
             </div>
             <div className="book-button-container">
               <IonButton expand="block" onClick={handleAddToCart}>
-                {user ? 'Add to Cart' : 'Log in to order'}
+                {user ? labels.addToCart : labels.loginToOrder}
               </IonButton>
             </div>
           </>

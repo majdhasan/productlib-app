@@ -65,3 +65,50 @@ ion-segment-button {
     font-size: 14px;
     margin-bottom: 12px;
 }
+
+.date-badge {
+    display: inline-block;
+    font-size: 0.9em;
+    margin: 10px auto;
+    padding: 5px 10px;
+    background-color: #f0f0f0;
+    color: #333;
+    border-radius: 10px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.orders-group {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.date-badge {
+    display: inline-block;
+    font-size: 0.9em;
+    margin: 10px auto;
+    padding: 5px 10px;
+    background-color: #f0f0f0;
+    color: #333;
+    border-radius: 10px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.order-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.order-items {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.item-thumbnail {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+}

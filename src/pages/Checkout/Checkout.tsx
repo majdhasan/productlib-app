@@ -92,11 +92,7 @@ const Checkout: React.FC = () => {
     
             const createdOrder = await response.json();
     
-            // Clear cart and update context
-            setCart(null);
-    
             // Navigate only after ensuring the cart is cleared
-            // TODO fix page not being rendered
             history.push(`/my-orders`);
         } catch (error) {
             console.error("Checkout Error:", error);

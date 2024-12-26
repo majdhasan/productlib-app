@@ -13,6 +13,7 @@ import {
     IonRefresherContent,
     IonAlert,
     IonThumbnail,
+    IonBadge,
 } from '@ionic/react';
 import { useHistory } from 'react-router-dom';
 import { useAppContext } from '../../context/AppContext';
@@ -20,15 +21,22 @@ import { UserAPI } from '../../services/apiService';
 import './MyOrders.css';
 import { translations } from '../../translations';
 
+enum OrderStatus {
+    SUBMITTED = 'Submitted',
+    APPROVED = 'Approved',
+    READY_FOR_PICKUP = 'Ready for Pickup',
+    IN_DELIVERY = 'In Delivery',
+    SUCCESSFUL = 'Successful',
+    FAILED = 'Failed',
+}
 
-// Helper functions to format date and time
-const formatDate = (timestamp: string, language: string): string => {
-    const options: Intl.DateTimeFormatOptions = {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-    };
-    return new Date(timestamp).toLocaleDateString(language, options);
+// Helper functions to format date
+const formatDate = (timestamp: string): string => {
+    const date = new Date(timestamp);
+    const day = String(date.getDate()).padStart(2, '0'); // Ensures 2 digits for the day
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Ensures 2 digits for the month
+    const year = date.getFullYear(); // Gets the full year
+    return `${day}.${month}.${year}`; // Formats as DD.MM.YYYY
 };
 
 const formatTime = (timestamp: string, language: string): string => {
@@ -39,8 +47,19 @@ const formatTime = (timestamp: string, language: string): string => {
     return new Date(timestamp).toLocaleTimeString(language, options);
 };
 
+const groupOrdersByDate = (orders: any[], language: string) => {
+    return orders.reduce((grouped: Record<string, any[]>, order: any) => {
+        const dateKey = formatDate(order.createdAt, language);
+        if (!grouped[dateKey]) {
+            grouped[dateKey] = [];
+        }
+        grouped[dateKey].push(order);
+        return grouped;
+    }, {});
+};
+
 const MyOrders: React.FC = () => {
-    const { user, language } = useAppContext(); // Access the user from AppContext
+    const { user, language } = useAppContext();
     const [orders, setOrders] = useState<any[]>([]);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const history = useHistory();
@@ -51,8 +70,7 @@ const MyOrders: React.FC = () => {
         if (user) {
             fetchOrders();
         } else {
-            // Clear orders when the user logs out
-            setOrders([]);
+            setOrders([]); // Clear orders when the user logs out
         }
     }, [user]);
 
@@ -63,7 +81,10 @@ const MyOrders: React.FC = () => {
             }
 
             const fetchedOrders = await UserAPI.fetchUserOrders(user.id);
-            setOrders(fetchedOrders);
+            const sortedOrders = fetchedOrders.sort(
+                (a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+            );
+            setOrders(sortedOrders);
         } catch (error) {
             console.error('Error fetching orders:', error);
             setErrorMessage('Failed to load orders. Please try again later.');
@@ -74,6 +95,8 @@ const MyOrders: React.FC = () => {
         await fetchOrders();
         event.detail.complete();
     };
+
+    const groupedOrders = groupOrdersByDate(orders, language);
 
     return (
         <IonPage>
@@ -87,47 +110,44 @@ const MyOrders: React.FC = () => {
                     <IonRefresherContent pullingText={labels.pullToRefresh} refreshingSpinner="bubbles" />
                 </IonRefresher>
 
-                {orders.length > 0 ? (
-                    <IonList>
-                        {orders.map((order: any) => (
-                            <IonItem
-                                key={order.id}
-                                button
-                                onClick={() => history.push(`/confirmation/${order.id}`)}
-                            >
-                                <IonLabel>
-                                    <h2>{`${labels.orderNumber}${order.id}`}</h2>
-                                    <p>
-                                        <strong>{labels.statusOrdered}:</strong>{' '}
-                                        {order.cart.status === 'ORDERED'
-                                            ? labels.statusOrdered
-                                            : labels.statusPending}
-                                    </p>
-                                    <p>
-                                        <strong>{labels.createdAt}:</strong>{' '}
-                                        {formatDate(order.createdAt, language)}{' '}
-                                        {formatTime(order.createdAt, language)}
-                                    </p>
-                                    <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
-                                        {order.cart.items.map((item: any) => (
-                                            <IonThumbnail key={item.id}>
-                                                <img
-                                                    // src={`http://localhost:8080/images/${item.product.image}`}
-                                                    src={`https://pbs.twimg.com/media/Dq_Dic9W4AAQo9c.png`}
-                                                    alt={item.product.name}
-                                                    style={{
-                                                        width: '50px',
-                                                        height: '50px',
-                                                        objectFit: 'cover',
-                                                    }}
-                                                />
-                                            </IonThumbnail>
-                                        ))}
-                                    </div>
-                                </IonLabel>
-                            </IonItem>
-                        ))}
-                    </IonList>
+                {Object.keys(groupedOrders).length > 0 ? (
+                    Object.keys(groupedOrders).map((date) => (
+                        <div key={date} className="orders-group">
+                            <IonBadge className="date-badge">{date}</IonBadge>
+                            <IonList>
+                                {groupedOrders[date].map((order: any) => (
+                                    <IonItem
+                                        key={order.id}
+                                        button
+                                        onClick={() => history.push(`/confirmation/${order.id}`)}
+                                    >
+                                        <IonLabel>
+                                            <h2 className="order-header">
+                                                {`${labels.orderNumber}${order.id}`}
+                                                <IonBadge className="status-badge">
+                                                    {labels[`status${order.status}` as keyof typeof labels] || labels.unknownStatus}
+                                                </IonBadge>
+                                            </h2>
+                                            <p>
+                                                <strong>{labels.createdAt}:</strong> {formatTime(order.createdAt, language)}
+                                            </p>
+                                            <div className="order-items">
+                                                {order.cart.items.map((item: any) => (
+                                                    <IonThumbnail key={item.id}>
+                                                        <img
+                                                            src={`https://pbs.twimg.com/media/Dq_Dic9W4AAQo9c.png`}
+                                                            alt={item.product.name}
+                                                            className="item-thumbnail"
+                                                        />
+                                                    </IonThumbnail>
+                                                ))}
+                                            </div>
+                                        </IonLabel>
+                                    </IonItem>
+                                ))}
+                            </IonList>
+                        </div>
+                    ))
                 ) : (
                     <IonText color="medium" className="ion-text-center">
                         <h2>{user ? labels.noOrdersFound : labels.notLoggedIn}</h2>
@@ -146,7 +166,6 @@ const MyOrders: React.FC = () => {
             </IonContent>
         </IonPage>
     );
-
 };
 
 export default MyOrders;
