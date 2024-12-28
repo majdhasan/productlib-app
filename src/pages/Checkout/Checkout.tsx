@@ -46,22 +46,28 @@ const Checkout: React.FC = () => {
         cart.items.reduce((total: number, item: any) => total + calculateRowTotal(item.quantity, item.product.cost), 0);
 
 
+    const padTime = (time: string) => {
+        const [hour, minute] = time.split(":");
+        return `${hour.padStart(2, "0")}:${minute}:00`;
+    };
+
+
     const handleSubmit = async () => {
         if (!phone || !firstName || !lastName) {
             alert(labels.enterRequiredFields);
             return;
         }
-    
+
         if (pickupOrDelivery === "delivery" && !address) {
             alert(labels.enterAddress);
             return;
         }
-    
+
         if (!pickupTimeOption || (pickupTimeOption === "specific" && (!specificPickupTime.date || !specificPickupTime.time))) {
             alert(labels.enterPickupTime);
             return;
         }
-    
+
         try {
             const payload = {
                 cartId: cart.id,
@@ -74,10 +80,10 @@ const Checkout: React.FC = () => {
                 orderNotes: orderNotes || null,
                 wishedPickupTime:
                     pickupTimeOption === "specific"
-                        ? `${specificPickupTime.date}T${specificPickupTime.time}:00`
+                        ? `${specificPickupTime.date}T${padTime(specificPickupTime.time)}`
                         : null,
             };
-    
+
             const response = await fetch("http://localhost:8080/api/orders", {
                 method: "POST",
                 headers: {
@@ -85,13 +91,13 @@ const Checkout: React.FC = () => {
                 },
                 body: JSON.stringify(payload),
             });
-    
+
             if (!response.ok) {
                 throw new Error(labels.checkoutError);
             }
-    
+
             const createdOrder = await response.json();
-    
+
             setOrderSubmitted(true);
 
             // Navigate only after ensuring the cart is cleared
