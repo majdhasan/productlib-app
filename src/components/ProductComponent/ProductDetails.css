@@ -22,3 +22,39 @@
   border-radius: 5px;
   padding: 10px;
 }
+
+.product-image-container {
+  text-align: center;
+  margin: 16px 0;
+  max-width: 600px; /* Set a maximum width for the container */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.product-image {
+  max-width: 50%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.product-details-container {
+  text-align: center;
+  margin: 16px 0;
+}
+
+.product-name {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.product-description {
+  font-size: 1rem;
+  margin-bottom: 8px;
+}
+
+.product-price {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #3880ff;
+}

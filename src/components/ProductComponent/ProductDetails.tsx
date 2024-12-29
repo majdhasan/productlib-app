@@ -122,20 +122,19 @@ const ProductDetails: React.FC = () => {
         {/* Product Details */}
         {product && !isLoading && (
           <>
-            <IonCard>
-              <IonCardHeader>
-                <IonCardTitle>{product.name}</IonCardTitle>
-              </IonCardHeader>
-              <IonCardContent>
-                <p>
-                  {product.description}
-                </p>
-                <p>
-                  <strong>{labels.price}:</strong> ₪{product.cost.toFixed(2)}
-                </p>
+            <div className="product-image-container">
+              <img src='https://pbs.twimg.com/media/Dq_Dic9W4AAQo9c.png' alt={product.name} className="product-image" />
+              {/* <img src={product.imageUrl} alt={product.name} className="product-image" /> */}
+            </div>
 
-              </IonCardContent>
-            </IonCard>
+            <div className="product-details-container">
+              <h2 className="product-name">{product.name}</h2>
+              <p className="product-description">{product.description}</p>
+              <p className="product-price">
+                <strong>{labels.price}:</strong> ₪{product.cost.toFixed(2)}
+              </p>
+            </div>
+            
             <div className="custom-controls">
               <IonItem>
                 <IonLabel>{labels.quantity}</IonLabel>

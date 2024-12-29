@@ -24,6 +24,7 @@ import Checkout from './pages/Checkout/Checkout';
 import Profile from './pages/Profile/Profile';
 import { useAppContext } from './context/AppContext';
 import { translations } from './translations';
+import './App.css';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -66,7 +67,7 @@ const App: React.FC = () => {
   const cartItemCount = cart?.items.reduce((total, item) => total + item.quantity, 0) || 0;
 
   return (
-    <IonApp>
+    <IonApp className='center-aligned'>
       <IonReactRouter>
         <IonTabs>
           <IonRouterOutlet>
