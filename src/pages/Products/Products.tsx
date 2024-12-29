@@ -1,41 +1,27 @@
-import {
-  IonContent,
-  IonHeader,
-  IonPage,
-  IonTitle,
-  IonToolbar,
-  IonSearchbar,
-  IonList,
-  IonItem,
-  IonLabel,
-  IonSpinner,
-  IonThumbnail
-} from '@ionic/react';
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom'; // For navigation
-import { ProductAPI } from "../../services/apiService";
-import { translations } from "../../translations";
+import { IonSearchbar, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonLabel, IonThumbnail, IonLoading, IonText } from '@ionic/react';
 import { useAppContext } from '../../context/AppContext';
-
+import { translations } from '../../translations';
 import './Products.css';
+import { ProductAPI } from "../../services/apiService";
+import { useHistory } from 'react-router';
 
 const Products: React.FC = () => {
-  const [products, setProducts] = useState([]); // State for products
-  const [searchQuery, setSearchQuery] = useState(''); // State for search query
-  const [isLoading, setIsLoading] = useState(true); // State for loading spinner
-  const history = useHistory(); // React Router hook for navigation
   const { language } = useAppContext();
+  const [products, setProducts] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const history  = useHistory();
 
   const labels = translations[language];
 
   useEffect(() => {
-    // Fetch products from the backend
     const fetchProducts = async () => {
       try {
         const data = await ProductAPI.fetchProducts()
         setProducts(data);
       } catch (error) {
-        console.error('Error fetching products:', error);
+        setError(error.message);
       } finally {
         setIsLoading(false);
       }
@@ -44,12 +30,11 @@ const Products: React.FC = () => {
     fetchProducts();
   }, []);
 
-  // Filter products based on search query
-  const filteredProducts = products.filter((product: any) =>
-    product.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const getTranslation = (product: any, language: string) => {
+    const translation = product.translations.find((t: any) => t.language === language);
+    return translation || { name: product.name, description: product.description };
+  };
 
-  // Navigate to the product details page
   const goToProductDetails = (productId: number) => {
     history.push(`/products/${productId}`);
   };
@@ -58,48 +43,34 @@ const Products: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>{labels.orderNow}</IonTitle>
+          <IonTitle>{labels.products}</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">{labels.orderNow}</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <IonSearchbar
-          className="ion-searchbar"
-          placeholder={labels.typeHere}
-          onIonInput={(e: any) => setSearchQuery(e.target.value)} // Update search query on input
-        ></IonSearchbar>
-
+      <IonContent>
         {isLoading ? (
-          // Show a loading spinner while fetching data
-          <div className="spinner-container">
-            <IonSpinner name="bubbles" />
-          </div>
+          <IonLoading isOpen={isLoading} message="Loading products..." />
+        ) : error ? (
+          <IonText color="danger" className="ion-padding">
+            <h3>{error}</h3>
+          </IonText>
         ) : (
           <IonList>
-            {filteredProducts.length > 0 ? (
-              filteredProducts.map((product: any) => (
-                <IonItem
-                  key={product.id}
-                  button
-                  onClick={() => goToProductDetails(product.id)} // Navigate on click
-                >
-                  <IonThumbnail slot="start">
-                    <img
-                      src={`https://pbs.twimg.com/media/Dq_Dic9W4AAQo9c.png`}
-                      alt={product.name}
-                    />
-                  </IonThumbnail>
-                  <IonLabel>
-                    <h2>{product.name}</h2>
-                    <p>{product.description}</p>
-                    <p>{labels.price}: ₪{product.cost}</p>
-                  </IonLabel>
-                </IonItem>
-              ))
+            {products.length > 0 ? (
+              products.map((product) => {
+                const { name, description } = getTranslation(product, language);
+                return (
+                  <IonItem key={product.id} button onClick={() => goToProductDetails(product.id)}>
+                    <IonThumbnail slot="start">
+                      <img src={`https://pbs.twimg.com/media/Dq_Dic9W4AAQo9c.png`} alt={name} />
+                    </IonThumbnail>
+                    <IonLabel>
+                      <h2>{name}</h2>
+                      <p>{description}</p>
+                      <p>{labels.price}: ₪{product.cost}</p>
+                    </IonLabel>
+                  </IonItem>
+                );
+              })
             ) : (
               <IonItem>
                 <IonLabel>{labels.noProductsFound}</IonLabel>

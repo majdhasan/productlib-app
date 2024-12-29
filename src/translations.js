@@ -105,6 +105,7 @@ export const translations = {
     'productAddedToCart': 'Product added to cart!',
     'failedToAddToCart': 'Failed to add product to cart. Please try again.',
     orderSubmitted: 'Order Submitted',
+    products: 'Products',
   },
   ar: {
     profileTitle: 'الملف الشخصي',
@@ -209,6 +210,7 @@ export const translations = {
     'productAddedToCart': 'تمت إضافة المنتج إلى السلة!',
     'failedToAddToCart': 'فشلت إضافة المنتج إلى السلة. يرجى المحاولة مرة أخرى.',
     orderSubmitted: 'تم تقديم الطلب',
+    products: 'المنتجات',
   },
   he: {
     profileTitle: 'פרופיל',
@@ -313,5 +315,6 @@ export const translations = {
     'productAddedToCart': 'המוצר נוסף לעגלה!',
     'failedToAddToCart': 'נכשל להוסיף את המוצר לעגלה. נסה שוב.',
     orderSubmitted: 'ההזמנה נשלחה',
+    products: 'מוצרים',
   },
 };
