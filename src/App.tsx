@@ -1,3 +1,4 @@
+import React from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import {
   IonApp,
@@ -8,7 +9,8 @@ import {
   IonTabButton,
   IonTabs,
   setupIonicReact,
-  IonToast
+  IonToast,
+  IonBadge
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { personOutline, rocketOutline, bookOutline, cartOutline } from 'ionicons/icons';
@@ -57,9 +59,11 @@ setupIonicReact();
 
 const App: React.FC = () => {
 
-  const { language, setShowToast, showToast, toastMessage, toastColor } = useAppContext();
+  const { language, setShowToast, showToast, toastMessage, toastColor, cart } = useAppContext();
 
   const labels = translations[language];
+
+  const cartItemCount = cart?.items.reduce((total, item) => total + item.quantity, 0) || 0;
 
   return (
     <IonApp>
@@ -116,6 +120,7 @@ const App: React.FC = () => {
 
             <IonTabButton tab="cart" href="/cart">
               <IonIcon aria-hidden="true" icon={cartOutline} />
+              {cartItemCount > 0 && <IonBadge color="danger">{cartItemCount}</IonBadge>}
               <IonLabel>{labels.cart}</IonLabel>
             </IonTabButton>
 
