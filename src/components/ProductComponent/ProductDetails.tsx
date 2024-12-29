@@ -31,7 +31,7 @@ const ProductDetails: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [notes, setNotes] = useState('');
-  const { user, cart, language, setCart } = useAppContext();
+  const { user, cart, language, setCart, setShowToast, setToastMessage, setToastColor } = useAppContext();
   const history = useHistory();
 
   const labels = translations[language];
@@ -72,10 +72,13 @@ const ProductDetails: React.FC = () => {
       const updatedCart = await updatedCartResponse.json();
       setCart(updatedCart);
       localStorage.setItem('cart', JSON.stringify(updatedCart));
-      alert('Product added to cart successfully!');
+      setToastMessage(labels.productAddedToCart);
+      setToastColor('success');
+      setShowToast(true);
     } catch (error: any) {
-      console.error('Error adding product to cart:', error.message);
-      alert('Failed to add product to cart.');
+      setToastMessage(labels.failedToAddToCart);
+      setToastColor('danger');
+      setShowToast(true);
     }
   };
 

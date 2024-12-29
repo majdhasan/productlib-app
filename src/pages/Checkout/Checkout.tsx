@@ -27,7 +27,7 @@ import { translations } from "../../translations";
 import "./Checkout.css";
 
 const Checkout: React.FC = () => {
-    const { user, cart, language, setOrderSubmitted } = useAppContext();
+    const { user, cart, language, setOrderSubmitted, setToastColor, setToastMessage, setShowToast } = useAppContext();
     const [pickupOrDelivery, setPickupOrDelivery] = useState<"pickup" | "delivery">("pickup");
     const [address, setAddress] = useState("");
     const [phone, setPhone] = useState(user?.phoneNumber || "");
@@ -43,7 +43,7 @@ const Checkout: React.FC = () => {
     const calculateRowTotal = (quantity: number, price: number) => quantity * price;
 
     const calculateCartTotal = () =>
-        cart.items.reduce((total: number, item: any) => total + calculateRowTotal(item.quantity, item.product.cost), 0);
+        cart?.items.reduce((total: number, item: any) => total + calculateRowTotal(item.quantity, item.product.cost), 0) || 0;
 
 
     const padTime = (time: string) => {
@@ -54,17 +54,23 @@ const Checkout: React.FC = () => {
 
     const handleSubmit = async () => {
         if (!phone || !firstName || !lastName) {
-            alert(labels.enterRequiredFields);
+            setToastMessage(labels.enterRequiredFields);
+            setToastColor('danger');
+            setShowToast(true);
             return;
         }
 
         if (pickupOrDelivery === "delivery" && !address) {
-            alert(labels.enterAddress);
+            setToastMessage(labels.enterAddress);
+            setToastColor('danger');
+            setShowToast(true);
             return;
         }
 
         if (!pickupTimeOption || (pickupTimeOption === "specific" && (!specificPickupTime.date || !specificPickupTime.time))) {
-            alert(labels.enterPickupTime);
+            setToastMessage(labels.enterPickupTime);
+            setToastColor('danger');
+            setShowToast(true);
             return;
         }
 
@@ -99,12 +105,17 @@ const Checkout: React.FC = () => {
             const createdOrder = await response.json();
 
             setOrderSubmitted(true);
+            setToastMessage(labels.orderSubmitted);
+            setToastColor('success');
+            setShowToast(true);
 
-            // Navigate only after ensuring the cart is cleared
             history.push(`/my-orders`);
         } catch (error) {
             console.error("Checkout Error:", error);
-            alert(labels.checkoutError);
+            
+            setToastMessage(labels.checkoutError);
+            setToastColor('danger');
+            setShowToast(true);
         }
     };
 
@@ -238,7 +249,9 @@ const Checkout: React.FC = () => {
                                         placeholder={labels.selectTimePlaceholder}
                                         onIonChange={(e) => {
                                             if (!specificPickupTime.date) {
-                                                alert(labels.selectDateFirst); // Alert user to select a date first
+                                                setToastMessage(labels.selectDateFirst);
+                                                setToastColor('danger');
+                                                setShowToast(true);
                                                 return;
                                             }
                                             setSpecificPickupTime((prev) => ({ ...prev, time: e.detail.value }));
@@ -287,7 +300,7 @@ const Checkout: React.FC = () => {
                             <h2 className="summary-title">{labels.orderSummary}</h2>
                         </IonLabel>
                     </IonItem>
-                    {cart.items.map((item: any, index: number) => (
+                    {cart?.items.map((item: any, index: number) => (
                         <IonItem key={index} lines="inset" className="product-item">
                             <IonThumbnail slot="start" className="product-thumbnail">
                                 <img
@@ -327,7 +340,7 @@ const Checkout: React.FC = () => {
                     />
                 </IonItem>
 
-                <IonButton expand="block" className="ion-margin-top" onClick={handleSubmit}>
+                <IonButton expand="block" onClick={handleSubmit}>
                     {labels.submitOrder}
                 </IonButton>
             </IonContent>

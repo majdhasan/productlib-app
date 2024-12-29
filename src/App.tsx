@@ -94,7 +94,7 @@ const App: React.FC = () => {
             isOpen={showToast}
             onDidDismiss={() => setShowToast(false)}
             message={toastMessage}
-            duration={5000}
+            duration={4000}
             color={toastColor}
             buttons={[
               {

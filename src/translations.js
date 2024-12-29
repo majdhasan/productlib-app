@@ -102,6 +102,9 @@ export const translations = {
     "registrationFailed": "Registration failed. Please try again.",
     "loginSuccessful": "Login successful!",
     'close': 'Close',
+    'productAddedToCart': 'Product added to cart!',
+    'failedToAddToCart': 'Failed to add product to cart. Please try again.',
+    orderSubmitted: 'Order Submitted',
   },
   ar: {
     profileTitle: 'الملف الشخصي',
@@ -203,6 +206,9 @@ export const translations = {
     "registrationFailed": "فشل التسجيل. حاول مرة اخرى.",
     "loginSuccessful": "تم تسجيل الدخول بنجاح!",
     'close': 'إغلاق',
+    'productAddedToCart': 'تمت إضافة المنتج إلى السلة!',
+    'failedToAddToCart': 'فشلت إضافة المنتج إلى السلة. يرجى المحاولة مرة أخرى.',
+    orderSubmitted: 'تم تقديم الطلب',
   },
   he: {
     profileTitle: 'פרופיל',
@@ -304,6 +310,8 @@ export const translations = {
     registrationFailed: 'הרשמה נכשלה. נסה שוב.',
     "loginSuccessful": "התחברות מוצלחת!",
     'close': 'סגור',
-    
+    'productAddedToCart': 'המוצר נוסף לעגלה!',
+    'failedToAddToCart': 'נכשל להוסיף את המוצר לעגלה. נסה שוב.',
+    orderSubmitted: 'ההזמנה נשלחה',
   },
 };
