@@ -1,4 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
+import { IonToast } from '@ionic/react';
 
 interface AppContextType {
   user: any;
@@ -9,6 +10,12 @@ interface AppContextType {
   setLanguage: React.Dispatch<React.SetStateAction<string>>;
   orderSubmitted: boolean;
   setOrderSubmitted: React.Dispatch<React.SetStateAction<boolean>>;
+  showToast: boolean;
+  setShowToast: React.Dispatch<React.SetStateAction<boolean>>;
+  toastMessage: string;
+  setToastMessage: React.Dispatch<React.SetStateAction<string>>;
+  toastColor: string;
+  setToastColor: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -26,10 +33,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const [language, setLanguage] = useState<string>(() => {
     const storedLanguage = localStorage.getItem('language');
-    return storedLanguage || 'en'; // Default to English if no language is stored
+    return storedLanguage || 'en';
   });
 
-  const [orderSubmitted, setOrderSubmitted] = useState<boolean>(false); // Added
+  const [orderSubmitted, setOrderSubmitted] = useState<boolean>(false); 
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const [toastColor, setToastColor] = useState('success');
 
   useEffect(() => {
     if (user) {
@@ -62,6 +72,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setLanguage,
         orderSubmitted,
         setOrderSubmitted,
+        showToast,
+        setShowToast,
+        toastMessage,
+        setToastMessage,
+        toastColor,
+        setToastColor,
       }}
     >
       {children}

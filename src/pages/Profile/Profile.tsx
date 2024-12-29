@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   IonPage,
   IonHeader,
@@ -16,6 +16,7 @@ import {
   IonSelectOption,
 } from '@ionic/react';
 import LoginComponent from '../../components/LoginComponent/LoginComponent';
+import SignUpComponent from '../../components/SignUpComponent/SignUpComponent';
 import { useAppContext } from '../../context/AppContext';
 import { translations } from '../../translations';
 
@@ -23,11 +24,18 @@ const ProfilePage: React.FC = () => {
   const { user, setUser, setCart, language, setLanguage } = useAppContext();
   const [firstName, setFirstName] = useState(user?.firstName || '');
   const [lastName, setLastName] = useState(user?.lastName || '');
-  const [dateOfBirth, setDateOfBirth] = useState(user?.dateOfBirth || '');
   const [phoneNumber, setPhoneNumber] = useState(user?.phoneNumber || '');
   const [activeTab, setActiveTab] = useState<'login' | 'signup'>('login');
 
   const labels = translations[language];
+
+  useEffect(() => {
+    if (user) {
+      setFirstName(user.firstName || '');
+      setLastName(user.lastName || '');
+      setPhoneNumber(user.phoneNumber || '');
+    }
+  }, [user]);
 
   const handleUpdateProfile = async () => {
     try {
@@ -37,7 +45,6 @@ const ProfilePage: React.FC = () => {
         body: JSON.stringify({
           firstName,
           lastName,
-          dateOfBirth,
           phoneNumber,
           preferredLanguage: language,
         }),
@@ -77,14 +84,6 @@ const ProfilePage: React.FC = () => {
               <IonItem>
                 <IonLabel position="stacked">{labels.lastName}</IonLabel>
                 <IonInput value={lastName} onIonChange={(e) => setLastName(e.detail.value!)} />
-              </IonItem>
-              <IonItem>
-                <IonLabel position="stacked">{labels.dateOfBirth}</IonLabel>
-                <IonInput
-                  type="date"
-                  value={dateOfBirth}
-                  onIonChange={(e) => setDateOfBirth(e.detail.value!)}
-                />
               </IonItem>
               <IonItem>
                 <IonLabel position="stacked">{labels.phoneNumber}</IonLabel>
@@ -128,11 +127,7 @@ const ProfilePage: React.FC = () => {
 
             <div className="tab-content-container">
               {activeTab === 'login' && <LoginComponent />}
-              {activeTab === 'signup' && (
-                <div>
-                  <p>{labels.signupPlaceholder}</p>
-                </div>
-              )}
+              {activeTab === 'signup' && <SignUpComponent />}
             </div>
           </>
         )}

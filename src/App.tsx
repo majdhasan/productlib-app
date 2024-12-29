@@ -7,7 +7,8 @@ import {
   IonTabBar,
   IonTabButton,
   IonTabs,
-  setupIonicReact
+  setupIonicReact,
+  IonToast
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { personOutline, rocketOutline, bookOutline, cartOutline } from 'ionicons/icons';
@@ -56,7 +57,7 @@ setupIonicReact();
 
 const App: React.FC = () => {
 
-  const { language } = useAppContext();
+  const { language, setShowToast, showToast, toastMessage, toastColor } = useAppContext();
 
   const labels = translations[language];
 
@@ -89,7 +90,19 @@ const App: React.FC = () => {
               <Checkout />
             </Route>
           </IonRouterOutlet>
-
+          <IonToast
+            isOpen={showToast}
+            onDidDismiss={() => setShowToast(false)}
+            message={toastMessage}
+            duration={5000}
+            color={toastColor}
+            buttons={[
+              {
+                text: labels.close,
+                role: 'cancel',
+              },
+            ]}
+          />
           <IonTabBar slot="bottom">
             <IonTabButton tab="my-orders" href="/my-orders">
               <IonIcon aria-hidden="true" icon={bookOutline} />

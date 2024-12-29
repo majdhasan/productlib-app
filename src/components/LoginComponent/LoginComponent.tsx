@@ -9,13 +9,16 @@ import {
 } from "@ionic/react";
 import { useHistory } from "react-router-dom";
 import { useAppContext } from "../../context/AppContext";
+import { translations } from "../../translations";
 
 const LoginComponent: React.FC = () => {
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
-    const history = useHistory(); // Access the history object
-    const { setUser, setCart } = useAppContext(); // Access AppContext
+    const history = useHistory();
+    const { language, setUser, setCart, setToastColor, setToastMessage, setShowToast } = useAppContext(); // Access AppContext
+
+    const labels = translations[language];
 
     const handleLogin = async () => {
         try {
@@ -32,14 +35,16 @@ const LoginComponent: React.FC = () => {
             const data = await response.json();
             const { user, cart } = data;
 
-            // Update AppContext with user and cart data
+            
             setUser(user);
             setCart(cart);
 
-            // Redirect to products page
-            history.push("/products");
+            setToastColor("success");
+            setToastMessage(labels.loginSuccessful);
+            setShowToast(true);
+            
+            history.push("/my-orders");
         } catch (error: any) {
-            console.error("Error logging in:", error.message);
             setErrorMessage("Login failed. Please try again.");
         }
     };
@@ -48,25 +53,25 @@ const LoginComponent: React.FC = () => {
         <div>
             <IonList>
                 <IonItem>
-                    <IonLabel position="stacked">Email</IonLabel>
+                    <IonLabel position="stacked">{labels.email}</IonLabel>
                     <IonInput
                         value={email}
-                        placeholder="Enter your email"
+                        placeholder={labels.enterEmail}
                         onIonChange={(e) => setEmail(e.detail.value || "")}
                     />
                 </IonItem>
                 <IonItem>
-                    <IonLabel position="stacked">Password</IonLabel>
+                    <IonLabel position="stacked">{labels.password}</IonLabel>
                     <IonInput
                         type="password"
                         value={password}
-                        placeholder="Enter your password"
+                        placeholder={labels.enterPassword}
                         onIonInput={(e: any) => setPassword(e.target.value || "")}
                     />
                 </IonItem>
             </IonList>
             <IonButton expand="block" onClick={handleLogin}>
-                Login
+                {labels.login}
             </IonButton>
 
             {errorMessage && (
