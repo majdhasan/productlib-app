@@ -314,6 +314,9 @@ const Checkout: React.FC = () => {
                                     <strong>{labels.quantity}:</strong> {item.quantity}
                                 </p>
                                 <p className="product-info">
+                                    {item.notes && <><strong>{labels.notes}:</strong> {item.notes}</>}
+                                </p>
+                                <p className="product-info">
                                     <strong>{labels.pricePerUnit}:</strong> ₪{item.product.cost.toFixed(2)}
                                 </p>
                                 <p className="product-info">
