@@ -10,19 +10,23 @@ import {
 } from "@ionic/react";
 import { useParams, useHistory } from "react-router-dom";
 import Confetti from "react-confetti";
+import { useAppContext } from "../../context/AppContext";
 import "./PaymentPage.css"; // Add styles for the page if necessary
+import { translations } from "../../translations";
 
 const PaymentPage: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const history = useHistory();
-    const [isLoading, setIsLoading] = useState(true);
     const [isPaid, setIsPaid] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [showConfetti, setShowConfetti] = useState(false);
+    const { language, isLoading, setIsLoading } = useAppContext();
+    const labels = translations[language];
 
     useEffect(() => {
         // Fetch order to ensure it exists
         const fetchOrder = async () => {
+            setIsLoading(true);
             try {
                 const response = await fetch(`http://localhost:8080/api/orders/${id}`);
                 if (!response.ok) {
@@ -71,7 +75,7 @@ const PaymentPage: React.FC = () => {
             <IonPage>
                 <IonHeader>
                     <IonToolbar>
-                        <IonTitle>Processing...</IonTitle>
+                        <IonTitle>{labels.processing}</IonTitle>
                     </IonToolbar>
                 </IonHeader>
                 <IonContent>
@@ -86,7 +90,7 @@ const PaymentPage: React.FC = () => {
             <IonPage>
                 <IonHeader>
                     <IonToolbar>
-                        <IonTitle>Error</IonTitle>
+                        <IonTitle>{labels.errorHeader}</IonTitle>
                     </IonToolbar>
                 </IonHeader>
                 <IonContent>

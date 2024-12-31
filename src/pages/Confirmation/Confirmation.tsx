@@ -20,14 +20,15 @@ import { useAppContext } from "../../context/AppContext";
 import { translations } from '../../translations';
 import "./Confirmation.css";
 
+// TODO rework this
+
 const Confirmation: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const { language } = useAppContext();
+  const { language, isLoading, setIsLoading } = useAppContext();
   const labels = translations[language];
 
   const history = useHistory();
   const [order, setOrder] = useState<any>(null);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchOrderDetails = async () => {
@@ -101,7 +102,6 @@ const Confirmation: React.FC = () => {
           <strong>{labels.orderId}:</strong> {order.id}
         </p>
         <p>
-          <strong>{labels.statusPaid}:</strong>{" "}
           <span className={order.isPaid ? "paid" : "unpaid"}>
             {order.isPaid ? labels.statusPaid : labels.statusUnpaid}
           </span>

@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import { IonToast } from '@ionic/react';
+import { IonLoading } from '@ionic/react';
+import { translations } from '../translations';
 
 interface AppContextType {
   user: any;
@@ -16,6 +17,8 @@ interface AppContextType {
   setToastMessage: React.Dispatch<React.SetStateAction<string>>;
   toastColor: string;
   setToastColor: React.Dispatch<React.SetStateAction<string>>;
+  isLoading: boolean;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -36,10 +39,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return storedLanguage || 'en';
   });
 
-  const [orderSubmitted, setOrderSubmitted] = useState<boolean>(false); 
+  const [orderSubmitted, setOrderSubmitted] = useState<boolean>(false);
+
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [toastColor, setToastColor] = useState('success');
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const labels = translations[language];
 
   useEffect(() => {
     if (user) {
@@ -78,9 +86,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setToastMessage,
         toastColor,
         setToastColor,
+        isLoading,
+        setIsLoading,
       }}
     >
       {children}
+      <IonLoading isOpen={isLoading} message = {labels.loading} />
     </AppContext.Provider>
   );
 };

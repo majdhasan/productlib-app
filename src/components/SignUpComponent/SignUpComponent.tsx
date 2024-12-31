@@ -13,18 +13,18 @@ import { translations } from "../../translations";
 import "./SignUpComponent.css";
 
 const SignUpComponent: React.FC = () => {
-    const { setUser, language, setShowToast, setToastMessage, setToastColor } = useAppContext();
+    const { setUser, language, setShowToast, setToastMessage, setToastColor, isLoading, setIsLoading } = useAppContext();
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const history = useHistory();
 
     const labels = translations[language];
 
     const handleSignUp = async () => {
+        setIsLoading(true);
         try {
             const response = await fetch("http://localhost:8080/api/users", {
                 method: "POST",
@@ -39,8 +39,9 @@ const SignUpComponent: React.FC = () => {
             });
 
             if (!response.ok) {
-                throw new Error("Failed to sign up.");
-            }
+                const data = await response.json();
+                throw new Error(data.error || "Failed to sign up.");
+              }
 
             const newUser = await response.json();
             setUser(newUser);
@@ -49,12 +50,13 @@ const SignUpComponent: React.FC = () => {
             setShowToast(true);
 
             history.push("/my-orders");
-          } catch (error) {
+        } catch (error) {
             console.error("Error signing up:", error);
-            setErrorMessage(labels.registrationFailed);
-            setToastMessage(labels.registrationFailed);
+            setToastMessage(labels.registrationFailed + ": " + error.message);
             setToastColor('danger');
             setShowToast(true);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -106,16 +108,6 @@ const SignUpComponent: React.FC = () => {
             <IonButton expand="block" onClick={handleSignUp}>
                 {labels.signUp}
             </IonButton>
-
-            {errorMessage && (
-                <IonAlert
-                    isOpen={!!errorMessage}
-                    onDidDismiss={() => setErrorMessage(null)}
-                    header="Error"
-                    message={errorMessage}
-                    buttons={["OK"]}
-                />
-            )}
         </div>
     );
 };

@@ -59,44 +59,43 @@ const groupOrdersByDate = (orders: any[], language: string) => {
 };
 
 const MyOrders: React.FC = () => {
-    const { user, language, orderSubmitted, setOrderSubmitted } = useAppContext();
+    const { user, language, orderSubmitted, setOrderSubmitted, setIsLoading } = useAppContext();
     const [orders, setOrders] = useState<any[]>([]);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const history = useHistory();
 
     const labels = translations[language];
 
-    useEffect(() => {
-        if (user) {
-            fetchOrders();
-        } else {
-            setOrders([]); // Clear orders when the user logs out
-        }
-    }, [user]);
-
-      useEffect(() => {
-        if (orderSubmitted) {
-            fetchOrders();
-            setOrderSubmitted(false);
-        }
-    }, [orderSubmitted]);
-
     const fetchOrders = async () => {
+        setIsLoading(true);
         try {
-            if (!user) {
-                return;
-            }
-
             const fetchedOrders = await UserAPI.fetchUserOrders(user.id);
             const sortedOrders = fetchedOrders.sort(
                 (a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
             );
             setOrders(sortedOrders);
         } catch (error) {
-            console.error('Error fetching orders:', error);
-            setErrorMessage('Failed to load orders. Please try again later.');
+            setErrorMessage(error.message);
+        } finally {
+            setIsLoading(false);
         }
     };
+
+    useEffect(() => {
+        if (!user) {
+            setIsLoading(false);
+            return;
+        }
+
+        fetchOrders();
+    }, [user, setIsLoading]);
+
+    useEffect(() => {
+        if (orderSubmitted) {
+            fetchOrders();
+            setOrderSubmitted(false);
+        }
+    }, [orderSubmitted, setIsLoading]);
 
     const handleRefresh = async (event: CustomEvent) => {
         await fetchOrders();

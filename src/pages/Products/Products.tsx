@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { IonSearchbar, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonLabel, IonThumbnail, IonLoading, IonText } from '@ionic/react';
+import { IonSearchbar, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonLabel, IonThumbnail, IonText } from '@ionic/react';
 import { useAppContext } from '../../context/AppContext';
 import { translations } from '../../translations';
 import './Products.css';
@@ -7,9 +7,8 @@ import { ProductAPI } from "../../services/apiService";
 import { useHistory } from 'react-router';
 
 const Products: React.FC = () => {
-  const { language } = useAppContext();
+  const { language, isLoading, setIsLoading } = useAppContext();
   const [products, setProducts] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const history  = useHistory();
 
@@ -17,6 +16,7 @@ const Products: React.FC = () => {
 
   useEffect(() => {
     const fetchProducts = async () => {
+      setIsLoading(true);
       try {
         const data = await ProductAPI.fetchProducts()
         setProducts(data);
@@ -47,9 +47,7 @@ const Products: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        {isLoading ? (
-          <IonLoading isOpen={isLoading} message="Loading products..." />
-        ) : error ? (
+        {error ? (
           <IonText color="danger" className="ion-padding">
             <h3>{error}</h3>
           </IonText>

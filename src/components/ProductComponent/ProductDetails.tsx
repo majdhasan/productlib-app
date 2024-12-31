@@ -4,14 +4,9 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
-  IonCard,
-  IonCardHeader,
-  IonCardTitle,
-  IonCardContent,
   IonButton,
   IonButtons,
   IonBackButton,
-  IonLoading,
   IonText,
   IonTextarea,
   IonItem,
@@ -27,11 +22,10 @@ import './ProductDetails.css';
 const ProductDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [product, setProduct] = useState<any>(null);
-  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [notes, setNotes] = useState('');
-  const { user, cart, language, setCart, setShowToast, setToastMessage, setToastColor } = useAppContext();
+  const { user, cart, language, setCart, setShowToast, setToastMessage, setToastColor, isLoading, setIsLoading } = useAppContext();
   const history = useHistory();
 
   const labels = translations[language];
@@ -83,6 +77,7 @@ const ProductDetails: React.FC = () => {
   };
 
   const fetchProductDetails = async () => {
+    setIsLoading(true);
     try {
       const data = await ProductAPI.fetchProductDetailsById(id)
       setProduct(data);
@@ -109,8 +104,6 @@ const ProductDetails: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        {/* Spinner */}
-        <IonLoading isOpen={isLoading} message="Loading product details..." />
 
         {/* Error State */}
         {error && (
