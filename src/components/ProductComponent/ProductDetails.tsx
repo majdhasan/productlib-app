@@ -66,8 +66,8 @@ const ProductDetails: React.FC = () => {
       const updatedCart = await updatedCartResponse.json();
       setCart(updatedCart);
       localStorage.setItem('cart', JSON.stringify(updatedCart));
-      setToastMessage(labels.productAddedToCart);
       setToastColor('success');
+      setToastMessage(labels.productAddedToCart);
       setShowToast(true);
     } catch (error: any) {
       setToastMessage(labels.failedToAddToCart);

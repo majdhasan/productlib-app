@@ -1,22 +1,51 @@
-.profile-page {
-    padding: 16px;
-  }
-  
-  .ion-input {
-    margin-bottom: 16px;
-  }
-  
-  .ion-button {
-    margin-top: 16px;
-  }
-  
-  .ion-title {
-    text-align: center;
-  }
-  
-  .profile-header {
-    text-align: center;
-    font-weight: bold;
-    margin-bottom: 16px;
-  }
-  
+.ion-padding {
+  padding: 16px;
+}
+
+.ion-label {
+  font-size: 1rem;
+}
+
+.ion-input {
+  font-size: 1rem;
+}
+
+.ion-button {
+  margin-top: 16px;
+}
+
+.profile-container {
+  padding: 16px;
+}
+
+.profile-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.profile-item ion-label {
+  width: 100%;
+  font-size: 1rem;
+}
+
+.profile-item ion-input {
+  width: 100%;
+  font-size: 1rem;
+}
+
+.profile-item ion-label.view-mode {
+  padding: 8px 0;
+}
+
+.application-settings {
+  margin-top: 32px;
+}
+
+.application-settings-header {
+  font-weight: bold;
+  font-size: 1.2rem;
+  text-align: center;
+  width: 100%;
+}

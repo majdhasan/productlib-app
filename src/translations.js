@@ -107,6 +107,10 @@ export const translations = {
     orderSubmitted: 'Order Submitted',
     products: 'Products',
     processing: 'Processing...',
+    updateProfileSuccess: 'Profile updated successfully!',
+    updateProfileFailed: 'Failed to update profile. Please try again.',
+    editProfile: 'Edit Profile',
+    applicationSettings: 'Application Settings',
   },
   ar: {
     profileTitle: 'الملف الشخصي',
@@ -213,6 +217,10 @@ export const translations = {
     orderSubmitted: 'تم تقديم الطلب',
     products: 'المنتجات',
     processing: 'جار التنفيذ...',
+    updateProfileSuccess: 'تم تحديث الملف الشخصي بنجاح!',
+    updateProfileFailed: 'فشل تحديث الملف الشخصي. يرجى المحاولة مرة أخرى.',
+    editProfile: 'تعديل الملف الشخصي',
+    applicationSettings: 'إعدادات التطبيق',
   },
   he: {
     profileTitle: 'פרופיל',
@@ -319,5 +327,9 @@ export const translations = {
     orderSubmitted: 'ההזמנה נשלחה',
     products: 'מוצרים',
     processing: 'מעבד...',
+    updateProfileSuccess: 'הפרופיל עודכן בהצלחה!',
+    updateProfileFailed: 'עדכון הפרופיל נכשל. נסה שוב.',
+    editProfile: 'ערוך פרופיל',
+    applicationSettings: 'הגדרות האפליקציה',
   },
 };
