@@ -17,7 +17,6 @@ import { personOutline, rocketOutline, bookOutline, cartOutline } from 'ionicons
 import Products from './pages/Products/Products';
 import ProductDetails from './components/ProductComponent/ProductDetails';
 import Confirmation from './pages/Confirmation/Confirmation';
-import PaymentPage from './pages/Payment/PaymentPage';
 import Cart from './pages/Cart/Cart';
 import MyOrders from './pages/MyOrders/MyOrders';
 import Checkout from './pages/Checkout/Checkout';
@@ -81,9 +80,6 @@ const App: React.FC = () => {
               <ProductDetails />
             </Route>
             <Route path="/confirmation/:id" render={(props) => <Confirmation key={props.match.params.id} />} />
-            <Route exact path="/payment/:id">
-              <PaymentPage />
-            </Route>
             <Route exact path="/my-orders">
               <MyOrders />
             </Route>
