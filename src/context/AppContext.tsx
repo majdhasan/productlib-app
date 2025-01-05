@@ -19,6 +19,8 @@ interface AppContextType {
   setToastColor: React.Dispatch<React.SetStateAction<string>>;
   isLoading: boolean;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  activeProfileTab: 'login' | 'signup';
+  setActiveProfileTab: React.Dispatch<React.SetStateAction<'login' | 'signup'>>;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -46,6 +48,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [toastColor, setToastColor] = useState('success');
 
   const [isLoading, setIsLoading] = useState(false);
+
+  const [activeProfileTab, setActiveProfileTab] = useState<'login' | 'signup'>('login');
 
   const labels = translations[language];
 
@@ -88,6 +92,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setToastColor,
         isLoading,
         setIsLoading,
+        activeProfileTab,
+        setActiveProfileTab,
       }}
     >
       {children}

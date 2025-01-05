@@ -24,6 +24,7 @@ import { callOutline, locationOutline, clipboardOutline, timeOutline, personOutl
 import { useHistory } from "react-router-dom";
 import { useAppContext } from "../../context/AppContext";
 import { translations } from "../../translations";
+import { OrderAPI } from '../../services/apiService';
 import "./Checkout.css";
 
 const Checkout: React.FC = () => {
@@ -90,19 +91,7 @@ const Checkout: React.FC = () => {
                         : null,
             };
 
-            const response = await fetch("http://localhost:8080/api/orders", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(payload),
-            });
-
-            if (!response.ok) {
-                throw new Error(labels.checkoutError);
-            }
-
-            const createdOrder = await response.json();
+            const createdOrder = await OrderAPI.createOrder(payload);
 
             setOrderSubmitted(true);
             setToastMessage(labels.orderSubmitted);

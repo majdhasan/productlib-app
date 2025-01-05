@@ -21,8 +21,7 @@ import SignUpComponent from '../../components/SignUpComponent/SignUpComponent';
 import './Profile.css';
 
 const ProfilePage: React.FC = () => {
-  const { user, setUser, setCart, language, setLanguage, setToastColor, setToastMessage, setShowToast } = useAppContext();
-  const [activeTab, setActiveTab] = useState<'login' | 'signup'>('login');
+  const { user, setUser, setCart, language, setLanguage, activeProfileTab, setActiveProfileTab } = useAppContext();
 
   const labels = translations[language];
 
@@ -66,8 +65,8 @@ const ProfilePage: React.FC = () => {
         ) : (
           <>
             <IonSegment
-              value={activeTab}
-              onIonChange={(e) => setActiveTab(e.detail.value as 'login' | 'signup')}
+              value={activeProfileTab}
+              onIonChange={(e) => setActiveProfileTab(e.detail.value as 'login' | 'signup')}
             >
               <IonSegmentButton value="login">
                 <IonLabel>{labels.login}</IonLabel>
@@ -78,8 +77,8 @@ const ProfilePage: React.FC = () => {
             </IonSegment>
 
             <div className="tab-content-container">
-              {activeTab === 'login' && <LoginComponent />}
-              {activeTab === 'signup' && <SignUpComponent />}
+              {activeProfileTab === 'login' && <LoginComponent />}
+              {activeProfileTab === 'signup' && <SignUpComponent />}
             </div>
           </>
         )}

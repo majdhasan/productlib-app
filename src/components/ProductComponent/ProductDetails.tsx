@@ -15,7 +15,7 @@ import {
 import React, { useEffect, useState } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { useAppContext } from '../../context/AppContext';
-import { ProductAPI } from "../../services/apiService";
+import { ProductAPI, CartAPI } from "../../services/apiService";
 import { translations } from '../../translations';
 import './ProductDetails.css';
 
@@ -31,11 +31,6 @@ const ProductDetails: React.FC = () => {
   const labels = translations[language];
 
   const handleAddToCart = async () => {
-    if (!user) {
-      history.push('/profile');
-      return;
-    }
-
     try {
       if (!user || !user.id) {
         alert('User information missing. Please log in again.');
@@ -43,27 +38,9 @@ const ProductDetails: React.FC = () => {
         return;
       }
 
-      const addResponse = await fetch(`http://localhost:8080/api/cart/add`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId: user.id,
-          productId: product.id,
-          quantity,
-          notes,
-        }),
-      });
+      await CartAPI.addItemToCart(user.id, product.id, quantity, notes);
+      const updatedCart = await CartAPI.fetchCart(cart.id);
 
-      if (!addResponse.ok) {
-        throw new Error('Failed to add product to cart.');
-      }
-
-      const updatedCartResponse = await fetch(`http://localhost:8080/api/cart/${cart.id}`);
-      if (!updatedCartResponse.ok) {
-        throw new Error('Failed to fetch updated cart.');
-      }
-
-      const updatedCart = await updatedCartResponse.json();
       setCart(updatedCart);
       localStorage.setItem('cart', JSON.stringify(updatedCart));
       setToastColor('success');

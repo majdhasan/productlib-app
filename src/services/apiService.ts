@@ -1,82 +1,95 @@
+import { getToken, refreshToken } from "./tokenService";
+
 const API_BASE_URL = "http://localhost:8080/api";
 
-// Helper function to handle requests
-const request = async (url: string, options: RequestInit) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}${url}`, options);
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    return response.json();
-  } catch (error) {
-    console.error("API Request Error:", error);
-    throw error;
+export const apiRequest = async (url: string, options: RequestInit = {}) => {
+  let token = getToken();
+
+  if (!token) {
+    throw new Error("No token found");
   }
+
+  options.headers = {
+    ...options.headers,
+    Authorization: `Bearer ${token}`,
+  };
+
+  let response = await fetch(`${API_BASE_URL}${url}`, options);
+
+  if (response.status === 401) {
+    // Token might be expired, try to refresh it
+    token = await refreshToken();
+    options.headers = {
+      ...options.headers,
+      Authorization: `Bearer ${token}`,
+    };
+    response = await fetch(`${API_BASE_URL}${url}`, options);
+  }
+
+  if (!response.ok) {
+    throw new Error("API request failed");
+  }
+
+  return response.json();
 };
 
 // Cart API methods
 export const CartAPI = {
-  fetchCart: (cartId: number) => request(`/cart/${cartId}`, { method: "GET" }),
+  fetchCart: (cartId: number) => apiRequest(`/cart/${cartId}`, { method: "GET" }),
   getOrCreateCart: (userId: number) =>
-    request(`/cart/user/${userId}`, {
+    apiRequest(`/cart/user/${userId}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
     }),
 
-  addItemToCart: (cartId: number, productId: number, quantity: number, notes: string) =>
-    request(`/cart/add`, {
+  addItemToCart: (userId: number, productId: number, quantity: number, notes: string) =>
+    apiRequest(`/cart/add`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ cartId, productId, quantity, notes }),
+      body: JSON.stringify({ userId, productId, quantity, notes }),
     }),
 
-  updateCartItemQuantity: async (cartItemId: number, newQuantity: number) => {
-    const response = await fetch(
-      `http://localhost:8080/api/cart/update/${cartItemId}?newQuantity=${newQuantity}`,
-      {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-      }
-    );
-    if (!response.ok) {
-      throw new Error("Failed to update cart item quantity.");
-    }
-    return await response.json();
-  },
-
-
-  removeCartItem: async (cartItemId: number) => {
-    const response = await fetch(
-      `http://localhost:8080/api/cart/remove/${cartItemId}`,
-      {
-        method: "DELETE",
-      }
-    );
-    if (!response.ok) {
-      throw new Error("Failed to remove cart item.");
-    }
-  },
-};
-
-// User API methods (if needed)
-export const UserAPI = {
-  fetchUserOrders: (userId: number) => request(`/orders/user/${userId}`, { method: "GET" }),
-  updateUserProfile: (userId: number, updatedUser: any) =>
-    request(`/users/profile/${userId}`, {
+  updateCartItemQuantity: (cartItemId: number, newQuantity: number) =>
+    apiRequest(`/cart/update/${cartItemId}?newQuantity=${newQuantity}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(updatedUser),
     }),
+
+  removeCartItem: (cartItemId: number) =>
+    apiRequest(`/cart/remove/${cartItemId}`, {
+      method: "DELETE",
+    }),
+};
+
+
+export const UserAPI = {
+  fetchUserOrders: (userId: number) => apiRequest(`/orders/user/${userId}`, { method: "GET" }),
+
+  login: async (email: string, password: string): Promise<any> => {
+    const response = await fetch(`${API_BASE_URL}/users/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+
+    if (!response.ok) {
+      const data = await response.json();
+      throw new Error(data.error || "Login failed. Please check your credentials.");
+    }
+
+    return response.json();
+  },
 };
 
 export const OrderAPI = {
-  fetchOrderById: async (orderId: string): Promise<any> => {
-    const response = await fetch(`http://localhost:8080/api/orders/${orderId}`);
-    if (!response.ok) {
-      throw new Error("Failed to fetch order.");
-    }
-    return response.json();
-  },
+  fetchOrderById: (orderId: string): Promise<any> =>
+    apiRequest(`/orders/${orderId}`, { method: "GET" }),
+  createOrder: (payload: any): Promise<any> =>
+    apiRequest(`/orders`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    }),
 };
 
 export const ProductAPI = {
@@ -88,11 +101,6 @@ export const ProductAPI = {
     return response.json();
   },
 
-  fetchProductDetailsById: async (productId: string): Promise<any> => {
-    const response = await fetch(`http://localhost:8080/api/products/${productId}`);
-    if (!response.ok) {
-      throw new Error("Failed to fetch product details.");
-    }
-    return response.json();
-  },
+  fetchProductDetailsById: (productId: string): Promise<any> =>
+    apiRequest(`/products/${productId}`, { method: "GET" }),
 };
