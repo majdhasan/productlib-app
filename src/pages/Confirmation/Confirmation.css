@@ -39,3 +39,22 @@ IonButton {
     margin-top: 10px;
     font-size: 1.2em;
 }
+
+.product-image-container {
+    margin-right: 16px;
+  }
+  
+  .product-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+
+  .text-left {
+    text-align: left;
+  }
+  
+  .text-right {
+    text-align: right;
+  }
