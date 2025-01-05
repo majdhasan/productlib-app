@@ -5,51 +5,32 @@ import {
     IonInput,
     IonButton,
     IonList,
-    IonAlert,
 } from "@ionic/react";
 import { useAppContext } from "../../context/AppContext";
-import { useHistory } from "react-router-dom";
 import { translations } from "../../translations";
+import { UserAPI } from "../../services/apiService";
 import "./SignUpComponent.css";
 
 const SignUpComponent: React.FC = () => {
-    const { setUser, language, setShowToast, setToastMessage, setToastColor, isLoading, setIsLoading } = useAppContext();
+    const { language, setShowToast, setToastMessage, setToastColor, isLoading, setIsLoading, setActiveProfileTab } = useAppContext();
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const history = useHistory();
 
     const labels = translations[language];
 
     const handleSignUp = async () => {
         setIsLoading(true);
         try {
-            const response = await fetch("http://localhost:8080/api/users", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    firstName,
-                    lastName,
-                    phoneNumber,
-                    email,
-                    password,
-                }),
-            });
-
-            if (!response.ok) {
-                const data = await response.json();
-                throw new Error(data.error || "Failed to sign up.");
-              }
-
-            const newUser = await response.json();
-            setUser(newUser);
+            await UserAPI.signUp(firstName, lastName, phoneNumber, email, password);
+            
             setToastMessage(labels.registrationSuccessful);
             setToastColor('success');
             setShowToast(true);
-
-            history.push("/my-orders");
+            setActiveProfileTab('login');
+            
         } catch (error) {
             console.error("Error signing up:", error);
             setToastMessage(labels.registrationFailed + ": " + error.message);

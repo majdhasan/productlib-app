@@ -11,7 +11,6 @@ import {
     IonText,
     IonRefresher,
     IonRefresherContent,
-    IonAlert,
     IonThumbnail,
     IonBadge,
 } from '@ionic/react';
@@ -20,15 +19,6 @@ import { useAppContext } from '../../context/AppContext';
 import { UserAPI } from '../../services/apiService';
 import './MyOrders.css';
 import { translations } from '../../translations';
-
-enum OrderStatus {
-    SUBMITTED = 'Submitted',
-    APPROVED = 'Approved',
-    READY_FOR_PICKUP = 'Ready for Pickup',
-    IN_DELIVERY = 'In Delivery',
-    SUCCESSFUL = 'Successful',
-    FAILED = 'Failed',
-}
 
 // Helper functions to format date
 const formatDate = (timestamp: string): string => {
@@ -75,7 +65,8 @@ const MyOrders: React.FC = () => {
             );
             setOrders(sortedOrders);
         } catch (error) {
-            setErrorMessage(error.message);
+            // TODO add toast message
+            console.error('Error fetching orders:', error);
         } finally {
             setIsLoading(false);
         }
@@ -160,16 +151,6 @@ const MyOrders: React.FC = () => {
                     <IonText color="medium" className="ion-text-center">
                         <h2>{user ? labels.noOrdersFound : labels.notLoggedIn}</h2>
                     </IonText>
-                )}
-
-                {errorMessage && (
-                    <IonAlert
-                        isOpen={!!errorMessage}
-                        onDidDismiss={() => setErrorMessage(null)}
-                        header={labels.errorHeader}
-                        message={labels.errorLoadingOrders}
-                        buttons={[labels.ok]}
-                    />
                 )}
             </IonContent>
         </IonPage>

@@ -79,11 +79,26 @@ export const UserAPI = {
 
     return response.json();
   },
+  signUp: async (firstName: string, lastName: string, phoneNumber: string, email: string, password: string): Promise<any> => {
+    const response = await fetch(`${API_BASE_URL}/users`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ firstName, lastName, phoneNumber, email, password }),
+    });
+
+    if (response.status !== 200) {
+      const data = await response.json();
+      throw new Error(data.error || "Failed to sign up.");
+    }
+
+    return response.json();
+  },
 };
 
 export const OrderAPI = {
   fetchOrderById: (orderId: string): Promise<any> =>
     apiRequest(`/orders/${orderId}`, { method: "GET" }),
+
   createOrder: (payload: any): Promise<any> =>
     apiRequest(`/orders`, {
       method: "POST",
@@ -94,7 +109,7 @@ export const OrderAPI = {
 
 export const ProductAPI = {
   fetchProducts: async (): Promise<any> => {
-    const response = await fetch('http://localhost:8080/api/products');
+    const response = await fetch(`${API_BASE_URL}/products`);
     if (!response.ok) {
       throw new Error("Failed to fetch products.");
     }

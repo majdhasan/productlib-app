@@ -21,13 +21,18 @@ import SignUpComponent from '../../components/SignUpComponent/SignUpComponent';
 import './Profile.css';
 
 const ProfilePage: React.FC = () => {
-  const { user, setUser, setCart, language, setLanguage, activeProfileTab, setActiveProfileTab } = useAppContext();
+  const { user, setUser, setCart, language, setLanguage, activeProfileTab, setActiveProfileTab, setToastColor, setToastMessage, setShowToast } = useAppContext();
 
   const labels = translations[language];
 
   const handleLogout = () => {
     setUser(null);
     setCart(null);
+    localStorage.removeItem('token');
+    
+    setToastColor('success');
+    setToastMessage(labels.logoutSuccess);
+    setShowToast(true);
   };
 
   return (

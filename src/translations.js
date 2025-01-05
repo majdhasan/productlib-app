@@ -111,6 +111,7 @@ export const translations = {
     updateProfileFailed: 'Failed to update profile. Please try again.',
     editProfile: 'Edit Profile',
     applicationSettings: 'Application Settings',
+    logoutSuccess: 'You have been logged out successfully!',
   },
   ar: {
     profileTitle: 'الملف الشخصي',
@@ -221,6 +222,7 @@ export const translations = {
     updateProfileFailed: 'فشل تحديث الملف الشخصي. يرجى المحاولة مرة أخرى.',
     editProfile: 'تعديل الملف الشخصي',
     applicationSettings: 'إعدادات التطبيق',
+    logoutSuccess: 'تم تسجيل الخروج بنجاح!',
   },
   he: {
     profileTitle: 'פרופיל',
@@ -331,5 +333,6 @@ export const translations = {
     updateProfileFailed: 'עדכון הפרופיל נכשל. נסה שוב.',
     editProfile: 'ערוך פרופיל',
     applicationSettings: 'הגדרות האפליקציה',
+    logoutSuccess: 'התנתקת בהצלחה!',
   },
 };
