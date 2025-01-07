@@ -6,12 +6,9 @@ import {
     IonTitle,
     IonContent,
     IonList,
-    IonItem,
-    IonLabel,
     IonText,
     IonRefresher,
     IonRefresherContent,
-    IonThumbnail,
     IonBadge,
 } from '@ionic/react';
 import { useHistory } from 'react-router-dom';
@@ -19,6 +16,7 @@ import { useAppContext } from '../../context/AppContext';
 import { UserAPI } from '../../services/apiService';
 import './MyOrders.css';
 import { translations } from '../../translations';
+import OrderListItem from '../../components/OrderListItemComponent/OrderListItem';
 
 // Helper functions to format date
 const formatDate = (timestamp: string): string => {
@@ -51,8 +49,6 @@ const groupOrdersByDate = (orders: any[], language: string) => {
 const MyOrders: React.FC = () => {
     const { user, language, orderSubmitted, setOrderSubmitted, setIsLoading } = useAppContext();
     const [orders, setOrders] = useState<any[]>([]);
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
-    const history = useHistory();
 
     const labels = translations[language];
 
@@ -113,36 +109,12 @@ const MyOrders: React.FC = () => {
                             <IonBadge className="date-badge">{date}</IonBadge>
                             <IonList>
                                 {groupedOrders[date].map((order: any) => (
-                                    <IonItem
+                                    <OrderListItem
                                         key={order.id}
-                                        button
-                                        onClick={() => history.push(`/confirmation/${order.id}`)}
-                                    >
-                                        <IonLabel>
-                                            <h2 className="order-header">
-                                                {`${labels.orderNumber}${order.id}`}
-                                                <IonBadge
-                                                    className={`status-badge status-${order.status.toLowerCase()}`}
-                                                >
-                                                    {labels[`status${order.status}`] || labels.unknownStatus}
-                                                </IonBadge>
-                                            </h2>
-                                            <p>
-                                                <strong>{labels.createdAt}:</strong> {formatTime(order.createdAt, language)}
-                                            </p>
-                                            <div className="order-items">
-                                                {order.cart.items.map((item: any) => (
-                                                    <IonThumbnail key={item.id}>
-                                                        <img
-                                                            src={`https://pbs.twimg.com/media/Dq_Dic9W4AAQo9c.png`}
-                                                            alt={item.product.name}
-                                                            className="item-thumbnail"
-                                                        />
-                                                    </IonThumbnail>
-                                                ))}
-                                            </div>
-                                        </IonLabel>
-                                    </IonItem>
+                                        order={order}
+                                        labels={labels}
+                                        language={language}
+                                    />
                                 ))}
                             </IonList>
                         </div>
