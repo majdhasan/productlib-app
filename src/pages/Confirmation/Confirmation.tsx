@@ -91,6 +91,10 @@ const Confirmation: React.FC = () => {
         return labels.unknownStatus;
     }
   };
+  
+  const formatDateTime = (dateTime: string) => {
+    return new Date(dateTime).toLocaleString('he-IL');
+  };
 
   return (
     <IonPage>
@@ -100,43 +104,6 @@ const Confirmation: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
-        <IonCard>
-          <IonCardHeader>
-            <IonCardTitle>{labels.orderDetails}</IonCardTitle>
-          </IonCardHeader>
-          <IonCardContent>
-            <IonList>
-            <IonItem>
-                <IonLabel>{labels.orderStatus}</IonLabel>
-                <IonText>{getStatusLabel(order.status)}</IonText>
-              </IonItem>
-              <IonItem>
-                <IonLabel>{labels.orderType}</IonLabel>
-                <IonText>{getTypeLabel(order.type)}</IonText>
-              </IonItem>
-              <IonItem>
-                <IonLabel>{labels.wishedPickupTime}</IonLabel>
-                <IonText>{order.wishedPickupTime || labels.asSoonAsPossible}</IonText>
-              </IonItem>
-              <IonItem>
-                <IonLabel>{labels.firstName}</IonLabel>
-                <IonText>{order.firstName}</IonText>
-              </IonItem>
-              <IonItem>
-                <IonLabel>{labels.lastName}</IonLabel>
-                <IonText>{order.lastName}</IonText>
-              </IonItem>
-              <IonItem>
-                <IonLabel>{labels.phoneNumber}</IonLabel>
-                <IonText>{order.phone}</IonText>
-              </IonItem>
-              <IonItem>
-                <IonLabel>{labels.orderAddress}</IonLabel>
-                <IonText>{order.address}</IonText>
-              </IonItem>
-            </IonList>
-          </IonCardContent>
-        </IonCard>
         <IonCard>
           <IonCardHeader>
             <IonCardTitle>{labels.products}</IonCardTitle>
@@ -171,6 +138,44 @@ const Confirmation: React.FC = () => {
                 <h2>₪{calculateTotalCost()}</h2>
               </IonText>
             </IonItem>
+          </IonCardContent>
+        </IonCard>
+        <IonCard>
+          <IonCardHeader>
+            <IonCardTitle>{labels.orderDetails}</IonCardTitle>
+          </IonCardHeader>
+          <IonCardContent>
+            <IonList>
+            <IonItem>
+                <IonLabel>{labels.orderStatus}</IonLabel>
+                <IonText>{getStatusLabel(order.status)}</IonText>
+              </IonItem>
+              <IonItem>
+                <IonLabel>{labels.orderType}</IonLabel>
+                <IonText>{getTypeLabel(order.type)}</IonText>
+              </IonItem>
+              <IonItem>
+                <IonLabel>{labels.wishedPickupTime}</IonLabel>
+                <IonText>{order.wishedPickupTime ? formatDateTime(order.wishedPickupTime) : labels.asSoonAsPossible}</IonText>
+              </IonItem>
+              <IonItem>
+                <IonLabel>{labels.firstName}</IonLabel>
+                <IonText>{order.firstName}</IonText>
+              </IonItem>
+              <IonItem>
+                <IonLabel>{labels.lastName}</IonLabel>
+                <IonText>{order.lastName}</IonText>
+              </IonItem>
+              <IonItem>
+                <IonLabel>{labels.phoneNumber}</IonLabel>
+                <IonText>{order.phone}</IonText>
+              </IonItem>
+              <IonItem>
+                <IonLabel>{labels.orderAddress}</IonLabel>
+                {/* TODO: replace with order address when applicable */}
+                <IonText>{labels.bakeryAddress}</IonText>
+              </IonItem>
+            </IonList>
           </IonCardContent>
         </IonCard>
       </IonContent>

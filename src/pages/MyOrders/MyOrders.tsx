@@ -39,7 +39,7 @@ const formatTime = (timestamp: string, language: string): string => {
 
 const groupOrdersByDate = (orders: any[], language: string) => {
     return orders.reduce((grouped: Record<string, any[]>, order: any) => {
-        const dateKey = formatDate(order.createdAt, language);
+        const dateKey = formatDate(order.createdAt);
         if (!grouped[dateKey]) {
             grouped[dateKey] = [];
         }

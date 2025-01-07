@@ -1,47 +1,11 @@
-.confirmation-container {
-    text-align: center;
-    padding: 20px;
-}
-
-.confirmation-container h2 {
-    margin-bottom: 10px;
-    color: var(--ion-color-primary);
-}
-
-.confirmation-container p {
-    margin-bottom: 20px;
-    font-size: 1.2rem;
-}
-
-.ion-padding {
-    text-align: center;
-}
-
-.ion-padding p {
-    margin: 10px 0;
-}
-
-IonButton {
-    margin: 10px 0;
-}
-
-.paid {
-    color: green;
-    font-weight: bold;
-}
-
 .unpaid {
     color: red;
     font-weight: bold;
-}
-
-.status-message {
+  }
+  
+  .status-message {
     margin-top: 10px;
     font-size: 1.2em;
-}
-
-.product-image-container {
-    margin-right: 16px;
   }
   
   .product-image {
@@ -50,11 +14,17 @@ IonButton {
     object-fit: cover;
     border-radius: 8px;
   }
-
+  
   .text-left {
     text-align: left;
   }
   
   .text-right {
     text-align: right;
+  }
+  
+  .centered-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
