@@ -91,7 +91,6 @@ const Confirmation: React.FC = () => {
         return labels.unknownStatus;
     }
   };
-  
   const formatDateTime = (dateTime: string) => {
     return new Date(dateTime).toLocaleString('he-IL');
   };
@@ -126,6 +125,7 @@ const Confirmation: React.FC = () => {
                       <strong>{labels.rowTotal}:</strong> ₪
                       {(item.productPrice * item.quantity).toFixed(2)}
                     </p>
+                    {item.notes && <p><strong>{labels.notes}:</strong> {item.notes}</p>}
                   </IonLabel>
                 </IonItem>
               ))}
@@ -146,7 +146,7 @@ const Confirmation: React.FC = () => {
           </IonCardHeader>
           <IonCardContent>
             <IonList>
-            <IonItem>
+              <IonItem>
                 <IonLabel>{labels.orderStatus}</IonLabel>
                 <IonText>{getStatusLabel(order.status)}</IonText>
               </IonItem>
@@ -175,6 +175,12 @@ const Confirmation: React.FC = () => {
                 {/* TODO: replace with order address when applicable */}
                 <IonText>{labels.bakeryAddress}</IonText>
               </IonItem>
+              {order.notes && (
+                <IonItem>
+                  <IonLabel>{labels.notes}</IonLabel>
+                  <IonText>{order.notes}</IonText>
+                </IonItem>
+              )}
             </IonList>
           </IonCardContent>
         </IonCard>
