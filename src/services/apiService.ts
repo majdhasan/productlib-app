@@ -1,6 +1,6 @@
 import { getToken, refreshToken } from "./tokenService";
 
-const API_BASE_URL = "http://localhost:8080/api";
+const API_BASE_URL = "https://api.meshhdawi.com";
 
 export const apiRequest = async (url: string, options: RequestInit = {}) => {
   let token = getToken();
