@@ -26,13 +26,16 @@ const ProfilePage: React.FC = () => {
   const labels = translations[language];
 
   const handleLogout = () => {
-    setUser(null);
-    setCart(null);
-    localStorage.removeItem('token');
-    
-    setToastColor('success');
-    setToastMessage(labels.logoutSuccess);
-    setShowToast(true);
+    const confirmed = window.confirm(labels.logoutConfirmation || 'Are you sure you want to log out?');
+    if (confirmed) {
+      setUser(null);
+      setCart(null);
+      localStorage.removeItem('token');
+      
+      setToastColor('success');
+      setToastMessage(labels.logoutSuccess);
+      setShowToast(true);
+    }
   };
 
   return (

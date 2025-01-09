@@ -129,6 +129,7 @@ export const translations = {
     bakeryName: "Meshhdawi Bakery",
     bakeryMotto: "More than just a bakery",
     printNow: "Print Now",
+    logoutConfirmation: "Are you sure you want to log out?"
   },
   ar: {
     profileTitle: 'الملف الشخصي',
@@ -257,8 +258,10 @@ export const translations = {
     price: "السعر",
     product: "المنتج",
     bakeryMotto: "اكثر من مجرد مخبز",
+    "logoutConfirmation": "هل أنت متأكد أنك تريد تسجيل الخروج؟"
   },
   he: {
+    "logoutConfirmation": "האם אתה בטוח שברצונך להתנתק?",
     profileTitle: 'פרופיל',
     bakeryMotto: 'יותר מפשוט מאפייה',
     printNow: 'הדפס עכשיו',
