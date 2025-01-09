@@ -31,7 +31,7 @@ const ProfilePage: React.FC = () => {
       setUser(null);
       setCart(null);
       localStorage.removeItem('token');
-      
+
       setToastColor('success');
       setToastMessage(labels.logoutSuccess);
       setShowToast(true);
@@ -76,10 +76,16 @@ const ProfilePage: React.FC = () => {
               value={activeProfileTab}
               onIonChange={(e) => setActiveProfileTab(e.detail.value as 'login' | 'signup')}
             >
-              <IonSegmentButton value="login">
+              <IonSegmentButton
+                value="login"
+                className={activeProfileTab === 'login' ? 'active-tab' : ''}
+              >
                 <IonLabel>{labels.login}</IonLabel>
               </IonSegmentButton>
-              <IonSegmentButton value="signup">
+              <IonSegmentButton
+                value="signup"
+                className={activeProfileTab === 'signup' ? 'active-tab' : ''}
+              >
                 <IonLabel>{labels.signup}</IonLabel>
               </IonSegmentButton>
             </IonSegment>

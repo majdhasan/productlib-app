@@ -49,3 +49,17 @@
   text-align: center;
   width: 100%;
 }
+
+.ion-segment-button-checked {
+  color: var(--ion-color-primary) !important; /* Ensure the text color is visible */
+  font-weight: bold; /* Make the text stand out */
+}
+
+.ion-segment-button-checked ion-label {
+  color: var(--ion-color-primary) !important;
+}
+
+/* Optional: Add a background color to the active tab */
+.ion-segment-button-checked {
+  background-color: var(--ion-color-light) !important;
+}
