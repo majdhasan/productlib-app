@@ -11,7 +11,6 @@ import {
     IonRefresherContent,
     IonBadge,
 } from '@ionic/react';
-import { useHistory } from 'react-router-dom';
 import { useAppContext } from '../../context/AppContext';
 import { UserAPI } from '../../services/apiService';
 import './MyOrders.css';
@@ -25,14 +24,6 @@ const formatDate = (timestamp: string): string => {
     const month = String(date.getMonth() + 1).padStart(2, '0'); // Ensures 2 digits for the month
     const year = date.getFullYear(); // Gets the full year
     return `${day}.${month}.${year}`; // Formats as DD.MM.YYYY
-};
-
-const formatTime = (timestamp: string, language: string): string => {
-    const options: Intl.DateTimeFormatOptions = {
-        hour: '2-digit',
-        minute: '2-digit',
-    };
-    return new Date(timestamp).toLocaleTimeString(language, options);
 };
 
 const groupOrdersByDate = (orders: any[], language: string) => {
@@ -71,6 +62,7 @@ const MyOrders: React.FC = () => {
     useEffect(() => {
         if (!user) {
             setIsLoading(false);
+            setOrders([]);
             return;
         }
 

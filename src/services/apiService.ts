@@ -116,6 +116,11 @@ export const ProductAPI = {
     return response.json();
   },
 
-  fetchProductDetailsById: (productId: string): Promise<any> =>
-    apiRequest(`/products/${productId}`, { method: "GET" }),
+  fetchProductDetailsById: async (productId: string): Promise<any> => {
+    const response = await fetch(`${API_BASE_URL}/products/${productId}`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch products.");
+    }
+    return response.json();
+  },
 };
