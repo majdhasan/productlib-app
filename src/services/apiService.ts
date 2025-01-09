@@ -30,6 +30,10 @@ export const apiRequest = async (url: string, options: RequestInit = {}) => {
     throw new Error("API request failed");
   }
 
+  if (response.status === 204) {
+    return null;
+  }
+
   return response.json();
 };
 
