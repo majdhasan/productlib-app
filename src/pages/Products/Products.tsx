@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { IonSearchbar, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonLabel, IonThumbnail, IonText } from '@ionic/react';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonLabel, IonThumbnail, IonText } from '@ionic/react';
 import { useAppContext } from '../../context/AppContext';
 import { translations } from '../../translations';
 import './Products.css';
-import { ProductAPI } from "../../services/apiService";
+import { ProductAPI, baseUrl } from "../../services/apiService";
 import { useHistory } from 'react-router';
 
 const Products: React.FC = () => {
-  const { language, isLoading, setIsLoading } = useAppContext();
+  const { language, setIsLoading } = useAppContext();
   const [products, setProducts] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
   const history  = useHistory();
@@ -59,7 +59,8 @@ const Products: React.FC = () => {
                 return (
                   <IonItem key={product.id} button onClick={() => goToProductDetails(product.id)}>
                     <IonThumbnail slot="start">
-                      <img src={`https://pbs.twimg.com/media/Dq_Dic9W4AAQo9c.png`} alt={name} />
+                    <img src={`${baseUrl}/files/${product.image}`} alt={name} />
+                      
                     </IonThumbnail>
                     <IonLabel>
                       <h2>{name}</h2>

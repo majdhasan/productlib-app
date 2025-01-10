@@ -24,13 +24,13 @@ import { callOutline, locationOutline, clipboardOutline, timeOutline, personOutl
 import { useHistory } from "react-router-dom";
 import { useAppContext } from "../../context/AppContext";
 import { translations } from "../../translations";
-import { OrderAPI } from '../../services/apiService';
+import { OrderAPI, baseUrl } from '../../services/apiService';
 import "./Checkout.css";
 
 const Checkout: React.FC = () => {
     const { user, cart, language, setOrderSubmitted, setToastColor, setToastMessage, setShowToast } = useAppContext();
     const [pickupOrDelivery, setPickupOrDelivery] = useState<"pickup" | "delivery">("pickup");
-    const [address, setAddress] = useState("");
+    const [address] = useState("");
     const [phone, setPhone] = useState(user?.phoneNumber || "");
     const [firstName, setFirstName] = useState(user?.firstName || "");
     const [lastName, setLastName] = useState(user?.lastName || "");
@@ -101,7 +101,7 @@ const Checkout: React.FC = () => {
             history.push(`/my-orders`);
         } catch (error) {
             console.error("Checkout Error:", error);
-            
+
             setToastMessage(labels.checkoutError);
             setToastColor('danger');
             setShowToast(true);
@@ -292,10 +292,8 @@ const Checkout: React.FC = () => {
                     {cart?.items.map((item: any, index: number) => (
                         <IonItem key={index} lines="inset" className="product-item">
                             <IonThumbnail slot="start" className="product-thumbnail">
-                                <img
-                                    src={`https://pbs.twimg.com/media/Dq_Dic9W4AAQo9c.png`}
-                                    alt={item.product.name}
-                                />
+
+                                <img src={`${baseUrl}/files/${item.product.image}`} alt={item.product.name} />
                             </IonThumbnail>
                             <IonLabel className="product-details">
                                 <h3 className="product-name">{item.product.name}</h3>

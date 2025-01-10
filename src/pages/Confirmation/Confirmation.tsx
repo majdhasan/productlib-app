@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonLabel, IonItem, IonList, IonText, IonThumbnail, IonCard, IonCardHeader, IonCardTitle, IonCardContent } from '@ionic/react';
-import { OrderAPI } from "../../services/apiService";
+import { OrderAPI, baseUrl } from "../../services/apiService";
 import { useAppContext } from "../../context/AppContext";
 import { translations } from '../../translations';
 import "./Confirmation.css";
@@ -112,10 +112,7 @@ const Confirmation: React.FC = () => {
               {order.cart.items.map((item: any, index: number) => (
                 <IonItem key={index}>
                   <IonThumbnail slot="start">
-                    <img
-                      src={`https://pbs.twimg.com/media/Dq_Dic9W4AAQo9c.png`}
-                      alt={item.product.name}
-                    />
+                  <img src={`${baseUrl}/files/${item.product.image}`} alt={item.product.name} />
                   </IonThumbnail>
                   <IonLabel>
                     <h2>{item.product.name}</h2>

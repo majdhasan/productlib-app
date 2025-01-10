@@ -1,6 +1,7 @@
 import React from 'react';
 import { IonItem, IonLabel, IonBadge, IonThumbnail } from '@ionic/react';
 import { useHistory } from 'react-router-dom';
+import { baseUrl } from '../../services/apiService';
 import './OrderListItem.css';
 
 interface OrderListItemProps {
@@ -39,11 +40,7 @@ const OrderListItem: React.FC<OrderListItemProps> = ({ order, labels, language }
                 <div className="order-items">
                     {order.cart.items.map((item: any) => (
                         <IonThumbnail key={item.id}>
-                            <img
-                                src={`https://pbs.twimg.com/media/Dq_Dic9W4AAQo9c.png`}
-                                alt={item.product.name}
-                                className="item-thumbnail"
-                            />
+                            <img src={`${baseUrl}/files/${item.product.image}`} alt={item.product.name} className="item-thumbnail" />
                         </IonThumbnail>
                     ))}
                 </div>

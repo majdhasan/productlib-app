@@ -15,7 +15,7 @@ import {
 } from "@ionic/react";
 import { useHistory } from "react-router-dom";
 import { useAppContext } from "../../context/AppContext";
-import { CartAPI } from "../../services/apiService";
+import { CartAPI, baseUrl } from "../../services/apiService";
 import { translations } from '../../translations';
 
 const Cart: React.FC = () => {
@@ -120,11 +120,7 @@ const Cart: React.FC = () => {
             {cart.items.map((item: any, index: number) => (
               <IonItem key={index}>
                 <IonThumbnail slot="start">
-                  <img
-                    // src={`http://localhost:8080/images/${item.product.image}`}
-                    src={`https://pbs.twimg.com/media/Dq_Dic9W4AAQo9c.png`}
-                    alt={item.product.name}
-                  />
+                  <img src={`${baseUrl}/files/${item.product.image}`} alt={item.product.name} />
                 </IonThumbnail>
                 <IonLabel>
                   <h2>{item.product.name}</h2>

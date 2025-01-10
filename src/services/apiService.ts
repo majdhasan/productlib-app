@@ -1,6 +1,6 @@
 import { getToken, refreshToken } from "./tokenService";
 
-const API_BASE_URL = "https://api.meshhdawi.com";
+export const baseUrl = "https://api.meshhdawi.com";
 
 export const apiRequest = async (url: string, options: RequestInit = {}) => {
   let token = getToken();
@@ -14,7 +14,7 @@ export const apiRequest = async (url: string, options: RequestInit = {}) => {
     Authorization: `Bearer ${token}`,
   };
 
-  let response = await fetch(`${API_BASE_URL}${url}`, options);
+  let response = await fetch(`${baseUrl}${url}`, options);
 
   if (response.status === 401) {
     // Token might be expired, try to refresh it
@@ -23,7 +23,7 @@ export const apiRequest = async (url: string, options: RequestInit = {}) => {
       ...options.headers,
       Authorization: `Bearer ${token}`,
     };
-    response = await fetch(`${API_BASE_URL}${url}`, options);
+    response = await fetch(`${baseUrl}${url}`, options);
   }
 
   if (!response.ok) {
@@ -70,7 +70,7 @@ export const UserAPI = {
   fetchUserOrders: (userId: number) => apiRequest(`/orders/user/${userId}`, { method: "GET" }),
 
   login: async (email: string, password: string): Promise<any> => {
-    const response = await fetch(`${API_BASE_URL}/users/login`, {
+    const response = await fetch(`${baseUrl}/users/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
@@ -84,7 +84,7 @@ export const UserAPI = {
     return response.json();
   },
   signUp: async (firstName: string, lastName: string, phoneNumber: string, email: string, password: string): Promise<any> => {
-    const response = await fetch(`${API_BASE_URL}/users`, {
+    const response = await fetch(`${baseUrl}/users`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ firstName, lastName, phoneNumber, email, password }),
@@ -113,7 +113,7 @@ export const OrderAPI = {
 
 export const ProductAPI = {
   fetchProducts: async (): Promise<any> => {
-    const response = await fetch(`${API_BASE_URL}/products`);
+    const response = await fetch(`${baseUrl}/products`);
     if (!response.ok) {
       throw new Error("Failed to fetch products.");
     }
@@ -121,7 +121,7 @@ export const ProductAPI = {
   },
 
   fetchProductDetailsById: async (productId: string): Promise<any> => {
-    const response = await fetch(`${API_BASE_URL}/products/${productId}`);
+    const response = await fetch(`${baseUrl}/products/${productId}`);
     if (!response.ok) {
       throw new Error("Failed to fetch products.");
     }

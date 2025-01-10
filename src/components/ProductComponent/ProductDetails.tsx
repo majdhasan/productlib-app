@@ -15,7 +15,7 @@ import {
 import React, { useEffect, useState } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { useAppContext } from '../../context/AppContext';
-import { ProductAPI, CartAPI } from "../../services/apiService";
+import { ProductAPI, CartAPI, baseUrl } from "../../services/apiService";
 import { translations } from '../../translations';
 import './ProductDetails.css';
 
@@ -93,8 +93,7 @@ const ProductDetails: React.FC = () => {
         {product && !isLoading && (
           <>
             <div className="product-image-container">
-              <img src='https://pbs.twimg.com/media/Dq_Dic9W4AAQo9c.png' alt={product.name} className="product-image" />
-              {/* <img src={product.imageUrl} alt={product.name} className="product-image" /> */}
+            <img src={`${baseUrl}/files/${product.image}`} alt={product.name}  className="product-image" />
             </div>
 
             <div className="product-details-container">
