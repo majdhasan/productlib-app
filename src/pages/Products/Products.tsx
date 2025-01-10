@@ -65,7 +65,7 @@ const Products: React.FC = () => {
                     <IonLabel>
                       <h2>{name}</h2>
                       <p>{description}</p>
-                      <p>{labels.price}: ₪{product.cost}</p>
+                      <p>{labels.price}: ₪{product.price}</p>
                     </IonLabel>
                   </IonItem>
                 );

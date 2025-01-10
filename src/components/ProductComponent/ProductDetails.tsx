@@ -100,7 +100,7 @@ const ProductDetails: React.FC = () => {
               <h2 className="product-name">{product.name}</h2>
               <p className="product-description">{product.description}</p>
               <p className="product-price">
-                <strong>{labels.price}:</strong> ₪{product.cost.toFixed(2)}
+                <strong>{labels.price}:</strong> ₪{product.price.toFixed(2)}
               </p>
             </div>
             

@@ -26,13 +26,10 @@ const Cart: React.FC = () => {
 
   const fetchOrCreateCart = async () => {
     try {
-      // Check if the current cart exists and is still pending
-      if (cart && cart.status === "PENDING") {
+      if (cart) {
         const fetchedCart = await CartAPI.fetchCart(cart.id);
-        if (fetchedCart.status === "PENDING") {
-          setCart(fetchedCart);
-          return;
-        }
+        setCart(fetchedCart);
+        return;
       }
 
       // If no pending cart exists, create a new cart for the current user
@@ -53,11 +50,11 @@ const Cart: React.FC = () => {
 
   useEffect(() => {
     if (orderSubmitted) {
-        // Fetch a new cart and reset the flag
-        fetchOrCreateCart();
-        setOrderSubmitted(false);
+      // Fetch a new cart and reset the flag
+      fetchOrCreateCart();
+      setOrderSubmitted(false);
     }
-}, [orderSubmitted]);
+  }, [orderSubmitted]);
 
   const handleQuantityChange = async (cartItemId: number, change: number) => {
     try {
@@ -70,12 +67,11 @@ const Cart: React.FC = () => {
       const updatedCart = { ...cart, items: updatedItems };
       setCart(updatedCart);
 
-      if (cart.status === "PENDING") {
-        const targetItem = updatedItems.find((item: any) => item.id === cartItemId);
-        if (targetItem) {
-          await CartAPI.updateCartItemQuantity(cartItemId, targetItem.quantity);
-        }
+      const targetItem = updatedItems.find((item: any) => item.id === cartItemId);
+      if (targetItem) {
+        await CartAPI.updateCartItemQuantity(cartItemId, targetItem.quantity);
       }
+
     } catch (error) {
       console.error("Error updating cart item quantity:", error);
     }
@@ -92,7 +88,7 @@ const Cart: React.FC = () => {
   };
 
   const calculateRowTotal = (item: any) => {
-    const price = cart.status === "PENDING" ? item.product.cost : item.productPrice;
+    const price = item.product.price;
     return price * item.quantity;
   };
 
@@ -126,9 +122,7 @@ const Cart: React.FC = () => {
                   <h2>{item.product.name}</h2>
                   <p>
                     <strong>{labels.pricePerUnit}:</strong> ₪
-                    {cart.status === "PENDING"
-                      ? item.product.cost.toFixed(2)
-                      : (item.productPrice || 0).toFixed(2)}
+                    {item.product.price.toFixed(2)}
                   </p>
                   <p>
                     <strong>{labels.rowTotal}:</strong> ₪

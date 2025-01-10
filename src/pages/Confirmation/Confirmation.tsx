@@ -58,8 +58,8 @@ const Confirmation: React.FC = () => {
     );
   }
 
-  const calculateTotalCost = () => {
-    return order.cart.items.reduce((total: number, item: any) => total + (item.productPrice * item.quantity), 0).toFixed(2);
+  const calculateTotalPrice = () => {
+    return order.items.reduce((total: number, item: any) => total + (item.productPrice * item.quantity), 0).toFixed(2);
   };
 
   const getStatusLabel = (status: string) => {
@@ -132,7 +132,7 @@ const Confirmation: React.FC = () => {
                 <h2>{labels.total}</h2>
               </IonLabel>
               <IonText>
-                <h2>₪{calculateTotalCost()}</h2>
+                <h2>₪{calculateTotaPrice()}</h2>
               </IonText>
             </IonItem>
           </IonCardContent>

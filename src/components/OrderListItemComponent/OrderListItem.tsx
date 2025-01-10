@@ -38,9 +38,9 @@ const OrderListItem: React.FC<OrderListItemProps> = ({ order, labels, language }
                     <strong>{labels.createdAt}:</strong> {formatTime(order.createdAt, language)}
                 </p>
                 <div className="order-items">
-                    {order.cart.items.map((item: any) => (
+                    {order.items.map((item: any) => (
                         <IonThumbnail key={item.id}>
-                            <img src={`${baseUrl}/files/${item.product.image}`} alt={item.product.name} className="item-thumbnail" />
+                            <img src={`${baseUrl}/files/${item.productImage}`} alt={item.productName} className="item-thumbnail" />
                         </IonThumbnail>
                     ))}
                 </div>

@@ -44,7 +44,7 @@ const Checkout: React.FC = () => {
     const calculateRowTotal = (quantity: number, price: number) => quantity * price;
 
     const calculateCartTotal = () =>
-        cart?.items.reduce((total: number, item: any) => total + calculateRowTotal(item.quantity, item.product.cost), 0) || 0;
+        cart?.items.reduce((total: number, item: any) => total + calculateRowTotal(item.quantity, item.product.price), 0) || 0;
 
 
     const padTime = (time: string) => {
@@ -304,10 +304,10 @@ const Checkout: React.FC = () => {
                                     {item.notes && <><strong>{labels.notes}:</strong> {item.notes}</>}
                                 </p>
                                 <p className="product-info">
-                                    <strong>{labels.pricePerUnit}:</strong> ₪{item.product.cost.toFixed(2)}
+                                    <strong>{labels.pricePerUnit}:</strong> ₪{item.product.price.toFixed(2)}
                                 </p>
                                 <p className="product-info">
-                                    <strong>{labels.rowTotal}:</strong> ₪{calculateRowTotal(item.quantity, item.product.cost).toFixed(2)}
+                                    <strong>{labels.rowTotal}:</strong> ₪{calculateRowTotal(item.quantity, item.product.price).toFixed(2)}
                                 </p>
                             </IonLabel>
                         </IonItem>
