@@ -17,6 +17,7 @@ import { useHistory } from "react-router-dom";
 import { useAppContext } from "../../context/AppContext";
 import { CartAPI, baseUrl } from "../../services/apiService";
 import { translations } from '../../translations';
+import { getTranslation } from '../../services/translationService';
 
 const Cart: React.FC = () => {
   const { user, cart, setCart, language, orderSubmitted, setOrderSubmitted } = useAppContext();
@@ -114,12 +115,13 @@ const Cart: React.FC = () => {
         {cart?.items?.length > 0 ? (
           <IonList>
             {cart.items.map((item: any, index: number) => (
+              
               <IonItem key={index}>
                 <IonThumbnail slot="start">
-                  <img src={`${baseUrl}/files/${item.product.image}`} alt={item.product.name} />
+                  <img src={`${baseUrl}/files/${item.product.image}`} alt={getTranslation(item.product, language).name} />
                 </IonThumbnail>
                 <IonLabel>
-                  <h2>{item.product.name}</h2>
+                  <h2>{getTranslation(item.product, language).name}</h2>
                   <p>
                     <strong>{labels.pricePerUnit}:</strong> ₪
                     {item.product.price.toFixed(2)}

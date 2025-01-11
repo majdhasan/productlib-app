@@ -4,6 +4,7 @@ import { useAppContext } from '../../context/AppContext';
 import { translations } from '../../translations';
 import './Products.css';
 import { ProductAPI, baseUrl } from "../../services/apiService";
+import { getTranslation } from '../../services/translationService';
 import { useHistory } from 'react-router';
 
 const Products: React.FC = () => {
@@ -29,11 +30,6 @@ const Products: React.FC = () => {
 
     fetchProducts();
   }, []);
-
-  const getTranslation = (product: any, language: string) => {
-    const translation = product.translations.find((t: any) => t.language === language);
-    return translation || { name: product.name, description: product.description };
-  };
 
   const goToProductDetails = (productId: number) => {
     history.push(`/products/${productId}`);

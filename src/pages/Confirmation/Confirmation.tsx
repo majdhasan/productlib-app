@@ -109,13 +109,13 @@ const Confirmation: React.FC = () => {
           </IonCardHeader>
           <IonCardContent>
             <IonList>
-              {order.cart.items.map((item: any, index: number) => (
+              {order.items.map((item: any, index: number) => (
                 <IonItem key={index}>
                   <IonThumbnail slot="start">
-                  <img src={`${baseUrl}/files/${item.product.image}`} alt={item.product.name} />
+                  <img src={`${baseUrl}/files/${item.productImage}`} alt={item.productName} />
                   </IonThumbnail>
                   <IonLabel>
-                    <h2>{item.product.name}</h2>
+                    <h2>{item.productName}</h2>
                     <p>{labels.quantity}: {item.quantity}</p>
                     <p>{labels.price}: ₪{item.productPrice}</p>
                     <p>
@@ -132,7 +132,7 @@ const Confirmation: React.FC = () => {
                 <h2>{labels.total}</h2>
               </IonLabel>
               <IonText>
-                <h2>₪{calculateTotaPrice()}</h2>
+                <h2>₪{calculateTotalPrice()}</h2>
               </IonText>
             </IonItem>
           </IonCardContent>
