@@ -88,6 +88,9 @@ export const translations = {
     statusIN_DELIVERY: "In Delivery",
     statusDELIVERED: "Delivered",
     statusFAILED: "Failed",
+    statusIN_PREPARATION: "In Preparation",
+    statusDECLINED: "Declined",
+    statusPICKED_UP: "Picked Up",
     unknownStatus: "Unknown Status",
     "email": "Email",
     "password": "Password",
@@ -132,6 +135,9 @@ export const translations = {
     loginToOrder: "Please log in to order",
   },
   ar: {
+    statusIN_PREPARATION: "قيد التحضير",
+    statusDECLINED: "تم الرفض",
+    statusPICKED_UP: "تم الاستلام",
     loginToOrder: 'الرجاء تسجيل الدخول للطلب',
     profileTitle: 'الملف الشخصي',
     bakeryName: 'مخبز المشهداوي',
@@ -262,6 +268,9 @@ export const translations = {
     
   },
   he: {
+    statusIN_PREPARATION: "בהכנה",
+    statusDECLINED: "נדחה",
+    statusPICKED_UP: "נאסף",
     loginToOrder: 'אנא התחבר כדי להזמין',
     "logoutConfirmation": "האם אתה בטוח שברצונך להתנתק?",
     profileTitle: 'פרופיל',

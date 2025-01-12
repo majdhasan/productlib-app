@@ -68,12 +68,18 @@ const Confirmation: React.FC = () => {
         return labels.statusSUBMITTED;
       case 'APPROVED':
         return labels.statusAPPROVED;
+      case 'IN_PREPARATION':
+        return labels.statusIN_PREPARATION;
+      case 'DECLINED':
+        return labels.statusDECLINED;
       case 'READY_FOR_PICKUP':
         return labels.statusREADY_FOR_PICKUP;
       case 'IN_DELIVERY':
         return labels.statusIN_DELIVERY;
       case 'DELIVERED':
         return labels.statusDELIVERED;
+      case 'PICKED_UP':
+        return labels.statusPICKED_UP;
       case 'FAILED':
         return labels.statusFAILED;
       default:
