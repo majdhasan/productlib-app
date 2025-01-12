@@ -34,7 +34,7 @@ const ProductDetails: React.FC = () => {
   const handleAddToCart = async () => {
     try {
       if (!user || !user.id) {
-        alert('User information missing. Please log in again.');
+        alert(labels.loginToOrder);
         history.push('/profile');
         return;
       }

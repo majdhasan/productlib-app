@@ -29,12 +29,6 @@
   margin-right: auto;
 }
 
-.product-image {
-  width: 500px; /* Set a fixed width for the image */
-  height: auto;
-  border-radius: 8px;
-}
-
 .product-details-container {
   text-align: center;
   margin: 16px 0;

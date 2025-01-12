@@ -81,7 +81,6 @@ export const translations = {
     noAvailableTime: 'No available times',
     addNotesPlaceholder: 'Add additional details or instructions...',
     addToCart: 'Add to Cart',
-    loginToOrder: 'Log in to order',
     productDetails: 'Product Details',
     statusSUBMITTED: "Submitted, waiting for approval",
     statusAPPROVED: "Approved",
@@ -129,9 +128,11 @@ export const translations = {
     bakeryName: "Meshhdawi Bakery",
     bakeryMotto: "More than just a bakery",
     printNow: "Print Now",
-    logoutConfirmation: "Are you sure you want to log out?"
+    logoutConfirmation: "Are you sure you want to log out?",
+    loginToOrder: "Please log in to order",
   },
   ar: {
+    loginToOrder: 'الرجاء تسجيل الدخول للطلب',
     profileTitle: 'الملف الشخصي',
     bakeryName: 'مخبز المشهداوي',
     printNow: 'اطبع الآن',
@@ -212,7 +213,6 @@ export const translations = {
     noAvailableTime: 'لا توجد أوقات متاحة',
     addNotesPlaceholder: 'أضف تفاصيل أو تعليمات إضافية...',
     addToCart: 'أضف إلى السلة',
-    loginToOrder: 'تسجيل الدخول للطلب',
     productDetails: 'تفاصيل المنتج',
     "statusSUBMITTED": "تم الإرسال، في انتظار الموافقة",
     "statusAPPROVED": "تمت الموافقة",
@@ -259,8 +259,10 @@ export const translations = {
     product: "المنتج",
     bakeryMotto: "اكثر من مجرد مخبز",
     "logoutConfirmation": "هل أنت متأكد أنك تريد تسجيل الخروج؟"
+    
   },
   he: {
+    loginToOrder: 'אנא התחבר כדי להזמין',
     "logoutConfirmation": "האם אתה בטוח שברצונך להתנתק?",
     profileTitle: 'פרופיל',
     bakeryMotto: 'יותר מפשוט מאפייה',
@@ -342,7 +344,6 @@ export const translations = {
     noAvailableTime: 'אין שעות זמינות',
     addNotesPlaceholder: 'הוסף פרטים או הוראות נוספות...',
     addToCart: 'הוסף לעגלה',
-    loginToOrder: 'התחבר להזמנה',
     productDetails: 'פרטי המוצר',
     "statusSUBMITTED": "נשלח, ממתין לאישור",
     "statusAPPROVED": "אושר",
