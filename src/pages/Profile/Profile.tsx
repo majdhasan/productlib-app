@@ -66,7 +66,7 @@ const ProfilePage: React.FC = () => {
                 <IonLabel className="view-mode">{user.phoneNumber}</IonLabel>
               </IonItem>
             </IonList>
-            <IonButton expand="block" color="danger" onClick={handleLogout}>
+            <IonButton color="danger" onClick={handleLogout}>
               {labels.logout}
             </IonButton>
           </>
