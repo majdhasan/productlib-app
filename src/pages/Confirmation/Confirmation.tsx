@@ -58,8 +58,8 @@ const Confirmation: React.FC = () => {
     );
   }
 
-  const calculateTotalCost = () => {
-    return order.cart.items.reduce((total: number, item: any) => total + (item.productPrice * item.quantity), 0).toFixed(2);
+  const calculateTotalPrice = () => {
+    return order.items.reduce((total: number, item: any) => total + (item.productPrice * item.quantity), 0).toFixed(2);
   };
 
   const getStatusLabel = (status: string) => {
@@ -68,12 +68,18 @@ const Confirmation: React.FC = () => {
         return labels.statusSUBMITTED;
       case 'APPROVED':
         return labels.statusAPPROVED;
+      case 'IN_PREPARATION':
+        return labels.statusIN_PREPARATION;
+      case 'DECLINED':
+        return labels.statusDECLINED;
       case 'READY_FOR_PICKUP':
         return labels.statusREADY_FOR_PICKUP;
       case 'IN_DELIVERY':
         return labels.statusIN_DELIVERY;
       case 'DELIVERED':
         return labels.statusDELIVERED;
+      case 'PICKED_UP':
+        return labels.statusPICKED_UP;
       case 'FAILED':
         return labels.statusFAILED;
       default:
@@ -109,13 +115,13 @@ const Confirmation: React.FC = () => {
           </IonCardHeader>
           <IonCardContent>
             <IonList>
-              {order.cart.items.map((item: any, index: number) => (
+              {order.items.map((item: any, index: number) => (
                 <IonItem key={index}>
                   <IonThumbnail slot="start">
-                  <img src={`${baseUrl}/files/${item.product.image}`} alt={item.product.name} />
+                  <img src={`${baseUrl}/files/${item.productImage}`} alt={item.productName} />
                   </IonThumbnail>
                   <IonLabel>
-                    <h2>{item.product.name}</h2>
+                    <h2>{item.productName}</h2>
                     <p>{labels.quantity}: {item.quantity}</p>
                     <p>{labels.price}: ₪{item.productPrice}</p>
                     <p>
@@ -132,7 +138,7 @@ const Confirmation: React.FC = () => {
                 <h2>{labels.total}</h2>
               </IonLabel>
               <IonText>
-                <h2>₪{calculateTotalCost()}</h2>
+                <h2>₪{calculateTotalPrice()}</h2>
               </IonText>
             </IonItem>
           </IonCardContent>

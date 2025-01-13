@@ -35,6 +35,16 @@
     color: white;
 }
 
+.status-in_preparation {
+    background-color: #f7c600;
+    color: white;
+}
+
+.status-declined {
+    background-color: #d9534f;
+    color: white;
+}
+
 .status-ready_for_pickup {
     background-color: #5cb85c;
     color: white;
@@ -46,6 +56,11 @@
 }
 
 .status-delivered {
+    background-color: #119111;
+    color: white;
+}
+
+.status-picked_up {
     background-color: #119111;
     color: white;
 }

@@ -18,6 +18,7 @@ import { useAppContext } from '../../context/AppContext';
 import { ProductAPI, CartAPI, baseUrl } from "../../services/apiService";
 import { translations } from '../../translations';
 import './ProductDetails.css';
+import { getTranslation } from '../../services/translationService';
 
 const ProductDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -33,7 +34,7 @@ const ProductDetails: React.FC = () => {
   const handleAddToCart = async () => {
     try {
       if (!user || !user.id) {
-        alert('User information missing. Please log in again.');
+        alert(labels.loginToOrder);
         history.push('/profile');
         return;
       }
@@ -89,45 +90,52 @@ const ProductDetails: React.FC = () => {
           </IonText>
         )}
 
-        {/* Product Details */}
+        
         {product && !isLoading && (
           <>
-            <div className="product-image-container">
-            <img src={`${baseUrl}/files/${product.image}`} alt={product.name}  className="product-image" />
-            </div>
+            {(() => {
+              const { name, description } = getTranslation(product, language);
+              return (
+                <>
+                  <div className="product-image-container">
+                    <img src={`${baseUrl}/files/${product.image}`} alt={name} className="product-image" />
+                  </div>
 
-            <div className="product-details-container">
-              <h2 className="product-name">{product.name}</h2>
-              <p className="product-description">{product.description}</p>
-              <p className="product-price">
-                <strong>{labels.price}:</strong> ₪{product.cost.toFixed(2)}
-              </p>
-            </div>
-            
-            <div className="custom-controls">
-              <IonItem>
-                <IonLabel>{labels.quantity}</IonLabel>
-                <div className="quantity-controls">
-                  <IonButton onClick={() => setQuantity(quantity > 1 ? quantity - 1 : 1)}>-</IonButton>
-                  <span>{quantity}</span>
-                  <IonButton onClick={() => setQuantity(quantity + 1)}>+</IonButton>
-                </div>
-              </IonItem>
-              <IonItem>
-                <IonLabel position="stacked">{labels.notes}</IonLabel>
-                <IonTextarea
-                  rows={4}
-                  value={notes}
-                  placeholder={labels.addNotesPlaceholder}
-                  onIonChange={(e) => { setNotes(e.detail.value || ''); }}
-                />
-              </IonItem>
-            </div>
-            <div className="book-button-container">
-              <IonButton expand="block" onClick={handleAddToCart}>
-                {user ? labels.addToCart : labels.loginToOrder}
-              </IonButton>
-            </div>
+                  <div className="product-details-container">
+                    <h2 className="product-name">{name}</h2>
+                    <p className="product-description">{description}</p>
+                    <p className="product-price">
+                      <strong>{labels.price}:</strong> ₪{product.price.toFixed(2)}
+                    </p>
+                  </div>
+
+                  <div className="custom-controls">
+                    <IonItem>
+                      <IonLabel>{labels.quantity}</IonLabel>
+                      <div className="quantity-controls">
+                        <IonButton onClick={() => setQuantity(quantity > 1 ? quantity - 1 : 1)}>-</IonButton>
+                        <span>{quantity}</span>
+                        <IonButton onClick={() => setQuantity(quantity + 1)}>+</IonButton>
+                      </div>
+                    </IonItem>
+                    <IonItem>
+                      <IonLabel position="stacked">{labels.notes}</IonLabel>
+                      <IonTextarea
+                        rows={4}
+                        value={notes}
+                        placeholder={labels.addNotesPlaceholder}
+                        onIonChange={(e) => { setNotes(e.detail.value || ''); }}
+                      />
+                    </IonItem>
+                  </div>
+                  <div className="book-button-container">
+                    <IonButton expand="block" onClick={handleAddToCart}>
+                      {user ? labels.addToCart : labels.loginToOrder}
+                    </IonButton>
+                  </div>
+                </>
+              );
+            })()}
           </>
         )}
       </IonContent>

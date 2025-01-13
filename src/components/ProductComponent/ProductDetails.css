@@ -24,16 +24,11 @@
   justify-content: center;
   align-items: center;
   margin: 16px 0;
-  max-width: 600px; /* Set a maximum width for the container */
+  max-width: 100%; /* Allow the container to take full width */
   margin-left: auto;
   margin-right: auto;
 }
 
-.product-image {
-  max-width: 100%;
-  height: auto;
-  border-radius: 8px;
-}
 .product-details-container {
   text-align: center;
   margin: 16px 0;

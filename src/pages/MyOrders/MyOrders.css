@@ -2,42 +2,21 @@
 .tab-content-container {
     margin: 16px; /* Consistent margin */
     padding: 16px;
-    border-radius: 8px; /* Rounded corners */
-    background-color: #1c1c1e; /* Match dark theme background */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for contrast */
-    color: #ffffff; /* Ensure text is white */
 }
 
 /* Input fields */
 .tab-content-container ion-item {
     --background: transparent; /* Transparent background */
-    --color: #ffffff; /* White text */
-    --placeholder-color: #a1a1a1; /* Light gray for placeholders */
     border-bottom: 1px solid #4a4a4a; /* Subtle border for input */
 }
 
 .tab-content-container ion-label {
     font-size: 14px;
-    color: #a1a1a1; /* Match placeholder color */
-}
-
-.tab-content-container ion-input {
-    color: #ffffff; /* White input text */
 }
 
 /* Buttons */
 .tab-content-container ion-button {
-    --background: #4c8dff; /* Primary blue for buttons */
-    --background-hover: #376bcf; /* Darker blue on hover */
-    --color: #ffffff; /* White text */
     margin-top: 16px;
-}
-
-/* Segments */
-ion-segment-button {
-    --indicator-color: #4c8dff; /* Blue underline */
-    --color: #a1a1a1; /* Unselected text color */
-    --color-checked: #4c8dff; /* Selected text color */
 }
 
 /* Align tabs centrally */

@@ -25,10 +25,11 @@ import { useHistory } from "react-router-dom";
 import { useAppContext } from "../../context/AppContext";
 import { translations } from "../../translations";
 import { OrderAPI, baseUrl } from '../../services/apiService';
+import { getTranslation } from '../../services/translationService';
 import "./Checkout.css";
 
 const Checkout: React.FC = () => {
-    const { user, cart, language, setOrderSubmitted, setToastColor, setToastMessage, setShowToast } = useAppContext();
+    const { user, cart, language, setOrderSubmitted, setToastColor, setToastMessage, setShowToast, setCart } = useAppContext();
     const [pickupOrDelivery, setPickupOrDelivery] = useState<"pickup" | "delivery">("pickup");
     const [address] = useState("");
     const [phone, setPhone] = useState(user?.phoneNumber || "");
@@ -44,7 +45,7 @@ const Checkout: React.FC = () => {
     const calculateRowTotal = (quantity: number, price: number) => quantity * price;
 
     const calculateCartTotal = () =>
-        cart?.items.reduce((total: number, item: any) => total + calculateRowTotal(item.quantity, item.product.cost), 0) || 0;
+        cart?.items.reduce((total: number, item: any) => total + calculateRowTotal(item.quantity, item.product.price), 0) || 0;
 
 
     const padTime = (time: string) => {
@@ -89,11 +90,13 @@ const Checkout: React.FC = () => {
                     pickupTimeOption === "specific"
                         ? `${specificPickupTime.date}T${padTime(specificPickupTime.time)}`
                         : null,
+                language: language
             };
 
             const createdOrder = await OrderAPI.createOrder(payload);
 
             setOrderSubmitted(true);
+            setCart(null);
             setToastMessage(labels.orderSubmitted);
             setToastColor('success');
             setShowToast(true);
@@ -293,10 +296,10 @@ const Checkout: React.FC = () => {
                         <IonItem key={index} lines="inset" className="product-item">
                             <IonThumbnail slot="start" className="product-thumbnail">
 
-                                <img src={`${baseUrl}/files/${item.product.image}`} alt={item.product.name} />
+                                <img src={`${baseUrl}/files/${item.product.image}`} alt={getTranslation(item.product, language).name} />
                             </IonThumbnail>
                             <IonLabel className="product-details">
-                                <h3 className="product-name">{item.product.name}</h3>
+                                <h3 className="product-name">{getTranslation(item.product, language).name}</h3>
                                 <p className="product-info">
                                     <strong>{labels.quantity}:</strong> {item.quantity}
                                 </p>
@@ -304,10 +307,10 @@ const Checkout: React.FC = () => {
                                     {item.notes && <><strong>{labels.notes}:</strong> {item.notes}</>}
                                 </p>
                                 <p className="product-info">
-                                    <strong>{labels.pricePerUnit}:</strong> ₪{item.product.cost.toFixed(2)}
+                                    <strong>{labels.pricePerUnit}:</strong> ₪{item.product.price.toFixed(2)}
                                 </p>
                                 <p className="product-info">
-                                    <strong>{labels.rowTotal}:</strong> ₪{calculateRowTotal(item.quantity, item.product.cost).toFixed(2)}
+                                    <strong>{labels.rowTotal}:</strong> ₪{calculateRowTotal(item.quantity, item.product.price).toFixed(2)}
                                 </p>
                             </IonLabel>
                         </IonItem>

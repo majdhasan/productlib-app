@@ -1,9 +1,17 @@
 /* For information on how to create your own theme, please see:
 http://ionicframework.com/docs/theming/ */
 
+/* Light mode variables */
 :root {
-    --ion-color-primary: #3880ff;
-    --ion-color-secondary: #3dc2ff;
-    --ion-color-light: #f4f5f8;
-    --ion-color-dark: #222428;
+  --ion-color-primary: #3a2313; /* Primary color for light mode */
+  --ion-background-color: #eeece6; /* Eggshell white background color */
+  /* Other variables... */
+}
+
+/* Dark mode variables */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ion-color-primary: #e7b84c; /* Primary color for dark mode */
+    /* Other variables... */
   }
+}
