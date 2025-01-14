@@ -31,6 +31,19 @@ const ProductDetails: React.FC = () => {
 
   const labels = translations[language];
 
+  const getUnitLabel = (unit) => {
+    switch (unit) {
+      case 'KILOGRAM':
+        return labels.unitKILOGRAM;
+      case 'HALF_KILOGRAM':
+        return labels.unitHALF_KILOGRAM;
+      case 'PIECE':
+        return labels.unitPIECE;
+      default:
+        return unit; // Fallback to the original unit if no translation is found
+    }
+  };
+
   const handleAddToCart = async () => {
     try {
       if (!user || !user.id) {
@@ -90,7 +103,6 @@ const ProductDetails: React.FC = () => {
           </IonText>
         )}
 
-        
         {product && !isLoading && (
           <>
             {(() => {
@@ -105,7 +117,7 @@ const ProductDetails: React.FC = () => {
                     <h2 className="product-name">{name}</h2>
                     <p className="product-description">{description}</p>
                     <p className="product-price">
-                      <strong>{labels.price}:</strong> ₪{product.price.toFixed(2)}
+                      <strong>{labels.price}:</strong> ₪{product.price.toFixed(2)} / {getUnitLabel(product.unit, language)}
                     </p>
                   </div>
 

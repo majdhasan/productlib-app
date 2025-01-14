@@ -133,8 +133,14 @@ export const translations = {
     printNow: "Print Now",
     logoutConfirmation: "Are you sure you want to log out?",
     loginToOrder: "Please log in to order",
+    unitPIECE: "piece",
+    unitHALF_KILOGRAM: "500g",
+    unitKILOGRAM: "kg",
   },
   ar: {
+    unitPIECE: "قطعة",
+    unitHALF_KILOGRAM: "500 غرام",
+    unitKILOGRAM: "كيلوغرام",
     statusIN_PREPARATION: "قيد التحضير",
     statusDECLINED: "تم الرفض",
     statusPICKED_UP: "تم الاستلام",
@@ -268,6 +274,9 @@ export const translations = {
     
   },
   he: {
+    unitPIECE: "יחידה",
+    unitHALF_KILOGRAM: "500 גרם",
+    unitKILOGRAM: "קילו",
     statusIN_PREPARATION: "בהכנה",
     statusDECLINED: "נדחה",
     statusPICKED_UP: "נאסף",
