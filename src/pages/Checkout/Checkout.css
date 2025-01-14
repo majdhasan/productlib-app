@@ -1,7 +1,6 @@
 /* General Section Box Style */
 .section-box {
-  margin-bottom: 16px;
-  padding: 16px;
+  margin-top: 16px;
   border-radius: 8px;
   background-color: var(--ion-card-background);
 }

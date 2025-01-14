@@ -1,30 +1,26 @@
-.unpaid {
-    color: red;
-    font-weight: bold;
-  }
-  
-  .status-message {
-    margin-top: 10px;
-    font-size: 1.2em;
-  }
-  
-  .product-image {
-    width: 350px;
-    height: auto;
-    object-fit: cover;
-    border-radius: 8px;
-  }
-  
-  .text-left {
-    text-align: left;
-  }
-  
-  .text-right {
-    text-align: right;
-  }
-  
-  .centered-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+
+.status-message {
+  margin-top: 10px;
+  font-size: 1.2em;
+}
+
+.product-image {
+  width: 350px;
+  height: auto;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.centered-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
