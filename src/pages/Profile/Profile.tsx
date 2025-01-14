@@ -45,7 +45,7 @@ const ProfilePage: React.FC = () => {
           <IonTitle>{labels.profileTitle}</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="profile-container">
+      <IonContent>
         {user ? (
           <>
             <IonList>

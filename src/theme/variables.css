@@ -4,14 +4,14 @@ http://ionicframework.com/docs/theming/ */
 /* Light mode variables */
 :root {
   --ion-color-primary: #3a2313; /* Primary color for light mode */
-  --ion-background-color: #eeece6; /* Eggshell white background color */
-  /* Other variables... */
+  --ion-background-color: #eeece6; /* Eggshell white background color */  
 }
+
+
 
 /* Dark mode variables */
 @media (prefers-color-scheme: dark) {
   :root {
     --ion-color-primary: #e7b84c; /* Primary color for dark mode */
-    /* Other variables... */
   }
 }

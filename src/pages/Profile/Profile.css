@@ -10,26 +10,6 @@
   font-size: 1rem;
 }
 
-.ion-button {
-  margin-top: 16px;
-}
-
-.profile-container {
-  padding: 16px;
-}
-
-.profile-item {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin-bottom: 16px;
-}
-
-.profile-item ion-label {
-  width: 100%;
-  font-size: 1rem;
-}
-
 .profile-item ion-input {
   width: 100%;
   font-size: 1rem;
@@ -48,18 +28,4 @@
   font-size: 1.2rem;
   text-align: center;
   width: 100%;
-}
-
-.ion-segment-button-checked {
-  color: var(--ion-color-primary) !important; /* Ensure the text color is visible */
-  font-weight: bold; /* Make the text stand out */
-}
-
-.ion-segment-button-checked ion-label {
-  color: var(--ion-color-primary) !important;
-}
-
-/* Optional: Add a background color to the active tab */
-.ion-segment-button-checked {
-  background-color: var(--ion-color-light) !important;
 }
