@@ -11,7 +11,7 @@ const Products: React.FC = () => {
   const { language, setIsLoading } = useAppContext();
   const [products, setProducts] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const history  = useHistory();
+  const history = useHistory();
 
   const labels = translations[language];
 
@@ -52,11 +52,25 @@ const Products: React.FC = () => {
             {products.length > 0 ? (
               products.map((product) => {
                 const { name, description } = getTranslation(product, language);
+                const thumbnailSrc = `${baseUrl}/files/thumbnail_${product.image}`;
+                const originalSrc = `${baseUrl}/files/${product.image}`;
+                let fallbackAttempted = false;
+
                 return (
                   <IonItem key={product.id} button onClick={() => goToProductDetails(product.id)}>
                     <IonThumbnail slot="start">
-                    <img src={`${baseUrl}/files/${product.image}`} alt={name} />
-                      
+                      <img
+                        src={thumbnailSrc}
+                        alt={name}
+                        onError={(e) => {
+                          if (!fallbackAttempted) {
+                            (e.target as HTMLImageElement).src = originalSrc;
+                            fallbackAttempted = true;
+                          } else {
+                            (e.target as HTMLImageElement).src = ''; // Clear the src to prevent infinite loop
+                          }
+                        }}
+                      />
                     </IonThumbnail>
                     <IonLabel>
                       <h2>{name}</h2>
