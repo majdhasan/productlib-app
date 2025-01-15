@@ -97,6 +97,10 @@ export const UserAPI = {
 
     return response.json();
   },
+
+  deleteUser: async (userId: number): Promise<any> => {
+    apiRequest(`/users/${userId}`, { method: "DELETE" });
+  },
 };
 
 export const OrderAPI = {

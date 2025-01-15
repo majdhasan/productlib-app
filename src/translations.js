@@ -8,6 +8,10 @@ export const translations = {
     logout: 'Logout',
     login: 'Login',
     signup: 'Sign Up',
+    deleteAccount: 'Delete Account',
+    deleteAccountConfirmation: 'Are you sure you want to delete your account?',
+    deleteAccountSuccess: 'Your account has been deleted successfully!',
+    deletingAccountFailed: 'Failed to delete account. Please try again.',
     selectLanguage: 'Select Language',
     myOrders: 'My Orders',
     orderNow: 'Order Now',
@@ -138,6 +142,10 @@ export const translations = {
     unitKILOGRAM: "kg",
   },
   ar: {
+    deletingAccountFailed: 'فشل حذف الحساب. يرجى المحاولة مرة أخرى.',
+    deleteAccountSuccess: 'تم حذف حسابك بنجاح!',
+    deleteAccountConfirmation: 'هل أنت متأكد أنك تريد حذف حسابك؟',
+    deleteAccount: 'حذف الحساب',
     unitPIECE: "قطعة",
     unitHALF_KILOGRAM: "500 غرام",
     unitKILOGRAM: "كيلوغرام",
@@ -274,6 +282,10 @@ export const translations = {
     
   },
   he: {
+    deletingAccountFailed: 'נכשל למחוק את החשבון. אנא נסה שוב.',
+    deleteAccountSuccess: 'החשבון שלך נמחק בהצלחה!',
+    deleteAccountConfirmation: 'האם אתה בטוח שברצונך למחוק את החשבון שלך?',
+    deleteAccount: 'מחק חשבון',
     unitPIECE: "יחידה",
     unitHALF_KILOGRAM: "500 גרם",
     unitKILOGRAM: "קילו",

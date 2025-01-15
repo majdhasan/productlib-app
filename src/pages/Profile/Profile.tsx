@@ -19,6 +19,7 @@ import { translations } from '../../translations';
 import LoginComponent from '../../components/LoginComponent/LoginComponent';
 import SignUpComponent from '../../components/SignUpComponent/SignUpComponent';
 import './Profile.css';
+import { UserAPI } from '../../services/apiService';
 
 const ProfilePage: React.FC = () => {
   const { user, setUser, setCart, language, setLanguage, activeProfileTab, setActiveProfileTab, setToastColor, setToastMessage, setShowToast } = useAppContext();
@@ -36,6 +37,28 @@ const ProfilePage: React.FC = () => {
       setToastMessage(labels.logoutSuccess);
       setShowToast(true);
     }
+  };
+
+  const handleDeleteAccount = async () => {
+    const confirmed = window.confirm(labels.deleteAccountConfirmation);
+    if (confirmed) {
+      try {
+        await UserAPI.deleteUser(user.id);
+
+        setUser(null);
+        setCart(null);
+        localStorage.removeItem('token');
+
+        setToastColor('success');
+        setToastMessage(labels.deleteAccountSuccess);
+        setShowToast(true);
+
+      } catch (error: any) {
+        setToastMessage(labels.deletingAccountFailed + ": " + error.message);
+        setToastColor('danger');
+        setShowToast(true);
+      }
+    };
   };
 
   return (
@@ -66,6 +89,9 @@ const ProfilePage: React.FC = () => {
                 <IonLabel className="view-mode">{user.phoneNumber}</IonLabel>
               </IonItem>
             </IonList>
+            <IonButton color="danger" onClick={handleDeleteAccount}>
+              {labels.deleteAccount}
+            </IonButton>
             <IonButton color="danger" onClick={handleLogout}>
               {labels.logout}
             </IonButton>
