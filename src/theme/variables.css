@@ -19,14 +19,8 @@ http://ionicframework.com/docs/theming/ */
 @media (prefers-color-scheme: dark) {
   :root {
     --ion-color-primary: #e7b84c; 
+      /* Tab bar customizations */
+  --ion-tab-bar-color: #947520;
+  --ion-tab-bar-color-selected: #efe6cb;
   }
-}
-
-/* Add custom font-weight for tab labels */
-ion-tab-bar {
-  font-weight: normal; /* Default weight for unselected tabs */
-}
-
-ion-tab-bar ion-tab-button[aria-selected="true"] {
-  font-weight: bold; /* Font weight for the selected tab */
 }
