@@ -97,6 +97,7 @@ const App: React.FC = () => {
             message={toastMessage}
             duration={4000}
             color={toastColor}
+            position="bottom" 
             buttons={[
               {
                 text: labels.close,

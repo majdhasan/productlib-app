@@ -29,7 +29,7 @@ import { getTranslation } from '../../services/translationService';
 import "./Checkout.css";
 
 const Checkout: React.FC = () => {
-    const { user, cart, language, setOrderSubmitted, setToastColor, setToastMessage, setShowToast, setCart } = useAppContext();
+    const { setIsLoading, user, cart, language, setOrderSubmitted, setToastColor, setToastMessage, setShowToast, setCart } = useAppContext();
     const [pickupOrDelivery, setPickupOrDelivery] = useState<"pickup" | "delivery">("pickup");
     const [address] = useState("");
     const [phone, setPhone] = useState(user?.phoneNumber || "");
@@ -77,6 +77,7 @@ const Checkout: React.FC = () => {
         }
 
         try {
+            setIsLoading(true);
             const payload = {
                 cartId: cart.id,
                 customerId: user.id,
@@ -108,6 +109,8 @@ const Checkout: React.FC = () => {
             setToastMessage(labels.checkoutError);
             setToastColor('danger');
             setShowToast(true);
+        } finally {
+            setIsLoading(false);
         }
     };
 
