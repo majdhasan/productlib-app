@@ -152,6 +152,7 @@ export const translations = {
     newPasswordSameAsCurrent: 'New password cannot be the same as the current password.',
     delete: 'Delete',
     profileSettings: 'Profile Settings',
+    fillAllFields: 'Please fill in all required fields.',
   },
   ar: {
     profileSettings: 'إعدادات الملف الشخصي',
@@ -303,9 +304,10 @@ export const translations = {
     currentPassword: 'كلمة المرور الحالية',
     passwordTooShort: 'كلمة المرور يجب أن تحتوي على 6 أحرف على الأقل.',
     newPasswordSameAsCurrent: 'كلمة المرور الجديدة لا يمكن أن تكون نفس كلمة المرور الحالية.',
-    
+    fillAllFields: 'يرجى ملء جميع الحقول المطلوبة.',
   },
   he: {
+    fillAllFields: 'אנא מלא את כל השדות הנדרשים.',
     profileSettings: 'הגדרות פרופיל',
     delete: 'מחק',
     change: 'שנה',

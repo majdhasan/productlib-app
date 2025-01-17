@@ -23,6 +23,14 @@ const SignUpComponent: React.FC = () => {
 
     const handleSignUp = async () => {
         setIsLoading(true);
+
+        if (!firstName || !lastName || !email || !password || !phoneNumber) {
+            setToastMessage(labels.fillAllFields);
+            setToastColor('danger');
+            setShowToast(true);
+            setIsLoading(false);
+            return;
+        }
         try {
             await UserAPI.signUp(firstName, lastName, phoneNumber, email, password);
             
@@ -45,7 +53,7 @@ const SignUpComponent: React.FC = () => {
         <div className="sign-up-container">
             <IonList>
                 <IonItem>
-                    <IonLabel position="stacked">{labels.firstName}</IonLabel>
+                    <IonLabel position="stacked">{labels.firstName}*</IonLabel>
                     <IonInput
                         value={firstName}
                         placeholder={labels.enterFirstName}
@@ -53,7 +61,7 @@ const SignUpComponent: React.FC = () => {
                     />
                 </IonItem>
                 <IonItem>
-                    <IonLabel position="stacked">{labels.lastName}</IonLabel>
+                    <IonLabel position="stacked">{labels.lastName}*</IonLabel>
                     <IonInput
                         value={lastName}
                         placeholder={labels.enterLastName}
@@ -61,7 +69,7 @@ const SignUpComponent: React.FC = () => {
                     />
                 </IonItem>
                 <IonItem>
-                    <IonLabel position="stacked">{labels.phoneNumber}</IonLabel>
+                    <IonLabel position="stacked">{labels.phoneNumber}*</IonLabel>
                     <IonInput
                         value={phoneNumber}
                         placeholder={labels.enterPhoneNumber}
@@ -69,7 +77,7 @@ const SignUpComponent: React.FC = () => {
                     />
                 </IonItem>
                 <IonItem>
-                    <IonLabel position="stacked">{labels.email}</IonLabel>
+                    <IonLabel position="stacked">{labels.email}*</IonLabel>
                     <IonInput
                         value={email}
                         placeholder={labels.enterEmail}
@@ -77,7 +85,7 @@ const SignUpComponent: React.FC = () => {
                     />
                 </IonItem>
                 <IonItem>
-                    <IonLabel position="stacked">{labels.password}</IonLabel>
+                    <IonLabel position="stacked">{labels.password}*</IonLabel>
                     <IonInput
                         type="password"
                         value={password}

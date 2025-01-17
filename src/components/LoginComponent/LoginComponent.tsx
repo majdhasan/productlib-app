@@ -20,6 +20,13 @@ const LoginComponent: React.FC = () => {
     const labels = translations[language];
 
     const handleLogin = async () => {
+
+        if (!email || !password) {
+            setToastMessage(labels.fillAllFields);
+            setToastColor('danger');
+            setShowToast(true);
+            return;
+        }
         try {
             const data = await UserAPI.login(email, password);
             const { user, cart, token } = data;
@@ -45,7 +52,7 @@ const LoginComponent: React.FC = () => {
         <div className="login-container">
             <IonList>
                 <IonItem>
-                    <IonLabel position="stacked">{labels.email}</IonLabel>
+                    <IonLabel position="stacked">{labels.email}*</IonLabel>
                     <IonInput
                         value={email}
                         placeholder={labels.enterEmail}
@@ -53,7 +60,7 @@ const LoginComponent: React.FC = () => {
                     />
                 </IonItem>
                 <IonItem>
-                    <IonLabel position="stacked">{labels.password}</IonLabel>
+                    <IonLabel position="stacked">{labels.password}*</IonLabel>
                     <IonInput
                         type="password"
                         value={password}
