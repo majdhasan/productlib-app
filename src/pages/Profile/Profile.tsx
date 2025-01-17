@@ -13,7 +13,12 @@ import {
   IonSelectOption,
   IonSegment,
   IonSegmentButton,
+  IonModal,
+  IonInput,
+  IonButtons,
+  IonIcon
 } from '@ionic/react';
+import { eyeOffOutline, eyeOutline } from 'ionicons/icons';
 import { useAppContext } from '../../context/AppContext';
 import { translations } from '../../translations';
 import LoginComponent from '../../components/LoginComponent/LoginComponent';
@@ -23,6 +28,14 @@ import { UserAPI } from '../../services/apiService';
 
 const ProfilePage: React.FC = () => {
   const { user, setUser, setCart, language, setLanguage, activeProfileTab, setActiveProfileTab, setToastColor, setToastMessage, setShowToast } = useAppContext();
+  const [showModal, setShowModal] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
 
   const labels = translations[language];
 
@@ -36,6 +49,51 @@ const ProfilePage: React.FC = () => {
       setToastColor('success');
       setToastMessage(labels.logoutSuccess);
       setShowToast(true);
+    }
+  };
+
+  const handleChangePassword = () => {
+    setShowModal(true);
+  };
+
+  const handlePasswordChange = async () => {
+    if (newPassword !== confirmPassword) {
+      setToastMessage(labels.passwordsDoNotMatch);
+      setToastColor('danger');
+      setShowToast(true);
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      setToastMessage(labels.passwordTooShort);
+      setToastColor('danger');
+      setShowToast(true);
+      return;
+    }
+
+    if (newPassword === currentPassword) {
+      setToastMessage(labels.newPasswordSameAsCurrent);
+      setToastColor('danger');
+      setShowToast(true);
+      return
+    }
+
+    try {
+      await UserAPI.changePassword(user.id, currentPassword, newPassword)
+      setToastColor('success');
+      setToastMessage(labels.passwordChangeSuccess);
+      setShowToast(true);
+      setShowModal(false);
+    }
+    catch (error: any) {
+      setToastMessage(labels.passwordChangeFailed + ": " + error.message);
+      setToastColor('danger');
+      setShowToast(true);
+    }
+    finally {
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
     }
   };
 
@@ -95,6 +153,9 @@ const ProfilePage: React.FC = () => {
             <IonButton color="danger" onClick={handleLogout}>
               {labels.logout}
             </IonButton>
+            <IonButton onClick={handleChangePassword}>
+              {labels.changePassword}
+            </IonButton>
           </>
         ) : (
           <>
@@ -138,6 +199,54 @@ const ProfilePage: React.FC = () => {
             </IonItem>
           </IonList>
         </div>
+        <IonModal isOpen={showModal} onDidDismiss={() => setShowModal(false)}>
+          <IonHeader>
+            <IonToolbar>
+              <IonTitle>{labels.changePassword}</IonTitle>
+              <IonButtons slot="end">
+                <IonButton onClick={() => setShowModal(false)}>{labels.close}</IonButton>
+              </IonButtons>
+            </IonToolbar>
+          </IonHeader>
+          <IonContent>
+            <IonItem>
+              <IonLabel position="stacked">{labels.currentPassword}</IonLabel>
+              <IonInput
+                type={showCurrentPassword ? "text" : "password"}
+                value={currentPassword}
+                onIonChange={(e) => setCurrentPassword(e.detail.value!)}
+              />
+              <IonButton slot="end" fill="clear" onClick={() => setShowCurrentPassword(!showCurrentPassword)}>
+                <IonIcon icon={showCurrentPassword ? eyeOffOutline : eyeOutline} />
+              </IonButton>
+            </IonItem>
+            <IonItem>
+              <IonLabel position="stacked">{labels.newPassword}</IonLabel>
+              <IonInput
+                type={showNewPassword ? "text" : "password"}
+                value={newPassword}
+                onIonChange={(e) => setNewPassword(e.detail.value!)}
+              />
+              <IonButton slot="end" fill="clear" onClick={() => setShowNewPassword(!showNewPassword)}>
+                <IonIcon icon={showNewPassword ? eyeOffOutline : eyeOutline} />
+              </IonButton>
+            </IonItem>
+            <IonItem>
+              <IonLabel position="stacked">{labels.confirmPassword}</IonLabel>
+              <IonInput
+                type={showConfirmPassword ? "text" : "password"}
+                value={confirmPassword}
+                onIonChange={(e) => setConfirmPassword(e.detail.value!)}
+              />
+              <IonButton slot="end" fill="clear" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+                <IonIcon icon={showConfirmPassword ? eyeOffOutline : eyeOutline} />
+              </IonButton>
+            </IonItem>
+            <IonButton expand="block" onClick={handlePasswordChange}>
+              {labels.submit}
+            </IonButton>
+          </IonContent>
+        </IonModal>
       </IonContent>
     </IonPage>
   );

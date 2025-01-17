@@ -27,7 +27,16 @@ export const apiRequest = async (url: string, options: RequestInit = {}) => {
   }
 
   if (!response.ok) {
-    throw new Error("API request failed");
+    let errorMessage = "API request failed";
+    try {
+      const errorData = await response.json();
+      if (errorData && errorData.message) {
+        errorMessage = errorData.message;
+      }
+    } catch (e) {
+      // Ignore JSON parsing errors and use the default error message
+    }
+    throw new Error(errorMessage);
   }
 
   if (response.status === 204) {
@@ -100,6 +109,19 @@ export const UserAPI = {
 
   deleteUser: async (userId: number): Promise<any> => {
     apiRequest(`/users/${userId}`, { method: "DELETE" });
+  },
+
+  changePassword: async (userId: number, oldPassword: string, newPassword: string): Promise<any> => {
+    return await apiRequest(`/users/${userId}/password`, {
+      method: "PUT",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        oldPassword,
+        newPassword,
+      }),
+    });
   },
 };
 
