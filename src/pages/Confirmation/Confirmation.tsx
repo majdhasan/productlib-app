@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonLabel, IonItem, IonList, IonText, IonThumbnail, IonCard, IonCardHeader, IonCardTitle, IonCardContent } from '@ionic/react';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonLabel, IonItem, IonList, IonText, IonThumbnail, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonBackButton, IonButtons } from '@ionic/react';
 import { OrderAPI, baseUrl } from "../../services/apiService";
 import { useAppContext } from "../../context/AppContext";
 import { translations } from '../../translations';
@@ -105,6 +105,9 @@ const Confirmation: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
+          <IonButtons slot="start">
+            <IonBackButton defaultHref="/" />
+          </IonButtons>
           <IonTitle>{labels.orderConfirmation}</IonTitle>
         </IonToolbar>
       </IonHeader>
@@ -118,7 +121,7 @@ const Confirmation: React.FC = () => {
               {order.items.map((item: any, index: number) => (
                 <IonItem key={index}>
                   <IonThumbnail slot="start">
-                  <img src={`${baseUrl}/files/${item.productImage}`} alt={item.productName} />
+                    <img src={`${baseUrl}/files/${item.productImage}`} alt={item.productName} />
                   </IonThumbnail>
                   <IonLabel>
                     <h2>{item.productName}</h2>

@@ -16,7 +16,12 @@ import {
   IonModal,
   IonInput,
   IonButtons,
-  IonIcon
+  IonIcon,
+  IonCardContent,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+
 } from '@ionic/react';
 import { eyeOffOutline, eyeOutline } from 'ionicons/icons';
 import { useAppContext } from '../../context/AppContext';
@@ -129,33 +134,60 @@ const ProfilePage: React.FC = () => {
       <IonContent>
         {user ? (
           <>
-            <IonList>
-              <IonItem className="profile-item">
-                <IonLabel position="stacked">{labels.firstName}</IonLabel>
-                <IonLabel className="view-mode">{user.firstName}</IonLabel>
-              </IonItem>
-              <IonItem className="profile-item">
-                <IonLabel position="stacked">{labels.lastName}</IonLabel>
-                <IonLabel className="view-mode">{user.lastName}</IonLabel>
-              </IonItem>
-              <IonItem className="profile-item">
-                <IonLabel position="stacked">{labels.email}</IonLabel>
-                <IonLabel className="view-mode">{user.email}</IonLabel>
-              </IonItem>
-              <IonItem className="profile-item">
-                <IonLabel position="stacked">{labels.phoneNumber}</IonLabel>
-                <IonLabel className="view-mode">{user.phoneNumber}</IonLabel>
-              </IonItem>
-            </IonList>
-            <IonButton color="danger" onClick={handleDeleteAccount}>
-              {labels.deleteAccount}
-            </IonButton>
-            <IonButton color="danger" onClick={handleLogout}>
-              {labels.logout}
-            </IonButton>
-            <IonButton onClick={handleChangePassword}>
-              {labels.changePassword}
-            </IonButton>
+            <IonCard>
+              <IonCardHeader>
+                <IonCardTitle>{labels.profile}</IonCardTitle>
+              </IonCardHeader>
+              <IonCardContent>
+                <IonList>
+                  <IonItem>
+                    <IonLabel>{labels.firstName}</IonLabel>
+                    <IonLabel>{user.firstName}</IonLabel>
+                  </IonItem>
+                  <IonItem >
+                    <IonLabel>{labels.lastName}</IonLabel>
+                    <IonLabel>{user.lastName}</IonLabel>
+                  </IonItem>
+                  <IonItem >
+                    <IonLabel >{labels.email}</IonLabel>
+                    <IonLabel>{user.email}</IonLabel>
+                  </IonItem>
+                  <IonItem >
+                    <IonLabel >{labels.phoneNumber}</IonLabel>
+                    <IonLabel>{user.phoneNumber}</IonLabel>
+                  </IonItem>
+                </IonList>
+              </IonCardContent>
+            </IonCard>
+
+            <IonCard>
+              <IonCardHeader>
+                <IonCardTitle>{labels.profileSettings}</IonCardTitle>
+              </IonCardHeader>
+              <IonCardContent>
+                <IonList>
+                  <IonItem>
+                    <IonLabel>{labels.changePassword}</IonLabel>
+                    <IonButton onClick={handleChangePassword} slot="end">
+                      {labels.change}
+                    </IonButton>
+                  </IonItem>
+                  <IonItem>
+                    <IonLabel>{labels.logout}</IonLabel>
+                    <IonButton onClick={handleLogout} slot="end">
+                      {labels.logout}
+                    </IonButton>
+                  </IonItem>
+                  <IonItem>
+                    <IonLabel>{labels.deleteAccount}</IonLabel>
+                    <IonButton onClick={handleDeleteAccount} color="danger" slot="end">
+                      {labels.delete}
+                    </IonButton>
+                  </IonItem>
+                </IonList>
+              </IonCardContent>
+            </IonCard>
+
           </>
         ) : (
           <>
@@ -184,21 +216,24 @@ const ProfilePage: React.FC = () => {
           </>
         )}
 
-        <div className="application-settings">
-          <IonList>
-            <IonItem>
-              <IonLabel className="application-settings-header">{labels.applicationSettings}</IonLabel>
-            </IonItem>
-            <IonItem>
-              <IonLabel>{labels.selectLanguage}</IonLabel>
-              <IonSelect value={language} onIonChange={(e) => setLanguage(e.detail.value)}>
-                <IonSelectOption value="en">English</IonSelectOption>
-                <IonSelectOption value="ar">العربية</IonSelectOption>
-                <IonSelectOption value="he">עברית</IonSelectOption>
-              </IonSelect>
-            </IonItem>
-          </IonList>
-        </div>
+        <IonCard>
+          <IonCardHeader>
+            <IonCardTitle>{labels.applicationSettings}</IonCardTitle>
+          </IonCardHeader>
+          <IonCardContent>
+            <IonList>
+              <IonItem>
+                <IonLabel>{labels.selectLanguage}</IonLabel>
+                <IonSelect value={language} onIonChange={(e) => setLanguage(e.detail.value)}>
+                  <IonSelectOption value="en">English</IonSelectOption>
+                  <IonSelectOption value="ar">العربية</IonSelectOption>
+                  <IonSelectOption value="he">עברית</IonSelectOption>
+                </IonSelect>
+              </IonItem>
+            </IonList>
+          </IonCardContent>
+        </IonCard>
+
         <IonModal isOpen={showModal} onDidDismiss={() => setShowModal(false)}>
           <IonHeader>
             <IonToolbar>

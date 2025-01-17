@@ -69,3 +69,13 @@
     background-color: #b9302b;
     color: white;
 }
+
+.more-items {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
