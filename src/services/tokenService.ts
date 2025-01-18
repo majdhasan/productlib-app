@@ -1,3 +1,5 @@
+import { baseUrl } from "./apiService";
+
 export const getToken = () => {
     return localStorage.getItem("token");
 };
@@ -12,13 +14,16 @@ export const refreshToken = async () => {
         throw new Error("No token found");
     }
 
-    const response = await fetch("http://localhost:8080/api/users/refresh-token", {
+    const response = await fetch(`${baseUrl}/users/refresh-token`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token }),
     });
 
     if (!response.ok) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        localStorage.removeItem("cartId");
         throw new Error("Failed to refresh token");
     }
 
