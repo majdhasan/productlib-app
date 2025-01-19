@@ -191,6 +191,7 @@ const Checkout: React.FC = () => {
                     />
                 </IonItem>
 
+                {/* // replace with time and date pickers https://ionicframework.com/docs/api/datetime#selecting-specific-values */}
                 <IonItem className="section-box">
                     <IonIcon slot="start" icon={timeOutline} />
                     <div className="pickup-options-container">

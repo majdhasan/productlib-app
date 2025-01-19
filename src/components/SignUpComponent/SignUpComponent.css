@@ -1,0 +1,11 @@
+.clickable-link {
+  color: var(--ion-color-primary);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.privacy-notice {
+  font-size: 14px;
+  color: var(--ion-color-medium);
+  text-align: center;
+}
