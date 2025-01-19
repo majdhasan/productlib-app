@@ -179,12 +179,12 @@ const Confirmation: React.FC = () => {
               <IonItem>
                 <IonLabel>{labels.orderAddress}</IonLabel>
                 {/* TODO: replace with order address when applicable */}
-                <IonText>{labels.bakeryAddress}</IonText>
+                <IonText className="multi-line-text">{order.address}</IonText>
               </IonItem>
               {order.notes && (
                 <IonItem>
                   <IonLabel>{labels.notes}</IonLabel>
-                  <IonText>{order.notes}</IonText>
+                  <IonText className="multi-line-text">{order.notes}</IonText>
                 </IonItem>
               )}
             </IonList>

@@ -27,13 +27,6 @@ const Cart: React.FC = () => {
 
   const fetchOrCreateCart = async () => {
     try {
-      if (cart) {
-        const fetchedCart = await CartAPI.fetchCart(cart.id);
-        setCart(fetchedCart);
-        return;
-      }
-
-      // If no pending cart exists, create a new cart for the current user
       if (user && user.id) {
         const newCart = await CartAPI.getOrCreateCart(user.id);
         setCart(newCart);
@@ -51,7 +44,6 @@ const Cart: React.FC = () => {
 
   useEffect(() => {
     if (orderSubmitted) {
-      // Fetch a new cart and reset the flag
       fetchOrCreateCart();
       setOrderSubmitted(false);
     }
@@ -81,7 +73,7 @@ const Cart: React.FC = () => {
   const handleRemoveItem = async (cartItemId: number) => {
     try {
       await CartAPI.removeCartItem(cartItemId);
-      const updatedCart = await CartAPI.fetchCart(cart.id);
+      const updatedCart = await CartAPI.getOrCreateCart(user.id);
       setCart(updatedCart);
     } catch (error) {
       console.error("Error removing item from cart:", error);

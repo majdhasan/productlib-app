@@ -31,7 +31,7 @@ import "./Checkout.css";
 const Checkout: React.FC = () => {
     const { setIsLoading, user, cart, language, setOrderSubmitted, setToastColor, setToastMessage, setShowToast, setCart } = useAppContext();
     const [pickupOrDelivery, setPickupOrDelivery] = useState<"pickup" | "delivery">("pickup");
-    const [address] = useState("");
+    const [address, setAddress] = useState("");
     const [phone, setPhone] = useState(user?.phoneNumber || "");
     const [firstName, setFirstName] = useState(user?.firstName || "");
     const [lastName, setLastName] = useState(user?.lastName || "");
@@ -82,7 +82,7 @@ const Checkout: React.FC = () => {
                 cartId: cart.id,
                 customerId: user.id,
                 orderType: pickupOrDelivery === "pickup" ? "PICKUP" : "DELIVERY",
-                address: pickupOrDelivery === "pickup" ? "Al-Bishara St 49, Nazareth, Israel" : address,
+                address: pickupOrDelivery === "pickup" ? labels.bakeryAddress : address,
                 phone,
                 firstName,
                 lastName,
@@ -98,6 +98,10 @@ const Checkout: React.FC = () => {
 
             setOrderSubmitted(true);
             setCart(null);
+            setAddress("");
+            setOrderNotes("");
+            setSpecificPickupTime("");
+            setPickupTimeOption("asap");
             setToastMessage(labels.orderSubmitted);
             setToastColor('success');
             setShowToast(true);
@@ -129,7 +133,7 @@ const Checkout: React.FC = () => {
                     <IonSegmentButton value="pickup">
                         <IonLabel>{labels.pickup}</IonLabel>
                     </IonSegmentButton>
-                    <IonSegmentButton value="delivery" disabled>
+                    <IonSegmentButton value="delivery">
                         <IonLabel>{labels.delivery}</IonLabel>
                     </IonSegmentButton>
                 </IonSegment>
@@ -154,11 +158,27 @@ const Checkout: React.FC = () => {
                     />
                 </IonItem>
 
-                <IonItem className="section-box">
-                    <IonIcon slot="start" icon={locationOutline} />
-                    <IonLabel position="stacked" className="section-label">{labels.orderAddress}</IonLabel>
-                    <IonInput value={labels.bakeryAddress} readonly />
-                </IonItem>
+                {pickupOrDelivery === 'pickup' && (
+                    <IonItem className="section-box">
+                        <IonIcon slot="start" icon={locationOutline} />
+                        <IonLabel position="stacked" className="section-label">{labels.orderAddress}</IonLabel>
+                        <IonInput value={labels.bakeryAddress} readonly />
+                    </IonItem>
+                )}
+
+
+                {pickupOrDelivery === 'delivery' && (
+                    <IonItem className="section-box">
+                        <IonIcon slot="start" icon={locationOutline} />
+                        <IonLabel position="stacked" className="section-label">{labels.orderAddress}</IonLabel>
+                        <IonTextarea
+                            rows={3}
+                            value={address}
+                            onIonChange={(e) => setAddress(e.detail.value || "")}
+                            placeholder={labels.addAddressInfo}
+                        />
+                    </IonItem>
+                )}
 
                 <IonItem className="section-box">
                     <IonIcon slot="start" icon={callOutline} />
@@ -235,7 +255,6 @@ const Checkout: React.FC = () => {
                                         })}
                                     </IonSelect>
                                 </IonItem>
-
 
                                 {/* Time Dropdown */}
                                 <IonItem className="dropdown-item" lines="none">

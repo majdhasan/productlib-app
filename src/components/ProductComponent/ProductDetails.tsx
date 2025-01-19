@@ -52,10 +52,9 @@ const ProductDetails: React.FC = () => {
       }
 
       await CartAPI.addItemToCart(user.id, product.id, quantity, notes);
-      const updatedCart = await CartAPI.fetchCart(cart.id);
+      const updatedCart = await CartAPI.getOrCreateCart(user.id);
 
       setCart(updatedCart);
-      localStorage.setItem('cart', JSON.stringify(updatedCart));
       setToastColor('success');
       setToastMessage(labels.productAddedToCart);
       setShowToast(true);

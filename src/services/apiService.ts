@@ -48,7 +48,6 @@ export const apiRequest = async (url: string, options: RequestInit = {}) => {
 
 // Cart API methods
 export const CartAPI = {
-  fetchCart: (cartId: number) => apiRequest(`/cart/${cartId}`, { method: "GET" }),
   getOrCreateCart: (userId: number) =>
     apiRequest(`/cart/user/${userId}`, {
       method: "POST",
