@@ -26,6 +26,7 @@ const SignUpComponent: React.FC = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [acceptPrivacyNotice, setAcceptPrivacyNotice] = useState(false);
+    const [agreeToReceiveMessages, setAgreeToReceiveMessages] = useState(false);
     const [showPrivacyModal, setShowPrivacyModal] = useState(false);
 
     const labels = translations[language];
@@ -48,9 +49,19 @@ const SignUpComponent: React.FC = () => {
             setIsLoading(false);
             return;
         }
+
+        // validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            setToastMessage(labels.invalidEmailFormat);
+            setToastColor('danger');
+            setShowToast(true);
+            setIsLoading(false);
+            return;
+        }
         
         try {
-            await UserAPI.signUp(firstName, lastName, phoneNumber, email, password);
+            await UserAPI.signUp(firstName, lastName, phoneNumber, email, password, agreeToReceiveMessages);
 
             setToastMessage(labels.registrationSuccessful);
             setToastColor('success');
@@ -122,6 +133,16 @@ const SignUpComponent: React.FC = () => {
                             {labels.privacyNotice}
 
                         </a>
+                        *
+                    </IonLabel>
+                </IonItem>
+                <IonItem>
+                    <IonCheckbox
+                        checked={agreeToReceiveMessages}
+                        onIonChange={(e) => setAgreeToReceiveMessages(e.detail.checked)}
+                    />
+                    <IonLabel>
+                        {labels.agreeToReceiveMessages}
                     </IonLabel>
                 </IonItem>
             </IonList>
@@ -196,7 +217,8 @@ const SignUpComponent: React.FC = () => {
                         <p>نقوم بحماية بياناتك باستخدام إجراءات تقنية وتنظيمية متقدمة. لا نشارك معلوماتك مع أطراف ثالثة لأغراض تجارية.</p>
 
                         <h3>حقوقك:</h3>
-                        <p>لديك الحق في الوصول إلى بياناتك الشخصية، أو تصحيحها، أو طلب حذفها. يمكنك الاتصال بنا للاستفسارات عبر البريد الإلكتروني: [عنوان البريد الإلكتروني].</p>
+                        <p>لديك الحق في الوصول إلى بياناتك الشخصية، أو تصحيحها، أو طلب حذفها. يمكنك الاتصال بنا للاستفسارات عبر البريد الإلكتروني.</p>
+                        <p>el.meshhdawi@gmail.com</p>
 
                         <h3>التغييرات في سياسة الخصوصية:</h3>
                         <p>قد نقوم بتحديث هذا الإشعار من وقت لآخر. سيتم إعلامك بأي تغييرات جوهرية من خلال إشعار على الموقع الإلكتروني.</p>

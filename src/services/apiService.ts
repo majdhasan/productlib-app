@@ -91,11 +91,11 @@ export const UserAPI = {
 
     return response.json();
   },
-  signUp: async (firstName: string, lastName: string, phoneNumber: string, email: string, password: string): Promise<any> => {
+  signUp: async (firstName: string, lastName: string, phoneNumber: string, email: string, password: string, agreeToReceiveMessages: boolean): Promise<any> => {
     const response = await fetch(`${baseUrl}/users`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ firstName, lastName, phoneNumber, email, password }),
+      body: JSON.stringify({ firstName, lastName, phoneNumber, email, password, agreeToReceiveMessages }),
     });
 
     if (response.status !== 200) {
