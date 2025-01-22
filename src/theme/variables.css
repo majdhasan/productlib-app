@@ -13,6 +13,9 @@ http://ionicframework.com/docs/theming/ */
   --ion-tab-bar-color-selected: #251d02;
 }
 
+* {
+  font-family: 'Readex Pro', sans-serif !important;
+}
 
 
 /* Dark mode variables */

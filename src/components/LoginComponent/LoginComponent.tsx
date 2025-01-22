@@ -15,7 +15,7 @@ const LoginComponent: React.FC = () => {
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const history = useHistory();
-    const { language, setUser, setCart, setToastColor, setToastMessage, setShowToast } = useAppContext(); // Access AppContext
+    const { language, setUser, setCart, setToastColor, setToastMessage, setShowToast, setIsLoading } = useAppContext(); // Access AppContext
 
     const labels = translations[language];
 
@@ -28,6 +28,7 @@ const LoginComponent: React.FC = () => {
             return;
         }
         try {
+            setIsLoading(true);
             const data = await UserAPI.login(email, password);
             const { user, cart, token } = data;
 
@@ -45,6 +46,9 @@ const LoginComponent: React.FC = () => {
             setToastMessage(labels.loginFailed + ": " + error.message);
             setToastColor('danger');
             setShowToast(true);
+        }
+        finally {
+            setIsLoading(false);
         }
     };
 

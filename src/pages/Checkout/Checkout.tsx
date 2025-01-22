@@ -138,9 +138,9 @@ const Checkout: React.FC = () => {
                     </IonSegmentButton>
                 </IonSegment>
 
-                <IonItem className="section-box">
+                <IonItem>
                     <IonIcon slot="start" icon={personOutline} />
-                    <IonLabel position="stacked" className="section-label">{labels.firstName}</IonLabel>
+                    <IonLabel position="stacked">{labels.firstName}</IonLabel>
                     <IonInput
                         value={firstName}
                         placeholder={labels.enterFirstName}
@@ -148,9 +148,9 @@ const Checkout: React.FC = () => {
                     />
                 </IonItem>
 
-                <IonItem className="section-box">
+                <IonItem>
                     <IonIcon slot="start" icon={personOutline} />
-                    <IonLabel position="stacked" className="section-label">{labels.lastName}</IonLabel>
+                    <IonLabel position="stacked">{labels.lastName}</IonLabel>
                     <IonInput
                         value={lastName}
                         placeholder={labels.enterLastName}
@@ -159,18 +159,18 @@ const Checkout: React.FC = () => {
                 </IonItem>
 
                 {pickupOrDelivery === 'pickup' && (
-                    <IonItem className="section-box">
+                    <IonItem>
                         <IonIcon slot="start" icon={locationOutline} />
-                        <IonLabel position="stacked" className="section-label">{labels.orderAddress}</IonLabel>
+                        <IonLabel position="stacked">{labels.orderAddress}</IonLabel>
                         <IonInput value={labels.bakeryAddress} readonly />
                     </IonItem>
                 )}
 
 
                 {pickupOrDelivery === 'delivery' && (
-                    <IonItem className="section-box">
+                    <IonItem>
                         <IonIcon slot="start" icon={locationOutline} />
-                        <IonLabel position="stacked" className="section-label">{labels.orderAddress}</IonLabel>
+                        <IonLabel position="stacked">{labels.orderAddress}</IonLabel>
                         <IonTextarea
                             rows={3}
                             value={address}
@@ -180,9 +180,9 @@ const Checkout: React.FC = () => {
                     </IonItem>
                 )}
 
-                <IonItem className="section-box">
+                <IonItem>
                     <IonIcon slot="start" icon={callOutline} />
-                    <IonLabel position="stacked" className="section-label">{labels.phoneNumber}</IonLabel>
+                    <IonLabel position="stacked">{labels.phoneNumber}</IonLabel>
                     <IonInput
                         type="tel"
                         value={phone}
@@ -192,10 +192,10 @@ const Checkout: React.FC = () => {
                 </IonItem>
 
                 {/* // replace with time and date pickers https://ionicframework.com/docs/api/datetime#selecting-specific-values */}
-                <IonItem className="section-box">
+                <IonItem>
                     <IonIcon slot="start" icon={timeOutline} />
                     <div className="pickup-options-container">
-                        <IonLabel position="stacked" className="section-label">
+                        <IonLabel position="stacked">
                             {labels.pickupTime}
                         </IonLabel>
                         <IonRadioGroup
@@ -308,12 +308,10 @@ const Checkout: React.FC = () => {
                 </IonItem>
 
 
-                <IonList className="section-box product-list">
-                    <IonItem lines="none" className="summary-header">
+                <IonList className="product-list">
+                    <IonItem lines="none">
                         <IonIcon icon={clipboardOutline} slot="start" />
-                        <IonLabel>
-                            <h2 className="summary-title">{labels.orderSummary}</h2>
-                        </IonLabel>
+                        <IonLabel position="stacked">{labels.orderSummary}</IonLabel>
                     </IonItem>
                     {cart?.items.map((item: any, index: number) => (
                         <IonItem key={index} lines="inset" className="product-item">
@@ -321,33 +319,30 @@ const Checkout: React.FC = () => {
 
                                 <img src={`${baseUrl}/files/${item.product.image}`} alt={getTranslation(item.product, language).name} />
                             </IonThumbnail>
-                            <IonLabel className="product-details">
-                                <h3 className="product-name">{getTranslation(item.product, language).name}</h3>
-                                <p className="product-info">
+                            <IonLabel>
+                                <h3>{getTranslation(item.product, language).name}</h3>
+                                <p>
                                     <strong>{labels.quantity}:</strong> {item.quantity}
                                 </p>
-                                <p className="product-info">
+                                <p>
                                     {item.notes && <><strong>{labels.notes}:</strong> {item.notes}</>}
                                 </p>
-                                <p className="product-info">
+                                <p>
                                     <strong>{labels.pricePerUnit}:</strong> ₪{item.product.price.toFixed(2)}
                                 </p>
-                                <p className="product-info">
+                                <p>
                                     <strong>{labels.rowTotal}:</strong> ₪{calculateRowTotal(item.quantity, item.product.price).toFixed(2)}
                                 </p>
                             </IonLabel>
                         </IonItem>
                     ))}
-                    <IonItem lines="none" className="total-item">
-                        <IonLabel>
-                            <h3 className="total-text">{labels.total}: ₪{calculateCartTotal().toFixed(2)}</h3>
-                        </IonLabel>
-                    </IonItem>
+                    <IonLabel>{labels.total}: ₪{calculateCartTotal().toFixed(2)}</IonLabel>
+
                 </IonList>
 
-                <IonItem className="section-box">
+                <IonItem>
                     <IonIcon slot="start" icon={clipboardOutline} />
-                    <IonLabel position="stacked" className="section-label">{labels.orderNotes}</IonLabel>
+                    <IonLabel position="stacked">{labels.orderNotes}</IonLabel>
                     <IonTextarea
                         rows={4}
                         value={orderNotes}

@@ -97,7 +97,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       }}
     >
       {children}
-      <IonLoading isOpen={isLoading} message = {labels.loading} />
+      <IonLoading isOpen={isLoading} message = {labels.loading} spinner="circular" />
     </AppContext.Provider>
   );
 };
