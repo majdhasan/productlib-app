@@ -136,14 +136,7 @@ const Confirmation: React.FC = () => {
                 </IonItem>
               ))}
             </IonList>
-            <IonItem>
-              <IonLabel>
-                <h2>{labels.total}</h2>
-              </IonLabel>
-              <IonText>
-                <h2>₪{calculateTotalPrice()}</h2>
-              </IonText>
-            </IonItem>
+            <IonLabel>{labels.total}: ₪{calculateTotalPrice()}</IonLabel>
           </IonCardContent>
         </IonCard>
         <IonCard>
