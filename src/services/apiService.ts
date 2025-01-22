@@ -1,6 +1,6 @@
 import { getToken, refreshToken } from "./tokenService";
 
-export const baseUrl = "https://api.meshhdawi.com";
+export const baseUrl = "http://localhost:8080/api";
 
 export const apiRequest = async (url: string, options: RequestInit = {}) => {
   let token = getToken();
@@ -91,6 +91,20 @@ export const UserAPI = {
 
     return response.json();
   },
+  forgotPassword: async (forgotPasswordEmail: string): Promise<any> => {
+    const response =
+      await fetch(`${baseUrl}/users/forgot-password`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: forgotPasswordEmail }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to reset password.");
+      }
+  },
+
   signUp: async (firstName: string, lastName: string, phoneNumber: string, email: string, password: string, agreeToReceiveMessages: boolean): Promise<any> => {
     const response = await fetch(`${baseUrl}/users`, {
       method: "POST",
