@@ -1,6 +1,6 @@
 import { getToken, refreshToken } from "./tokenService";
 
-export const baseUrl = "http://localhost:8080/api";
+export const baseUrl = "https://api.meshhdawi.com";
 
 export const apiRequest = async (url: string, options: RequestInit = {}) => {
   let token = getToken();
