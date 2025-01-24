@@ -90,6 +90,7 @@ const Products: React.FC = () => {
       setToastColor('success');
       setShowToast(true);
       setShowContactModal(false);
+      setContactMessage('');
     } catch (error) {
       setToastMessage(error.message);
       setToastColor('danger');
