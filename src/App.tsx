@@ -23,6 +23,9 @@ import Checkout from './pages/Checkout/Checkout';
 import Profile from './pages/Profile/Profile';
 import { useAppContext } from './context/AppContext';
 import { translations } from './translations';
+import ReactGA from 'react-ga4';
+import { useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
 import './App.css';
 
 /* Core CSS required for Ionic components to work properly */
@@ -41,6 +44,7 @@ import '@ionic/react/css/text-transformation.css';
 import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 
+
 /**
  * Ionic Dark Mode
  * -----------------------------------------------------
@@ -55,41 +59,34 @@ import '@ionic/react/css/palettes/dark.system.css';
 /* Theme variables */
 import './theme/variables.css';
 
+const GA_MEASUREMENT_ID = 'G-6RM9P2FYEB';
+ReactGA.initialize(GA_MEASUREMENT_ID);
+ReactGA.send({ hitType: "pageview", page: window.location.pathname });
 setupIonicReact();
 
 const App: React.FC = () => {
-
   const { language, setShowToast, showToast, toastMessage, toastColor, cart } = useAppContext();
-
   const labels = translations[language];
-
   const cartItemCount = cart?.items.reduce((total, item) => total + item.quantity, 0) || 0;
+  const location = useLocation();
+
+  useEffect(() => {
+    ReactGA.send({ hitType: "pageview", page: location.pathname });
+  }, [location]);
 
   return (
-    <IonApp className='center-aligned'>
+    <IonApp className="center-aligned">
       <IonReactRouter>
         <IonTabs>
           <IonRouterOutlet>
-            <Route exact path="/products">
-              <Products />
-            </Route>
-            <Route exact path="/">
-              <Redirect to="/products" />
-            </Route>
-            <Route path="/products/:id"> {/* Add route for product details */}
-              <ProductDetails />
-            </Route>
+            <Route exact path="/products" component={Products} />
+            <Route exact path="/" render={() => <Redirect to="/products" />} />
+            <Route path="/products/:id" component={ProductDetails} />
             <Route path="/confirmation/:id" render={(props) => <Confirmation key={props.match.params.id} />} />
-            <Route exact path="/my-orders">
-              <MyOrders />
-            </Route>
+            <Route exact path="/my-orders" component={MyOrders} />
             <Route exact path="/profile" component={Profile} />
-            <Route exact path="/cart">
-              <Cart />
-            </Route>
-            <Route exact path="/checkout">
-              <Checkout />
-            </Route>
+            <Route exact path="/cart" component={Cart} />
+            <Route exact path="/checkout" component={Checkout} />
           </IonRouterOutlet>
           <IonToast
             isOpen={showToast}
@@ -97,31 +94,23 @@ const App: React.FC = () => {
             message={toastMessage}
             duration={4000}
             color={toastColor}
-            position="bottom" 
-            buttons={[
-              {
-                text: labels.close,
-                role: 'cancel',
-              },
-            ]}
+            position="bottom"
+            buttons={[{ text: labels.close, role: 'cancel' }]}
           />
           <IonTabBar slot="bottom">
             <IonTabButton tab="my-orders" href="/my-orders">
               <IonIcon aria-hidden="true" icon={bookOutline} />
               <IonLabel>{labels.myOrders}</IonLabel>
             </IonTabButton>
-
             <IonTabButton tab="products" href="/products">
               <IonIcon aria-hidden="true" icon={rocketOutline} />
               <IonLabel>{labels.orderNow}</IonLabel>
             </IonTabButton>
-
             <IonTabButton tab="cart" href="/cart">
               <IonIcon aria-hidden="true" icon={cartOutline} />
               {cartItemCount > 0 && <IonBadge color="danger">{cartItemCount}</IonBadge>}
               <IonLabel>{labels.cart}</IonLabel>
             </IonTabButton>
-
             <IonTabButton tab="profile" href="/profile">
               <IonIcon aria-hidden="true" icon={personOutline} />
               <IonLabel>{labels.profile}</IonLabel>

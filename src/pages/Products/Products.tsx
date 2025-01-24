@@ -6,6 +6,7 @@ import './Products.css';
 import { ProductAPI, baseUrl } from "../../services/apiService";
 import { getTranslation } from '../../services/translationService';
 import { useHistory } from 'react-router';
+import ReactGA from 'react-ga4';
 
 const CATEGORY_ORDER = [
   'ROLL',
@@ -61,7 +62,13 @@ const Products: React.FC = () => {
     fetchProducts();
   }, []);
 
-  const goToProductDetails = (productId: number) => {
+  const goToProductDetails = (productId: number, productName: string) => {
+    ReactGA.event({
+      category: 'Product',
+      action: 'Product Click',
+      label: productName, // The name of the product clicked
+      value: productId,   // Tracking product ID
+    });
     history.push(`/products/${productId}`);
   };
 
@@ -103,7 +110,7 @@ const Products: React.FC = () => {
                     let fallbackAttempted = false;
 
                     return (
-                      <IonItem key={product.id} button onClick={() => goToProductDetails(product.id)}>
+                      <IonItem key={product.id} button onClick={() => goToProductDetails(product.id, name)}>
                         <IonThumbnail slot="start">
                           <img
                             src={thumbnailSrc}
