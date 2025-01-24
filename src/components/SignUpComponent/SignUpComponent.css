@@ -9,3 +9,24 @@
   color: var(--ion-color-medium);
   text-align: center;
 }
+
+.privacy-notice-item {
+  display: flex;
+  align-items: center;
+  margin-top: 16px;
+}
+
+.privacy-notice-item input[type="checkbox"] {
+  margin-right: 8px;
+}
+
+.privacy-notice-item .clickable-link {
+  color: var(--ion-color-primary);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.privacy-notice-item ion-label {
+  display: flex;
+  align-items: center;
+}

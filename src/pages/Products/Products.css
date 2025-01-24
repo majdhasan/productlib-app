@@ -1,10 +1,16 @@
-.spinner-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-  }
-  
-  .ion-searchbar {
-    margin-bottom: 1rem;
-  }
+.category-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 15px 0;
+}
+
+.category-badge {
+  font-size: 0.9em;
+  padding: 5px 10px;
+  background-color: #e5dada;
+  color: #333;
+  border-radius: 10px;
+  text-align: center;
+  white-space: nowrap;
+}

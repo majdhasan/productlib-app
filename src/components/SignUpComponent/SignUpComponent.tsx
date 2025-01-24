@@ -3,15 +3,14 @@ import {
     IonItem,
     IonLabel,
     IonInput,
+    IonButton,
     IonList,
-    IonCheckbox,
     IonModal,
     IonHeader,
     IonToolbar,
     IonTitle,
     IonContent,
     IonButtons,
-    IonButton,
 } from "@ionic/react";
 import { useAppContext } from "../../context/AppContext";
 import { translations } from "../../translations";
@@ -61,13 +60,13 @@ const SignUpComponent: React.FC = () => {
         }
         
         try {
-            await UserAPI.signUp(firstName, lastName, phoneNumber, email, password, agreeToReceiveMessages);
-
+            await UserAPI.signUp(firstName, lastName, phoneNumber, email, password);
+            
             setToastMessage(labels.registrationSuccessful);
             setToastColor('success');
             setShowToast(true);
             setActiveProfileTab('login');
-
+            
         } catch (error) {
             console.error("Error signing up:", error);
             setToastMessage(labels.registrationFailed + ": " + error.message);
@@ -79,7 +78,7 @@ const SignUpComponent: React.FC = () => {
     };
 
     return (
-        <div>
+        <div className="sign-up-container">
             <IonList>
                 <IonItem>
                     <IonLabel position="stacked">{labels.firstName}*</IonLabel>
@@ -122,24 +121,25 @@ const SignUpComponent: React.FC = () => {
                         onIonInput={(e: any) => setPassword(e.target.value || "")}
                     />
                 </IonItem>
-                <IonItem>
-                    <IonCheckbox
+                <IonItem className="privacy-notice-item">
+                    <input
+                        type="checkbox"
                         checked={acceptPrivacyNotice}
-                        onIonChange={(e) => setAcceptPrivacyNotice(e.detail.checked)}
+                        onChange={(e) => setAcceptPrivacyNotice(e.target.checked)}
                     />
                     <IonLabel>
-                        {labels.acceptPrivacyNotice}
+                        {labels.acceptPrivacyNotice}{" "}
                         <a className="clickable-link" onClick={() => setShowPrivacyModal(true)}>
                             {labels.privacyNotice}
-
                         </a>
                         *
                     </IonLabel>
                 </IonItem>
-                <IonItem>
-                    <IonCheckbox
+                <IonItem className="privacy-notice-item">
+                    <input
+                        type="checkbox"
                         checked={agreeToReceiveMessages}
-                        onIonChange={(e) => setAgreeToReceiveMessages(e.detail.checked)}
+                        onChange={(e) => setAgreeToReceiveMessages(e.target.checked)}
                     />
                     <IonLabel>
                         {labels.agreeToReceiveMessages}
@@ -190,9 +190,7 @@ const SignUpComponent: React.FC = () => {
                         <h3>שינויים במדיניות הפרטיות:</h3>
                         <p>אנו עשויים לעדכן הצהרה זו מעת לעת. במקרה של שינויים מהותיים, נעדכן אותך באמצעות הודעה באתר.</p>
 
-
                         <hr />
-
 
                         <p>نحن في <strong>مخبز المشهداوي</strong> ملتزمون بحماية خصوصية عملائنا. يوضح إشعار الخصوصية هذا كيفية جمع بياناتك الشخصية واستخدامها وحمايتها عند استخدام موقعنا.</p>
 

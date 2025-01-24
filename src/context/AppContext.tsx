@@ -38,7 +38,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const [language, setLanguage] = useState<string>(() => {
     const storedLanguage = localStorage.getItem('language');
-    return storedLanguage || 'he';
+    return storedLanguage || 'ar';
   });
 
   const [orderSubmitted, setOrderSubmitted] = useState<boolean>(false);
