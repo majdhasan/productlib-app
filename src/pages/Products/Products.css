@@ -14,3 +14,7 @@
   text-align: center;
   white-space: nowrap;
 }
+
+.feedback-button {
+  margin: 15px 10px;
+}

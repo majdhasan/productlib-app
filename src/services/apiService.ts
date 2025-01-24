@@ -120,6 +120,18 @@ export const UserAPI = {
     return response.json();
   },
 
+  contactUs: async (name: string, email: string, message: string): Promise<any> => {
+    const response = await fetch(`${baseUrl}/contact`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, message }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to send message.");
+    }
+  },
+
   deleteUser: async (userId: number): Promise<any> => {
     apiRequest(`/users/${userId}`, { method: "DELETE" });
   },

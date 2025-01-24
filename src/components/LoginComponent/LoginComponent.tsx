@@ -49,7 +49,7 @@ const LoginComponent: React.FC = () => {
             setToastColor('success');
             setShowToast(true);
 
-            history.push("/my-orders");
+            history.push("/products");
         } catch (error: any) {
             setToastMessage(labels.loginFailed);
             setToastColor('danger');
