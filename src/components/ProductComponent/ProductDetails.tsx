@@ -105,24 +105,14 @@ const ProductDetails: React.FC = () => {
           <>
             {(() => {
               const { name, description } = getTranslation(product, language);
-              const resizedSrc = `${baseUrl}/files/resized_${product.image}`;
-              const originalSrc = `${baseUrl}/files/${product.image}`;
-              let fallbackAttempted = false;
+
               return (
                 <>
                   <div className="product-image-container">
                     <img
-                        src={resizedSrc}
+                        src={`${baseUrl}/files/resized_${product.image}`}
                         alt={name}
                         className="product-image"
-                        onError={(e) => {
-                          if (!fallbackAttempted) {
-                            (e.target as HTMLImageElement).src = originalSrc;
-                            fallbackAttempted = true;
-                          } else {
-                            (e.target as HTMLImageElement).src = ''; // Clear the src to prevent infinite loop
-                          }
-                        }}
                       />
                   </div>
 

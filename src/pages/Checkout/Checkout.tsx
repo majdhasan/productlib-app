@@ -317,7 +317,7 @@ const Checkout: React.FC = () => {
                         <IonItem key={index} lines="inset" className="product-item">
                             <IonThumbnail slot="start" className="product-thumbnail">
 
-                                <img src={`${baseUrl}/files/${item.product.image}`} alt={getTranslation(item.product, language).name} />
+                                <img src={`${baseUrl}/files/thumbnail_${item.product.image}`} alt={getTranslation(item.product, language).name} />
                             </IonThumbnail>
                             <IonLabel>
                                 <h3>{getTranslation(item.product, language).name}</h3>

@@ -133,24 +133,13 @@ const Products: React.FC = () => {
                 <IonList>
                   {groupedProducts[category].map((product) => {
                     const { name, description } = getTranslation(product, language);
-                    const thumbnailSrc = `${baseUrl}/files/thumbnail_${product.image}`;
-                    const originalSrc = `${baseUrl}/files/${product.image}`;
-                    let fallbackAttempted = false;
-
+                    
                     return (
                       <IonItem key={product.id} button onClick={() => goToProductDetails(product.id, name)}>
                         <IonThumbnail slot="start">
                           <img
-                            src={thumbnailSrc}
+                            src={`${baseUrl}/files/thumbnail_${product.image}`}
                             alt={name}
-                            onError={(e) => {
-                              if (!fallbackAttempted) {
-                                (e.target as HTMLImageElement).src = originalSrc;
-                                fallbackAttempted = true;
-                              } else {
-                                (e.target as HTMLImageElement).src = ''; // Clear the src to prevent infinite loop
-                              }
-                            }}
                           />
                         </IonThumbnail>
                         <IonLabel>

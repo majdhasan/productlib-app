@@ -40,7 +40,7 @@ const OrderListItem: React.FC<OrderListItemProps> = ({ order, labels, language }
                 <div className="order-items">
                     {order.items.slice(0, 5).map((item: any) => (
                         <IonThumbnail key={item.id}>
-                            <img src={`${baseUrl}/files/${item.productImage}`} alt={item.productName} className="item-thumbnail" />
+                            <img src={`${baseUrl}/files/thumbnail_${item.productImage}`} alt={item.productName} className="item-thumbnail" />
                         </IonThumbnail>
                     ))}
                     {order.items.length > 5 && (

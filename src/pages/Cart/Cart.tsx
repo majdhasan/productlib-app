@@ -110,7 +110,7 @@ const Cart: React.FC = () => {
               
               <IonItem key={index}>
                 <IonThumbnail slot="start">
-                  <img src={`${baseUrl}/files/${item.product.image}`} alt={getTranslation(item.product, language).name} />
+                  <img src={`${baseUrl}/files/thumbnail_${item.product.image}`} alt={getTranslation(item.product, language).name} />
                 </IonThumbnail>
                 <IonLabel>
                   <h2>{getTranslation(item.product, language).name}</h2>
