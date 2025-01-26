@@ -72,6 +72,14 @@ const ProfilePage: React.FC = () => {
   };
 
   const handleUserUpdate = async () => {
+
+    if (!updatedFirstName || !updatedLastName || !updatedPhoneNumber) {
+      setToastMessage(labels.fillAllFields);
+      setToastColor('danger');
+      setShowToast(true);
+      return;
+    }
+
     setIsLoading(true);
     try {
       var updatedUser = await UserAPI.updateUser(user.id, updatedFirstName, updatedLastName, updatedPhoneNumber, agreeToReceiveMessages);
@@ -280,15 +288,15 @@ const ProfilePage: React.FC = () => {
           </IonHeader>
           <IonContent>
             <IonItem>
-              <IonLabel position="stacked">{labels.firstName}</IonLabel>
+              <IonLabel position="stacked">{labels.firstName}*</IonLabel>
               <IonInput value={updatedFirstName} onIonChange={(e) => setUpdatedFirstName(e.detail.value!)} />
             </IonItem>
             <IonItem>
-              <IonLabel position="stacked">{labels.lastName}</IonLabel>
+              <IonLabel position="stacked">{labels.lastName}*</IonLabel>
               <IonInput value={updatedLastName} onIonChange={(e) => setUpdatedLastName(e.detail.value!)} />
             </IonItem>
             <IonItem>
-              <IonLabel position="stacked">{labels.phoneNumber}</IonLabel>
+              <IonLabel position="stacked">{labels.phoneNumber}*</IonLabel>
               <IonInput value={updatedPhoneNumber} onIonChange={(e) => setUpdatedPhoneNumber(e.detail.value!)} />
             </IonItem>
             <IonItem className="privacy-notice-item">
