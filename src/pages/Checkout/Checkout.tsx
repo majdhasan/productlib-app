@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     IonPage,
     IonHeader,
@@ -42,6 +42,12 @@ const Checkout: React.FC = () => {
     const labels = translations[language];
     const history = useHistory();
 
+    useEffect(() => {
+        if (!cart || cart.items.length === 0) {
+            history.push("/products");
+        }
+    }, [cart, history]);
+
     const calculateRowTotal = (quantity: number, price: number) => quantity * price;
 
     const calculateCartTotal = () =>
@@ -70,7 +76,7 @@ const Checkout: React.FC = () => {
         }
 
         if (!pickupTimeOption || (pickupTimeOption === "specific" && (!specificPickupTime.date || !specificPickupTime.time))) {
-            setToastMessage(labels.enterPickupTime);
+            setToastMessage(labels.enterWishedTime);
             setToastColor('danger');
             setShowToast(true);
             return;
@@ -196,7 +202,7 @@ const Checkout: React.FC = () => {
                     <IonIcon slot="start" icon={timeOutline} />
                     <div className="pickup-options-container">
                         <IonLabel position="stacked">
-                            {labels.pickupTime}
+                            {pickupOrDelivery === 'delivery' ? labels.deliveryTime :  labels.pickupTime}
                         </IonLabel>
                         <IonRadioGroup
                             value={pickupTimeOption}

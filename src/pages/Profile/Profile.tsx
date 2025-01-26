@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   IonPage,
   IonHeader,
@@ -32,14 +32,20 @@ import './Profile.css';
 import { UserAPI } from '../../services/apiService';
 
 const ProfilePage: React.FC = () => {
-  const { user, setUser, setCart, language, setLanguage, activeProfileTab, setActiveProfileTab, setToastColor, setToastMessage, setShowToast } = useAppContext();
-  const [showModal, setShowModal] = useState(false);
+  const { user, setIsLoading, setUser, setCart, language, setLanguage, activeProfileTab, setActiveProfileTab, setToastColor, setToastMessage, setShowToast } = useAppContext();
+  const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
+  const [showUpdateUserModal, setShowUpdateUserModal] = useState(false);
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  
+  const [updatedFirstName, setUpdatedFirstName] = useState(user?.firstName || '');
+  const [updatedLastName, setUpdatedLastName] = useState(user?.lastName || '');
+  const [updatedPhoneNumber, setUpdatedPhoneNumber] = useState(user?.phoneNumber || '');
+  const [agreeToReceiveMessages, setAgreeToReceiveMessages] = useState(user?.agreeToReceiveMessages || false);
 
 
   const labels = translations[language];
@@ -58,8 +64,31 @@ const ProfilePage: React.FC = () => {
   };
 
   const handleChangePassword = () => {
-    setShowModal(true);
+    setShowChangePasswordModal(true);
   };
+
+  const handleUpdateUser = () => {
+    setShowUpdateUserModal(true);
+  };
+
+  const handleUserUpdate = async () => {
+    setIsLoading(true);
+    try {
+      var updatedUser = await UserAPI.updateUser(user.id, updatedFirstName, updatedLastName, updatedPhoneNumber, agreeToReceiveMessages);
+      setUser(updatedUser);
+      setToastColor('success');
+      setToastMessage(labels.userUpdateSuccess);
+      setShowToast(true);
+      setShowUpdateUserModal(false);
+    }
+    catch (error: any) {
+      setToastMessage(labels.userUpdateFailed + ": " + error.message);
+      setToastColor('danger');
+      setShowToast(true);
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   const handlePasswordChange = async () => {
     if (newPassword !== confirmPassword) {
@@ -88,7 +117,7 @@ const ProfilePage: React.FC = () => {
       setToastColor('success');
       setToastMessage(labels.passwordChangeSuccess);
       setShowToast(true);
-      setShowModal(false);
+      setShowChangePasswordModal(false);
     }
     catch (error: any) {
       setToastMessage(labels.passwordChangeFailed + ": " + error.message);
@@ -167,6 +196,12 @@ const ProfilePage: React.FC = () => {
               <IonCardContent>
                 <IonList>
                   <IonItem>
+                    <IonLabel>{labels.updateUser}</IonLabel>
+                    <IonButton onClick={handleUpdateUser} slot="end">
+                      {labels.update}
+                    </IonButton>
+                  </IonItem>
+                  <IonItem>
                     <IonLabel>{labels.changePassword}</IonLabel>
                     <IonButton onClick={handleChangePassword} slot="end">
                       {labels.change}
@@ -234,12 +269,50 @@ const ProfilePage: React.FC = () => {
           </IonCardContent>
         </IonCard>
 
-        <IonModal isOpen={showModal} onDidDismiss={() => setShowModal(false)}>
+        <IonModal isOpen={showUpdateUserModal} onDidDismiss={() => setShowUpdateUserModal(false)}>
+          <IonHeader>
+            <IonToolbar>
+              <IonTitle>{labels.updateUser}</IonTitle>
+              <IonButtons slot="end">
+                <IonButton onClick={() => setShowUpdateUserModal(false)}>{labels.close}</IonButton>
+              </IonButtons>
+            </IonToolbar>
+          </IonHeader>
+          <IonContent>
+            <IonItem>
+              <IonLabel position="stacked">{labels.firstName}</IonLabel>
+              <IonInput value={updatedFirstName} onIonChange={(e) => setUpdatedFirstName(e.detail.value!)} />
+            </IonItem>
+            <IonItem>
+              <IonLabel position="stacked">{labels.lastName}</IonLabel>
+              <IonInput value={updatedLastName} onIonChange={(e) => setUpdatedLastName(e.detail.value!)} />
+            </IonItem>
+            <IonItem>
+              <IonLabel position="stacked">{labels.phoneNumber}</IonLabel>
+              <IonInput value={updatedPhoneNumber} onIonChange={(e) => setUpdatedPhoneNumber(e.detail.value!)} />
+            </IonItem>
+            <IonItem className="privacy-notice-item">
+              <input
+                type="checkbox"
+                checked={agreeToReceiveMessages}
+                onChange={(e) => setAgreeToReceiveMessages(e.target.checked)}
+              />
+              <IonLabel>
+                {labels.agreeToReceiveMessages}
+              </IonLabel>
+            </IonItem>
+            <IonButton expand="block" onClick={handleUserUpdate}>
+              {labels.submit}
+            </IonButton>
+          </IonContent>
+        </IonModal>
+
+        <IonModal isOpen={showChangePasswordModal} onDidDismiss={() => setShowChangePasswordModal(false)}>
           <IonHeader>
             <IonToolbar>
               <IonTitle>{labels.changePassword}</IonTitle>
               <IonButtons slot="end">
-                <IonButton onClick={() => setShowModal(false)}>{labels.close}</IonButton>
+                <IonButton onClick={() => setShowChangePasswordModal(false)}>{labels.close}</IonButton>
               </IonButtons>
             </IonToolbar>
           </IonHeader>

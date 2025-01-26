@@ -132,6 +132,22 @@ export const UserAPI = {
     }
   },
 
+  updateUser: async (userId: number, firstName: string, lastName: string, phoneNumber: string, agreeToReceiveMessages: boolean): Promise<any> => {
+    return await apiRequest(`/users`, {
+      method: "PUT",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: userId,
+        firstName,
+        lastName,
+        phoneNumber,
+        agreeToReceiveMessages,
+      }),
+    });
+  },
+
   deleteUser: async (userId: number): Promise<any> => {
     apiRequest(`/users/${userId}`, { method: "DELETE" });
   },

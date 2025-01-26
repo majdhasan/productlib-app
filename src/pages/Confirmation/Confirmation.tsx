@@ -121,7 +121,7 @@ const Confirmation: React.FC = () => {
               {order.items.map((item: any, index: number) => (
                 <IonItem key={index}>
                   <IonThumbnail slot="start">
-                    <img src={`${baseUrl}/files/${item.productImage}`} alt={item.productName} />
+                    <img src={`${baseUrl}/files/thumbnail_${item.productImage}`} alt={item.productName} />
                   </IonThumbnail>
                   <IonLabel>
                     <h2>{item.productName}</h2>
@@ -154,7 +154,7 @@ const Confirmation: React.FC = () => {
                 <IonText>{getTypeLabel(order.type)}</IonText>
               </IonItem>
               <IonItem>
-                <IonLabel>{labels.wishedPickupTime}</IonLabel>
+                <IonLabel>{labels.wishedTime}</IonLabel>
                 <IonText>{order.wishedPickupTime ? formatDateTime(order.wishedPickupTime) : labels.asSoonAsPossible}</IonText>
               </IonItem>
               <IonItem>
