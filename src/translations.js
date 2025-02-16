@@ -183,8 +183,10 @@ export const translations = {
     updateUser: 'Update User',
     update: 'Update',
     userUpdateSuccess: 'User updated successfully!',
+    bakeryClosed: 'Sorry, the bakery is closed at the moment.',
   },
   ar: {
+    bakeryClosed: 'عذرًا، المخبز مغلق في الوقت الحالي.',
     update: 'تحديث',
     wishedTime: "الوقت المطلوب",
     contactUs: 'تواصل معنا',
@@ -368,6 +370,7 @@ export const translations = {
     userUpdateSuccess: 'تم تحديث المستخدم بنجاح!',
   },
   he: {
+    bakeryClosed: 'מצטערים, המאפייה סגורה כעת.',
     userUpdateSuccess: 'המשתמש עודכן בהצלחה!',
     update: 'עדכן',
     updateUser: 'עדכן משתמש',

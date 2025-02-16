@@ -28,6 +28,22 @@ import { OrderAPI, baseUrl } from '../../services/apiService';
 import { getTranslation } from '../../services/translationService';
 import "./Checkout.css";
 
+const WORKING_HOURS = {
+    start: 9,
+    end: 17
+};
+
+const isWithinWorkingHours = () => {
+    const now = new Date();
+    const currentHour = now.getHours();
+    const currentDay = now.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+
+    if (currentDay === 0 || currentHour < WORKING_HOURS.start || currentHour >= WORKING_HOURS.end) {
+        return false;
+    }
+    return true;
+};
+
 const Checkout: React.FC = () => {
     const { setIsLoading, user, cart, language, setOrderSubmitted, setToastColor, setToastMessage, setShowToast, setCart } = useAppContext();
     const [pickupOrDelivery, setPickupOrDelivery] = useState<"pickup" | "delivery">("pickup");
@@ -53,12 +69,10 @@ const Checkout: React.FC = () => {
     const calculateCartTotal = () =>
         cart?.items.reduce((total: number, item: any) => total + calculateRowTotal(item.quantity, item.product.price), 0) || 0;
 
-
     const padTime = (time: string) => {
         const [hour, minute] = time.split(":");
         return `${hour.padStart(2, "0")}:${minute}:00`;
     };
-
 
     const handleSubmit = async () => {
         if (!phone || !firstName || !lastName) {
@@ -124,6 +138,8 @@ const Checkout: React.FC = () => {
         }
     };
 
+    const isSubmitDisabled = pickupOrDelivery === "pickup" && pickupTimeOption === "asap" && !isWithinWorkingHours();
+
     return (
         <IonPage>
             <IonHeader>
@@ -172,7 +188,6 @@ const Checkout: React.FC = () => {
                     </IonItem>
                 )}
 
-
                 {pickupOrDelivery === 'delivery' && (
                     <IonItem>
                         <IonIcon slot="start" icon={locationOutline} />
@@ -197,12 +212,11 @@ const Checkout: React.FC = () => {
                     />
                 </IonItem>
 
-                {/* // replace with time and date pickers https://ionicframework.com/docs/api/datetime#selecting-specific-values */}
                 <IonItem>
                     <IonIcon slot="start" icon={timeOutline} />
                     <div className="pickup-options-container">
                         <IonLabel position="stacked">
-                            {pickupOrDelivery === 'delivery' ? labels.deliveryTime :  labels.pickupTime}
+                            {pickupOrDelivery === 'delivery' ? labels.deliveryTime : labels.pickupTime}
                         </IonLabel>
                         <IonRadioGroup
                             value={pickupTimeOption}
@@ -212,7 +226,7 @@ const Checkout: React.FC = () => {
                                 lines="none"
                                 className="radio-option"
                                 button
-                                onClick={() => setPickupTimeOption("asap")} // Explicitly update the state
+                                onClick={() => setPickupTimeOption("asap")}
                             >
                                 <IonRadio slot="start" value="asap" />
                                 <IonLabel>{labels.asap}</IonLabel>
@@ -221,7 +235,7 @@ const Checkout: React.FC = () => {
                                 lines="none"
                                 className="radio-option"
                                 button
-                                onClick={() => setPickupTimeOption("specific")} // Explicitly update the state
+                                onClick={() => setPickupTimeOption("specific")}
                             >
                                 <IonRadio slot="start" value="specific" />
                                 <IonLabel>{labels.specificTime}</IonLabel>
@@ -229,8 +243,6 @@ const Checkout: React.FC = () => {
                         </IonRadioGroup>
                         {pickupTimeOption === "specific" && (
                             <div className="datetime-dropdowns">
-
-                                {/* Date Dropdown */}
                                 <IonItem className="dropdown-item" lines="none">
                                     <IonLabel position="stacked">{labels.selectDate}</IonLabel>
                                     <IonSelect
@@ -242,9 +254,8 @@ const Checkout: React.FC = () => {
                                         {Array.from({ length: 7 }).map((_, i) => {
                                             const date = new Date();
                                             date.setDate(date.getDate() + i);
-                                            const dayOfWeek = date.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+                                            const dayOfWeek = date.getDay();
 
-                                            // Skip Sundays (dayOfWeek === 0)
                                             if (dayOfWeek === 0) {
                                                 return null;
                                             }
@@ -263,7 +274,6 @@ const Checkout: React.FC = () => {
                                     </IonSelect>
                                 </IonItem>
 
-                                {/* Time Dropdown */}
                                 <IonItem className="dropdown-item" lines="none">
                                     <IonLabel position="stacked">{labels.selectTime}</IonLabel>
                                     <IonSelect
@@ -277,25 +287,25 @@ const Checkout: React.FC = () => {
                                             }
                                             setSpecificPickupTime((prev) => ({ ...prev, time: e.detail.value }));
                                         }}
-                                        disabled={!specificPickupTime.date} // Disable the dropdown if no date is selected
+                                        disabled={!specificPickupTime.date}
                                     >
                                         {(() => {
                                             if (!specificPickupTime.date) {
-                                                return null; // Return nothing if no date is selected
+                                                return null;
                                             }
 
                                             const selectedDate = new Date(specificPickupTime.date);
                                             const isToday = selectedDate.toDateString() === new Date().toDateString();
                                             const currentHour = new Date().getHours();
-                                            const hours = Array.from({ length: 12 }).map((_, i) => i + 9); // Working hours: 9 AM - 9 PM
+                                            const hours = Array.from({ length: 12 }).map((_, i) => i + 9);
                                             const availableHours = isToday
-                                                ? hours.filter((hour) => hour >= currentHour + 3) // At least 2 hours from now
+                                                ? hours.filter((hour) => hour >= currentHour + 3)
                                                 : hours;
 
                                             if (availableHours.length === 0) {
                                                 return (
                                                     <IonSelectOption disabled>
-                                                        {labels.noAvailableTime} {/* Add this label in your translations */}
+                                                        {labels.noAvailableTime}
                                                     </IonSelectOption>
                                                 );
                                             }
@@ -313,7 +323,6 @@ const Checkout: React.FC = () => {
                     </div>
                 </IonItem>
 
-
                 <IonList className="product-list">
                     <IonItem lines="none">
                         <IonIcon icon={clipboardOutline} slot="start" />
@@ -322,7 +331,6 @@ const Checkout: React.FC = () => {
                     {cart?.items.map((item: any, index: number) => (
                         <IonItem key={index} lines="inset" className="product-item">
                             <IonThumbnail slot="start" className="product-thumbnail">
-
                                 <img src={`${baseUrl}/files/thumbnail_${item.product.image}`} alt={getTranslation(item.product, language).name} />
                             </IonThumbnail>
                             <IonLabel>
@@ -343,7 +351,6 @@ const Checkout: React.FC = () => {
                         </IonItem>
                     ))}
                     <IonLabel>{labels.total}: ₪{calculateCartTotal().toFixed(2)}</IonLabel>
-
                 </IonList>
 
                 <IonItem>
@@ -357,8 +364,8 @@ const Checkout: React.FC = () => {
                     />
                 </IonItem>
 
-                <IonButton expand="block" onClick={handleSubmit}>
-                    {labels.submitOrder}
+                <IonButton expand="block" onClick={handleSubmit} disabled={isSubmitDisabled}>
+                    {isSubmitDisabled ? labels.bakeryClosed : labels.submitOrder}
                 </IonButton>
             </IonContent>
         </IonPage>
