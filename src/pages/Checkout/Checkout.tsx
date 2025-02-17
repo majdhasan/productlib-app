@@ -138,7 +138,7 @@ const Checkout: React.FC = () => {
         }
     };
 
-    const isSubmitDisabled = pickupOrDelivery === "pickup" && pickupTimeOption === "asap" && !isWithinWorkingHours();
+    const isSubmitDisabled = pickupTimeOption === "asap" && !isWithinWorkingHours();
 
     return (
         <IonPage>
