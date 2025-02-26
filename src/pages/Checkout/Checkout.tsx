@@ -29,7 +29,7 @@ import { getTranslation } from '../../services/translationService';
 import "./Checkout.css";
 
 const WORKING_HOURS = {
-    start: 9,
+    start: 7,
     end: 17
 };
 
