@@ -30,8 +30,8 @@ export const apiRequest = async (url: string, options: RequestInit = {}) => {
     let errorMessage = "API request failed";
     try {
       const errorData = await response.json();
-      if (errorData && errorData.message) {
-        errorMessage = errorData.message;
+      if (errorData && errorData.error) {
+        errorMessage = errorData.error;
       }
     } catch (e) {
       // Ignore JSON parsing errors and use the default error message
@@ -169,6 +169,9 @@ export const UserAPI = {
 export const OrderAPI = {
   fetchOrderById: (orderId: string): Promise<any> =>
     apiRequest(`/orders/${orderId}`, { method: "GET" }),
+
+  cancelOrder: (orderId: string): Promise<any> =>
+    apiRequest(`/orders/cancel/${orderId}`, { method: "PUT" }),
 
   createOrder: (payload: any): Promise<any> =>
     apiRequest(`/orders`, {
