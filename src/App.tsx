@@ -13,7 +13,7 @@ import {
   IonBadge
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { personOutline, rocketOutline, bookOutline, cartOutline } from 'ionicons/icons';
+import { personOutline, rocketOutline, bookOutline, cartOutline, notificationsOutline } from 'ionicons/icons';
 import Products from './pages/Products/Products';
 import ProductDetails from './components/ProductComponent/ProductDetails';
 import Confirmation from './pages/Confirmation/Confirmation';
@@ -21,6 +21,7 @@ import Cart from './pages/Cart/Cart';
 import MyOrders from './pages/MyOrders/MyOrders';
 import Checkout from './pages/Checkout/Checkout';
 import Profile from './pages/Profile/Profile';
+import Notifications from './pages/Notifications/Notifications';
 import { useAppContext } from './context/AppContext';
 import { translations } from './translations';
 import ReactGA from 'react-ga4';
@@ -65,9 +66,10 @@ ReactGA.send({ hitType: "pageview", page: window.location.pathname });
 setupIonicReact();
 
 const App: React.FC = () => {
-  const { language, setShowToast, showToast, toastMessage, toastColor, cart } = useAppContext();
+  const { language, setShowToast, showToast, toastMessage, toastColor, cart, notifications } = useAppContext();
   const labels = translations[language];
   const cartItemCount = cart?.items.reduce((total, item) => total + item.quantity, 0) || 0;
+  const unreadNotificationsCount = notifications.filter(notification => !notification.isRead).length;
   const location = useLocation();
 
   useEffect(() => {
@@ -87,6 +89,7 @@ const App: React.FC = () => {
             <Route exact path="/profile" component={Profile} />
             <Route exact path="/cart" component={Cart} />
             <Route exact path="/checkout" component={Checkout} />
+            <Route path="/notifications" component={Notifications} />
           </IonRouterOutlet>
           <IonToast
             isOpen={showToast}
@@ -104,7 +107,7 @@ const App: React.FC = () => {
             </IonTabButton>
             <IonTabButton tab="products" href="/products">
               <IonIcon aria-hidden="true" icon={rocketOutline} />
-              <IonLabel>{labels.orderNow}</IonLabel>
+              <IonLabel>{labels.products}</IonLabel>
             </IonTabButton>
             <IonTabButton tab="cart" href="/cart">
               <IonIcon aria-hidden="true" icon={cartOutline} />
@@ -114,6 +117,11 @@ const App: React.FC = () => {
             <IonTabButton tab="profile" href="/profile">
               <IonIcon aria-hidden="true" icon={personOutline} />
               <IonLabel>{labels.profile}</IonLabel>
+            </IonTabButton>
+            <IonTabButton tab="notifications" href="/notifications">
+              <IonIcon aria-hidden="true" icon={notificationsOutline} />
+              {unreadNotificationsCount > 0 && <IonBadge color="danger">{unreadNotificationsCount}</IonBadge>}
+              <IonLabel>{labels.notifications}</IonLabel>
             </IonTabButton>
           </IonTabBar>
         </IonTabs>

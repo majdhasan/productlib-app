@@ -38,10 +38,7 @@ const isWithinWorkingHours = () => {
     const currentHour = now.getHours();
     const currentDay = now.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
 
-    if (currentDay === 0 || currentHour < WORKING_HOURS.start || currentHour >= WORKING_HOURS.end) {
-        return false;
-    }
-    return true;
+    return !(currentDay === 0 || currentHour < WORKING_HOURS.start || currentHour >= WORKING_HOURS.end);
 };
 
 const Checkout: React.FC = () => {
@@ -114,7 +111,7 @@ const Checkout: React.FC = () => {
                 language: language
             };
 
-            const createdOrder = await OrderAPI.createOrder(payload);
+            await OrderAPI.createOrder(payload);
 
             setOrderSubmitted(true);
             setCart(null);

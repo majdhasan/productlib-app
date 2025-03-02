@@ -41,7 +41,7 @@ const ProfilePage: React.FC = () => {
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  
+
   const [updatedFirstName, setUpdatedFirstName] = useState(user?.firstName || '');
   const [updatedLastName, setUpdatedLastName] = useState(user?.lastName || '');
   const [updatedPhoneNumber, setUpdatedPhoneNumber] = useState(user?.phoneNumber || '');
@@ -158,7 +158,7 @@ const ProfilePage: React.FC = () => {
         setToastColor('danger');
         setShowToast(true);
       }
-    };
+    }
   };
 
   return (
@@ -172,28 +172,12 @@ const ProfilePage: React.FC = () => {
         {user ? (
           <>
             <IonCard>
-              <IonCardHeader>
-                <IonCardTitle>{labels.profile}</IonCardTitle>
-              </IonCardHeader>
               <IonCardContent>
-                <IonList>
-                  <IonItem>
-                    <IonLabel>{labels.firstName}</IonLabel>
-                    <IonLabel>{user.firstName}</IonLabel>
-                  </IonItem>
-                  <IonItem >
-                    <IonLabel>{labels.lastName}</IonLabel>
-                    <IonLabel>{user.lastName}</IonLabel>
-                  </IonItem>
-                  <IonItem >
-                    <IonLabel >{labels.email}</IonLabel>
-                    <IonLabel>{user.email}</IonLabel>
-                  </IonItem>
-                  <IonItem >
-                    <IonLabel >{labels.phoneNumber}</IonLabel>
-                    <IonLabel>{user.phoneNumber}</IonLabel>
-                  </IonItem>
-                </IonList>
+                <div className="profile-greeting">
+                  <h2>{user.firstName} {user.lastName}</h2>
+                  <p>{user.email}</p>
+                  <p>{user.phoneNumber}</p>
+                </div>
               </IonCardContent>
             </IonCard>
 

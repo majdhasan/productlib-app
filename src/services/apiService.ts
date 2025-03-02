@@ -178,6 +178,14 @@ export const OrderAPI = {
     }),
 };
 
+export const NotificationsAPI = {
+  fetchNotifications: (): Promise<any> =>
+      apiRequest(`/notifications/user`, { method: "GET" }),
+
+  markNotificationsRead: (): Promise<any> =>
+      apiRequest(`/notifications/user/read`, { method: "PUT" }),
+};
+
 export const ProductAPI = {
   fetchProducts: async (): Promise<any> => {
     const response = await fetch(`${baseUrl}/products`);
