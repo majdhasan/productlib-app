@@ -51,7 +51,7 @@ const ProfilePage: React.FC = () => {
   const labels = translations[language];
 
   const handleLogout = () => {
-    const confirmed = window.confirm(labels.logoutConfirmation || 'Are you sure you want to log out?');
+    const confirmed = window.confirm(labels.logoutConfirmation);
     if (confirmed) {
       setUser(null);
       setCart(null);

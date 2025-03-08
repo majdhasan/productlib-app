@@ -47,17 +47,23 @@ const Confirmation: React.FC = () => {
     }, [id, setIsLoading]);
 
     const cancelOrder = async () => {
-        setIsLoading(true);
-        try {
-            let updatedOrder = await OrderAPI.cancelOrder(id);
-            setOrder(updatedOrder);
-        } catch (error) {
-            console.error("Error cancelling order:", error);
-            setToastColor("danger");
-            setToastMessage(error.message);
-            setShowToast(true);
-        } finally {
-            setIsLoading(false);
+        const confirmed = window.confirm(labels.cancelOrderConfirmation);
+        if (confirmed) {
+            setIsLoading(true);
+            try {
+                let updatedOrder = await OrderAPI.cancelOrder(id);
+                setOrder(updatedOrder);
+                setToastColor("success");
+                setToastMessage(labels.orderCancelled);
+                setShowToast(true);
+            } catch (error) {
+                console.error("Error cancelling order:", error);
+                setToastColor("danger");
+                setToastMessage(error.message);
+                setShowToast(true);
+            } finally {
+                setIsLoading(false);
+            }
         }
     };
 

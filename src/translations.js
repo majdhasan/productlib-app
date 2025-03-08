@@ -178,8 +178,11 @@ export const translations = {
         notifications: 'Notifications',
         noNotifications: 'No notifications',
         cancelOrder: 'Cancel Order',
+        cancelOrderConfirmation: 'Are you sure you want to cancel the order?',
+        orderCancelled: 'Order Cancelled',
     },
     ar: {
+        cancelOrderConfirmation: 'هل أنت متأكد أنك تريد إلغاء الطلب؟',
         cancelOrder: 'إلغاء الطلب',
         noNotifications: 'لا توجد إشعارات',
         bakeryClosed: 'عذرًا، المخبز مغلق في الوقت الحالي.',
@@ -358,8 +361,11 @@ export const translations = {
         updateUser: 'تحديث المستخدم',
         userUpdateSuccess: 'تم تحديث المستخدم بنجاح!',
         notifications: 'الإشعارات',
+        orderCancelled: 'تم إلغاء الطلب',
     },
     he: {
+        orderCancelled: 'ההזמנה בוטלה',
+        cancelOrderConfirmation: 'האם אתה בטוח שברצונך לבטל את ההזמנה?',
         cancelOrder: 'ביטול הזמנה',
         noNotifications: 'אין התראות',
         notifications: 'התראות',
