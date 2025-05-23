@@ -29,8 +29,8 @@ import { getTranslation } from '../../services/translationService';
 import "./Checkout.css";
 
 const WORKING_HOURS = {
-    start: 0,
-    end: 24
+    start: 6,
+    end: 16
 };
 
 const isWithinWorkingHours = () => {

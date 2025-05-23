@@ -14,6 +14,7 @@ const CATEGORY_ORDER = [
   'FATAYER',
   'FAMILY_MEALS',
   'BISCUITS',
+  'DRINKS',
   'OTHERS'
 ];
 
@@ -43,6 +44,7 @@ const Products: React.FC = () => {
     FATAYER: labels.fatayer,
     BISCUITS: labels.biscuits,
     FAMILY_MEALS: labels.familyMeals,
+    DRINKS: labels.drinks,
     OTHERS: labels.others
   };
 
