@@ -46,6 +46,29 @@ export const apiRequest = async (url: string, options: RequestInit = {}) => {
   return response.json();
 };
 
+export const publicRequest = async (url: string, options: RequestInit = {}) => {
+  let response = await fetch(`${baseUrl}${url}`, options);
+
+  if (!response.ok) {
+    let errorMessage = "API request failed";
+    try {
+      const errorData = await response.json();
+      if (errorData && errorData.error) {
+        errorMessage = errorData.error;
+      }
+    } catch (e) {
+      // Ignore JSON parsing errors and use the default error message
+    }
+    throw new Error(errorMessage);
+  }
+
+  if (response.status === 204) {
+    return null;
+  }
+
+  return response.json();
+};
+
 // Cart API methods
 export const CartAPI = {
   getOrCreateCart: (userId: number) =>
@@ -181,7 +204,7 @@ export const OrderAPI = {
     }),
 
   createGuestOrder: (payload: any): Promise<any> =>
-    apiRequest(`/orders/guest`, {
+    publicRequest(`/orders/guest`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
