@@ -13,7 +13,7 @@ interface OrderListItemProps {
 
 const OrderListItem: React.FC<OrderListItemProps> = ({ order, labels, language }) => {
     const history = useHistory();
-    const { user, guestLastName } = useAppContext();
+    const { user } = useAppContext();
 
     const formatTime = (timestamp: string, language: string): string => {
         const options: Intl.DateTimeFormatOptions = {
@@ -30,7 +30,7 @@ const OrderListItem: React.FC<OrderListItemProps> = ({ order, labels, language }
             onClick={() =>
                 history.push(
                     `/confirmation/${order.id}${
-                        user ? '' : `?lastName=${encodeURIComponent(guestLastName)}`
+                        user ? '' : `?lastName=${encodeURIComponent(order.lastName)}`
                     }`
                 )
             }

@@ -74,7 +74,7 @@ const Confirmation: React.FC = () => {
                 updatedOrder = await OrderAPI.cancelGuestOrder(id, lastNameParam);
                 setGuestOrders(
                     guestOrders.map((o: any) =>
-                        o.id === updatedOrder.id ? updatedOrder : o
+                        o.id === updatedOrder.id ? { ...updatedOrder, lastName: o.lastName } : o
                     )
                 );
             }
