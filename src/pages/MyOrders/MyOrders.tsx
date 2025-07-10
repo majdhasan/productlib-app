@@ -38,7 +38,7 @@ const groupOrdersByDate = (orders: any[], language: string) => {
 };
 
 const MyOrders: React.FC = () => {
-    const { user, language, orderSubmitted, setOrderSubmitted, setIsLoading } = useAppContext();
+    const { user, language, orderSubmitted, setOrderSubmitted, setIsLoading, guestOrders } = useAppContext();
     const [orders, setOrders] = useState<any[]>([]);
 
     const labels = translations[language];
@@ -62,22 +62,39 @@ const MyOrders: React.FC = () => {
     useEffect(() => {
         if (!user) {
             setIsLoading(false);
-            setOrders([]);
+            const sortedGuestOrders = guestOrders.sort(
+                (a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+            );
+            setOrders(sortedGuestOrders);
             return;
         }
 
         fetchOrders();
-    }, [user, setIsLoading]);
+    }, [user, guestOrders, setIsLoading]);
 
     useEffect(() => {
         if (orderSubmitted) {
-            fetchOrders();
+            if (user) {
+                fetchOrders();
+            } else {
+                const sortedGuestOrders = guestOrders.sort(
+                    (a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+                );
+                setOrders(sortedGuestOrders);
+            }
             setOrderSubmitted(false);
         }
-    }, [orderSubmitted, setIsLoading]);
+    }, [orderSubmitted, guestOrders, user, setIsLoading]);
 
     const handleRefresh = async (event: CustomEvent) => {
-        await fetchOrders();
+        if (user) {
+            await fetchOrders();
+        } else {
+            const sortedGuestOrders = guestOrders.sort(
+                (a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+            );
+            setOrders(sortedGuestOrders);
+        }
         event.detail.complete();
     };
 
@@ -113,7 +130,7 @@ const MyOrders: React.FC = () => {
                     ))
                 ) : (
                     <IonText color="medium" className="ion-text-center">
-                        <h2>{user ? labels.noOrdersFound : labels.notLoggedIn}</h2>
+                        <h2>{user || guestOrders.length > 0 ? labels.noOrdersFound : labels.notLoggedIn}</h2>
                     </IonText>
                 )}
             </IonContent>

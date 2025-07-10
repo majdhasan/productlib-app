@@ -42,7 +42,7 @@ const isWithinWorkingHours = () => {
 };
 
 const Checkout: React.FC = () => {
-    const { setIsLoading, user, cart, language, setOrderSubmitted, setToastColor, setToastMessage, setShowToast, setCart } = useAppContext();
+    const { setIsLoading, user, cart, language, setOrderSubmitted, setToastColor, setToastMessage, setShowToast, setCart, guestOrders, setGuestOrders } = useAppContext();
     const [pickupOrDelivery, setPickupOrDelivery] = useState<"pickup" | "delivery">("pickup");
     const [address, setAddress] = useState("");
     const [phone, setPhone] = useState(user?.phoneNumber || "");
@@ -127,6 +127,7 @@ const Checkout: React.FC = () => {
                     })),
                 };
                 createdOrder = await OrderAPI.createGuestOrder(payload);
+                setGuestOrders([...guestOrders, createdOrder]);
             }
 
             setOrderSubmitted(true);
