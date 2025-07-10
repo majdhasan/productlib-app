@@ -27,7 +27,17 @@ import "./Confirmation.css";
 const Confirmation: React.FC = () => {
     const {id} = useParams<{ id: string }>();
     const location = useLocation();
-    const {language, isLoading, setIsLoading, setToastMessage, setShowToast, setToastColor, user} = useAppContext();
+    const {
+        language,
+        isLoading,
+        setIsLoading,
+        setToastMessage,
+        setShowToast,
+        setToastColor,
+        user,
+        guestOrders,
+        setGuestOrders
+    } = useAppContext();
     const lastNameParam = new URLSearchParams(location.search).get('lastName') || '';
     const labels = translations[language];
     const [order, setOrder] = useState<any>(null);
@@ -52,22 +62,33 @@ const Confirmation: React.FC = () => {
 
     const cancelOrder = async () => {
         const confirmed = window.confirm(labels.cancelOrderConfirmation);
-        if (confirmed) {
-            setIsLoading(true);
-            try {
-                let updatedOrder = await OrderAPI.cancelOrder(id);
-                setOrder(updatedOrder);
-                setToastColor("success");
-                setToastMessage(labels.orderCancelled);
-                setShowToast(true);
-            } catch (error) {
-                console.error("Error cancelling order:", error);
-                setToastColor("danger");
-                setToastMessage(error.message);
-                setShowToast(true);
-            } finally {
-                setIsLoading(false);
+        if (!confirmed) {
+            return;
+        }
+        setIsLoading(true);
+        try {
+            let updatedOrder;
+            if (user && user.id) {
+                updatedOrder = await OrderAPI.cancelOrder(id);
+            } else {
+                updatedOrder = await OrderAPI.cancelGuestOrder(id, lastNameParam);
+                setGuestOrders(
+                    guestOrders.map((o: any) =>
+                        o.id === updatedOrder.id ? updatedOrder : o
+                    )
+                );
             }
+            setOrder(updatedOrder);
+            setToastColor("success");
+            setToastMessage(labels.orderCancelled);
+            setShowToast(true);
+        } catch (error) {
+            console.error("Error cancelling order:", error);
+            setToastColor("danger");
+            setToastMessage((error as Error).message);
+            setShowToast(true);
+        } finally {
+            setIsLoading(false);
         }
     };
 
