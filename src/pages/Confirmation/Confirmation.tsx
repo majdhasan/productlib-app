@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {useParams} from 'react-router-dom';
+import {useParams, useLocation} from 'react-router-dom';
 import {
     IonBackButton,
     IonButton,
@@ -26,7 +26,9 @@ import "./Confirmation.css";
 
 const Confirmation: React.FC = () => {
     const {id} = useParams<{ id: string }>();
-    const {language, isLoading, setIsLoading, setToastMessage, setShowToast, setToastColor} = useAppContext();
+    const location = useLocation();
+    const {language, isLoading, setIsLoading, setToastMessage, setShowToast, setToastColor, user} = useAppContext();
+    const lastNameParam = new URLSearchParams(location.search).get('lastName') || '';
     const labels = translations[language];
     const [order, setOrder] = useState<any>(null);
 
@@ -34,7 +36,9 @@ const Confirmation: React.FC = () => {
         const fetchOrderDetails = async () => {
             setIsLoading(true);
             try {
-                const fetchedOrder = await OrderAPI.fetchOrderById(id);
+                const fetchedOrder = user && user.id
+                    ? await OrderAPI.fetchOrderById(id)
+                    : await OrderAPI.fetchGuestOrderById(id, lastNameParam);
                 setOrder(fetchedOrder);
             } catch (error) {
                 console.error("Error fetching order:", error);
@@ -44,7 +48,7 @@ const Confirmation: React.FC = () => {
         };
 
         fetchOrderDetails();
-    }, [id, setIsLoading]);
+    }, [id, setIsLoading, user, lastNameParam]);
 
     const cancelOrder = async () => {
         const confirmed = window.confirm(labels.cancelOrderConfirmation);

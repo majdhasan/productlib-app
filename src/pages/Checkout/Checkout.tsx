@@ -142,7 +142,7 @@ const Checkout: React.FC = () => {
             if (user && user.id) {
                 history.push(`/my-orders`);
             } else {
-                history.push(`/confirmation/${createdOrder.id}`);
+                history.push(`/confirmation/${createdOrder.id}?lastName=${encodeURIComponent(lastName)}`);
             }
         } catch (error) {
             console.error("Checkout Error:", error);

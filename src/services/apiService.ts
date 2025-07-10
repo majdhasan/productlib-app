@@ -193,6 +193,9 @@ export const OrderAPI = {
   fetchOrderById: (orderId: string): Promise<any> =>
     apiRequest(`/orders/${orderId}`, { method: "GET" }),
 
+  fetchGuestOrderById: (orderId: string, lastName: string): Promise<any> =>
+    publicRequest(`/orders/guest/${orderId}?lastName=${encodeURIComponent(lastName)}`, { method: "GET" }),
+
   cancelOrder: (orderId: string): Promise<any> =>
     apiRequest(`/orders/cancel/${orderId}`, { method: "PUT" }),
 
