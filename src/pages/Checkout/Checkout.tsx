@@ -95,9 +95,7 @@ const Checkout: React.FC = () => {
 
         try {
             setIsLoading(true);
-            const payload = {
-                cartId: cart.id,
-                customerId: user.id,
+            const commonPayload = {
                 orderType: pickupOrDelivery === "pickup" ? "PICKUP" : "DELIVERY",
                 address: pickupOrDelivery === "pickup" ? labels.bakeryAddress : address,
                 phone,
@@ -111,7 +109,25 @@ const Checkout: React.FC = () => {
                 language: language
             };
 
-            await OrderAPI.createOrder(payload);
+            let createdOrder;
+            if (user && user.id) {
+                const payload = {
+                    ...commonPayload,
+                    cartId: cart.id,
+                    customerId: user.id,
+                };
+                createdOrder = await OrderAPI.createOrder(payload);
+            } else {
+                const payload = {
+                    ...commonPayload,
+                    items: cart.items.map((item: any) => ({
+                        productId: item.product.id,
+                        quantity: item.quantity,
+                        notes: item.notes,
+                    })),
+                };
+                createdOrder = await OrderAPI.createGuestOrder(payload);
+            }
 
             setOrderSubmitted(true);
             setCart(null);
@@ -123,7 +139,11 @@ const Checkout: React.FC = () => {
             setToastColor('success');
             setShowToast(true);
 
-            history.push(`/my-orders`);
+            if (user && user.id) {
+                history.push(`/my-orders`);
+            } else {
+                history.push(`/confirmation/${createdOrder.id}`);
+            }
         } catch (error) {
             console.error("Checkout Error:", error);
 

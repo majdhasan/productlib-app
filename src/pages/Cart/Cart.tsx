@@ -31,7 +31,9 @@ const Cart: React.FC = () => {
         const newCart = await CartAPI.getOrCreateCart(user.id);
         setCart(newCart);
       } else {
-        console.error("User not logged in or user ID is missing.");
+        if (!cart) {
+          setCart({ items: [] });
+        }
       }
     } catch (error) {
       console.error("Error initializing cart:", error);
@@ -60,9 +62,11 @@ const Cart: React.FC = () => {
       const updatedCart = { ...cart, items: updatedItems };
       setCart(updatedCart);
 
-      const targetItem = updatedItems.find((item: any) => item.id === cartItemId);
-      if (targetItem) {
-        await CartAPI.updateCartItemQuantity(cartItemId, targetItem.quantity);
+      if (user && user.id) {
+        const targetItem = updatedItems.find((item: any) => item.id === cartItemId);
+        if (targetItem) {
+          await CartAPI.updateCartItemQuantity(cartItemId, targetItem.quantity);
+        }
       }
 
     } catch (error) {
@@ -72,9 +76,14 @@ const Cart: React.FC = () => {
 
   const handleRemoveItem = async (cartItemId: number) => {
     try {
-      await CartAPI.removeCartItem(cartItemId);
-      const updatedCart = await CartAPI.getOrCreateCart(user.id);
-      setCart(updatedCart);
+      if (user && user.id) {
+        await CartAPI.removeCartItem(cartItemId);
+        const updatedCart = await CartAPI.getOrCreateCart(user.id);
+        setCart(updatedCart);
+      } else {
+        const updatedItems = cart.items.filter((item: any) => item.id !== cartItemId);
+        setCart({ ...cart, items: updatedItems });
+      }
     } catch (error) {
       console.error("Error removing item from cart:", error);
     }

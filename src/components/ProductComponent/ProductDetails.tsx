@@ -46,15 +46,22 @@ const ProductDetails: React.FC = () => {
 
   const handleAddToCart = async () => {
     try {
-      if (!user || !user.id) {
-        history.push('/profile');
-        return;
+      if (user && user.id) {
+        await CartAPI.addItemToCart(user.id, product.id, quantity, notes);
+        const updatedCart = await CartAPI.getOrCreateCart(user.id);
+        setCart(updatedCart);
+      } else {
+        const guestCart = cart || { items: [] };
+        const newItem = {
+          id: Date.now(),
+          product,
+          quantity,
+          notes,
+        };
+        guestCart.items.push(newItem);
+        setCart({ ...guestCart });
       }
 
-      await CartAPI.addItemToCart(user.id, product.id, quantity, notes);
-      const updatedCart = await CartAPI.getOrCreateCart(user.id);
-
-      setCart(updatedCart);
       setToastColor('success');
       setToastMessage(labels.productAddedToCart);
       setShowToast(true);
@@ -145,7 +152,7 @@ const ProductDetails: React.FC = () => {
                   </div>
                   <div className="book-button-container">
                     <IonButton expand="block" onClick={handleAddToCart}>
-                      {user ? labels.addToCart : labels.loginToOrder}
+                      {labels.addToCart}
                     </IonButton>
                   </div>
                 </>

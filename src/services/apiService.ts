@@ -179,6 +179,13 @@ export const OrderAPI = {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     }),
+
+  createGuestOrder: (payload: any): Promise<any> =>
+    apiRequest(`/orders/guest`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    }),
 };
 
 export const NotificationsAPI = {
