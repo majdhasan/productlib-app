@@ -162,7 +162,7 @@ const Cart: React.FC = () => {
           </IonList>
         ) : (
           <IonText color="medium" className="ion-text-center">
-            <h2>{user ? labels.emptyCart : labels.notLoggedIn}</h2>
+            <h2>{labels.emptyCart}</h2>
           </IonText>
         )}
       </IonContent>

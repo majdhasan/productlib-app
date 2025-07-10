@@ -130,7 +130,7 @@ const MyOrders: React.FC = () => {
                     ))
                 ) : (
                     <IonText color="medium" className="ion-text-center">
-                        <h2>{user || guestOrders.length > 0 ? labels.noOrdersFound : labels.notLoggedIn}</h2>
+                        <h2>{labels.noOrdersFound}</h2>
                     </IonText>
                 )}
             </IonContent>
