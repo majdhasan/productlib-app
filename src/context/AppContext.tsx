@@ -12,6 +12,8 @@ interface AppContextType {
     setCart: React.Dispatch<React.SetStateAction<any>>;
     guestOrders: any[];
     setGuestOrders: React.Dispatch<React.SetStateAction<any[]>>;
+    guestLastName: string;
+    setGuestLastName: React.Dispatch<React.SetStateAction<string>>;
     language: string;
     setLanguage: React.Dispatch<React.SetStateAction<string>>;
     orderSubmitted: boolean;
@@ -44,6 +46,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({children})
     const [guestOrders, setGuestOrders] = useState<any[]>(() => {
         const storedOrders = localStorage.getItem('guestOrders');
         return storedOrders ? JSON.parse(storedOrders) : [];
+    });
+
+    const [guestLastName, setGuestLastName] = useState<string>(() => {
+        const storedLastName = localStorage.getItem('guestLastName');
+        return storedLastName || '';
     });
 
     const [language, setLanguage] = useState<string>(() => {
@@ -85,6 +92,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({children})
     }, [guestOrders]);
 
     useEffect(() => {
+        if (guestLastName) {
+            localStorage.setItem('guestLastName', guestLastName);
+        } else {
+            localStorage.removeItem('guestLastName');
+        }
+    }, [guestLastName]);
+
+    useEffect(() => {
         localStorage.setItem('language', language);
     }, [language]);
 
@@ -116,6 +131,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({children})
                 setCart,
                 guestOrders,
                 setGuestOrders,
+                guestLastName,
+                setGuestLastName,
                 language,
                 setLanguage,
                 orderSubmitted,
