@@ -199,6 +199,12 @@ export const OrderAPI = {
   cancelOrder: (orderId: string): Promise<any> =>
     apiRequest(`/orders/cancel/${orderId}`, { method: "PUT" }),
 
+  cancelGuestOrder: (orderId: string, lastName: string): Promise<any> =>
+    publicRequest(
+      `/orders/guest/cancel/${orderId}?lastName=${encodeURIComponent(lastName)}`,
+      { method: "PUT" }
+    ),
+
   createOrder: (payload: any): Promise<any> =>
     apiRequest(`/orders`, {
       method: "POST",

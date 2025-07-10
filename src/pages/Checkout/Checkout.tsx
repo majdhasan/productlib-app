@@ -42,7 +42,8 @@ const isWithinWorkingHours = () => {
 };
 
 const Checkout: React.FC = () => {
-    const { setIsLoading, user, cart, language, setOrderSubmitted, setToastColor, setToastMessage, setShowToast, setCart } = useAppContext();
+    const { setIsLoading, user, cart, language, setOrderSubmitted, setToastColor, setToastMessage, setShowToast, setCart, guestOrders, setGuestOrders } = useAppContext();
+    const [isOrderComplete, setIsOrderComplete] = useState(false);
     const [pickupOrDelivery, setPickupOrDelivery] = useState<"pickup" | "delivery">("pickup");
     const [address, setAddress] = useState("");
     const [phone, setPhone] = useState(user?.phoneNumber || "");
@@ -57,9 +58,11 @@ const Checkout: React.FC = () => {
 
     useEffect(() => {
         if (!cart || cart.items.length === 0) {
-            history.push("/products");
+            if (!isOrderComplete) {
+                history.push("/products");
+            }
         }
-    }, [cart, history]);
+    }, [cart, history, isOrderComplete]);
 
     const calculateRowTotal = (quantity: number, price: number) => quantity * price;
 
@@ -127,9 +130,11 @@ const Checkout: React.FC = () => {
                     })),
                 };
                 createdOrder = await OrderAPI.createGuestOrder(payload);
+                setGuestOrders([...guestOrders, { ...createdOrder, lastName }]);
             }
 
             setOrderSubmitted(true);
+            setIsOrderComplete(true);
             setCart(null);
             setAddress("");
             setOrderNotes("");

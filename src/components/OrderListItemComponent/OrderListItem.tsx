@@ -2,6 +2,7 @@ import React from 'react';
 import { IonItem, IonLabel, IonBadge, IonThumbnail } from '@ionic/react';
 import { useHistory } from 'react-router-dom';
 import { baseUrl } from '../../services/apiService';
+import { useAppContext } from '../../context/AppContext';
 import './OrderListItem.css';
 
 interface OrderListItemProps {
@@ -12,6 +13,7 @@ interface OrderListItemProps {
 
 const OrderListItem: React.FC<OrderListItemProps> = ({ order, labels, language }) => {
     const history = useHistory();
+    const { user } = useAppContext();
 
     const formatTime = (timestamp: string, language: string): string => {
         const options: Intl.DateTimeFormatOptions = {
@@ -25,7 +27,13 @@ const OrderListItem: React.FC<OrderListItemProps> = ({ order, labels, language }
         <IonItem
             key={order.id}
             button
-            onClick={() => history.push(`/confirmation/${order.id}`)}
+            onClick={() =>
+                history.push(
+                    `/confirmation/${order.id}${
+                        user ? '' : `?lastName=${encodeURIComponent(order.lastName)}`
+                    }`
+                )
+            }
         >
             <IonLabel>
                 <h2 className="order-header">
