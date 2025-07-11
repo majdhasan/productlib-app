@@ -52,14 +52,27 @@ const ProductDetails: React.FC = () => {
         setCart(updatedCart);
       } else {
         const guestCart = cart || { items: [] };
-        const newItem = {
-          id: Date.now(),
-          product,
-          quantity,
-          notes,
-        };
-        guestCart.items.push(newItem);
-        setCart({ ...guestCart });
+        const existingItemIndex = guestCart.items.findIndex(
+          (item: any) =>
+            item.product.id === product.id && item.notes === notes
+        );
+
+        if (existingItemIndex !== -1) {
+          const updatedItems = [...guestCart.items];
+          updatedItems[existingItemIndex] = {
+            ...updatedItems[existingItemIndex],
+            quantity: updatedItems[existingItemIndex].quantity + quantity,
+          };
+          setCart({ ...guestCart, items: updatedItems });
+        } else {
+          const newItem = {
+            id: Date.now(),
+            product,
+            quantity,
+            notes,
+          };
+          setCart({ ...guestCart, items: [...guestCart.items, newItem] });
+        }
       }
 
       setToastColor('success');
