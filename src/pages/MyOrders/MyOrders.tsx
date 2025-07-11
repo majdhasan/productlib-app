@@ -12,7 +12,7 @@ import {
     IonBadge,
 } from '@ionic/react';
 import { useAppContext } from '../../context/AppContext';
-import { UserAPI } from '../../services/apiService';
+import { OrderAPI, UserAPI } from '../../services/apiService';
 import './MyOrders.css';
 import { translations } from '../../translations';
 import OrderListItem from '../../components/OrderListItemComponent/OrderListItem';
@@ -38,7 +38,15 @@ const groupOrdersByDate = (orders: any[], language: string) => {
 };
 
 const MyOrders: React.FC = () => {
-    const { user, language, orderSubmitted, setOrderSubmitted, setIsLoading, guestOrders } = useAppContext();
+    const {
+        user,
+        language,
+        orderSubmitted,
+        setOrderSubmitted,
+        setIsLoading,
+        guestOrders,
+        setGuestOrders,
+    } = useAppContext();
     const [orders, setOrders] = useState<any[]>([]);
 
     const labels = translations[language];
@@ -59,41 +67,61 @@ const MyOrders: React.FC = () => {
         }
     };
 
-    useEffect(() => {
-        if (!user) {
-            setIsLoading(false);
-            const sortedGuestOrders = guestOrders.sort(
+    const fetchGuestOrders = async () => {
+        if (guestOrders.length === 0) {
+            setOrders([]);
+            return;
+        }
+        setIsLoading(true);
+        try {
+            const updatedOrders = await Promise.all(
+                guestOrders.map(async (order: any) => {
+                    try {
+                        const updatedOrder = await OrderAPI.fetchGuestOrderById(order.id, order.lastName);
+                        return { ...updatedOrder, lastName: order.lastName };
+                    } catch (e) {
+                        console.error('Error fetching guest order:', e);
+                        return order;
+                    }
+                })
+            );
+            const sortedOrders = updatedOrders.sort(
                 (a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
             );
-            setOrders(sortedGuestOrders);
+            setGuestOrders(updatedOrders);
+            setOrders(sortedOrders);
+        } catch (error) {
+            console.error('Error fetching guest orders:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        if (!user) {
+            fetchGuestOrders();
             return;
         }
 
         fetchOrders();
-    }, [user, guestOrders, setIsLoading]);
+    }, [user]);
 
     useEffect(() => {
         if (orderSubmitted) {
             if (user) {
                 fetchOrders();
             } else {
-                const sortedGuestOrders = guestOrders.sort(
-                    (a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-                );
-                setOrders(sortedGuestOrders);
+                fetchGuestOrders();
             }
             setOrderSubmitted(false);
         }
-    }, [orderSubmitted, guestOrders, user, setIsLoading]);
+    }, [orderSubmitted, user]);
 
     const handleRefresh = async (event: CustomEvent) => {
         if (user) {
             await fetchOrders();
         } else {
-            const sortedGuestOrders = guestOrders.sort(
-                (a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-            );
-            setOrders(sortedGuestOrders);
+            await fetchGuestOrders();
         }
         event.detail.complete();
     };
