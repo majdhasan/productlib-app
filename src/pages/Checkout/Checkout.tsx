@@ -228,9 +228,12 @@ const Checkout: React.FC = () => {
                     <IonLabel position="stacked">{labels.phoneNumber}</IonLabel>
                     <IonInput
                         type="tel"
+                        maxlength={15}
                         value={phone}
                         placeholder={labels.enterYourPhone}
-                        onIonChange={(e) => setPhone(e.detail.value || "")}
+                        onIonChange={(e) =>
+                            setPhone((e.detail.value || "").slice(0, 15))
+                        }
                     />
                 </IonItem>
 

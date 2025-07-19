@@ -99,9 +99,13 @@ const SignUpComponent: React.FC = () => {
                 <IonItem>
                     <IonLabel position="stacked">{labels.phoneNumber}*</IonLabel>
                     <IonInput
+                        type="tel"
+                        maxlength={15}
                         value={phoneNumber}
                         placeholder={labels.enterPhoneNumber}
-                        onIonInput={(e: any) => setPhoneNumber(e.target.value || "")}
+                        onIonInput={(e: any) =>
+                            setPhoneNumber((e.target.value || "").slice(0, 15))
+                        }
                     />
                 </IonItem>
                 <IonItem>
