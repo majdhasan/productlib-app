@@ -281,7 +281,14 @@ const ProfilePage: React.FC = () => {
             </IonItem>
             <IonItem>
               <IonLabel position="stacked">{labels.phoneNumber}*</IonLabel>
-              <IonInput value={updatedPhoneNumber} onIonChange={(e) => setUpdatedPhoneNumber(e.detail.value!)} />
+              <IonInput
+                type="tel"
+                maxlength={15}
+                value={updatedPhoneNumber}
+                onIonChange={(e) =>
+                  setUpdatedPhoneNumber((e.detail.value || '').slice(0, 15))
+                }
+              />
             </IonItem>
             <IonItem className="privacy-notice-item">
               <input
